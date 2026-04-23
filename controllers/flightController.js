@@ -33,6 +33,7 @@ const parseBoardingPass = (data) => {
       destinationCode: leg.destinationAirportCode
     };
   } catch (err) {
+    // If BCBP fails, return null
     return null;
   }
 };
@@ -86,7 +87,10 @@ exports.getTrackedFlight = catchAsync(async (req, res, next) => {
   if (!track) return next(new AppError("No active tracking.", 404));
 
   const flight = track.flight;
-  const destinationCode = flight.route.toCode;
+  if (!flight) return next(new AppError("Tracked flight data missing.", 404));
+
+  const destinationCode = flight.route?.toCode;
+  if (!destinationCode) return next(new AppError("Flight destination code missing.", 400));
 
   // Execute external API calls and DB queries concurrently
   const [airport, weather, recommendations] = await Promise.all([

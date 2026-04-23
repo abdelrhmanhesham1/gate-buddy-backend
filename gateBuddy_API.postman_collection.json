@@ -22,6 +22,20 @@
               "mode": "raw",
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
             },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData.token) {",
+                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/users/signup",
               "host": ["{{base_url}}"],
@@ -43,6 +57,20 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
             },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData.token) {",
+                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/users/login",
               "host": ["{{base_url}}"],

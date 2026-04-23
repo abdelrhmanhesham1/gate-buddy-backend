@@ -6,7 +6,7 @@ const { loginLimiter, authLimiter, oauthSocialLimiter, forgotPasswordLimiter } =
 
 const router = express.Router();
 
-// --- 1. AUTHENTICATION ---
+// --- 1. AUTHENTICATION (PUBLIC) ---
 router.post("/signup", authLimiter, validateSignup, authController.signup);
 router.post("/login", loginLimiter, validateLogin, authController.login);
 router.post("/logout", authController.logout);

@@ -6,13 +6,14 @@ const router = express.Router();
 
 // --- 1. PUBLIC ---
 router.get("/updated", flightController.getUpdatedFlights);
-router.get("/:id", flightController.getFlight); // NOW PUBLIC
 
 // --- 2. PROTECTED ---
 router.use(authController.protect);
 
-router.post("/scan", flightController.scanBoardingPass);
 router.get("/my-flight", flightController.getTrackedFlight);
+router.get("/:id", flightController.getFlight); // Moved below specific routes
+
+router.post("/scan", flightController.scanBoardingPass);
 router.post("/:id/track", flightController.trackFlight);
 router.patch("/:id/cancel-track", flightController.cancelTrack);
 

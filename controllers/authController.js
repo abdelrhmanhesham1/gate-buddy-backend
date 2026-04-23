@@ -61,6 +61,7 @@ const resolveOAuthUser = async (provider, profile, req, res) => {
 
 // --- 3. EXPORTED HANDLERS ---
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log("--- DEBUG: SIGNUP ROUTE HIT ---");
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
