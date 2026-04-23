@@ -36,6 +36,7 @@
     "luxon": "^3.7.2",
     "mongoose": "^8.23.0",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.3",
     "nodemailer": "^7.0.10",
