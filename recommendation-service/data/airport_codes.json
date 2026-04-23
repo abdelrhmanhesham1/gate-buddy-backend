@@ -1,0 +1,182 @@
+{
+  "CDG": {
+    "city": "Paris",
+    "country": "France",
+    "iata": "CDG",
+    "icao": "LFPG"
+  },
+  "LFPG": {
+    "city": "Paris",
+    "country": "France",
+    "iata": "CDG",
+    "icao": "LFPG"
+  },
+  "CAI": {
+    "city": "Cairo",
+    "country": "Egypt",
+    "iata": "CAI",
+    "icao": "HECA"
+  },
+  "HECA": {
+    "city": "Cairo",
+    "country": "Egypt",
+    "iata": "CAI",
+    "icao": "HECA"
+  },
+  "LHR": {
+    "city": "London",
+    "country": "United Kingdom",
+    "iata": "LHR",
+    "icao": "EGLL"
+  },
+  "EGLL": {
+    "city": "London",
+    "country": "United Kingdom",
+    "iata": "LHR",
+    "icao": "EGLL"
+  },
+  "JFK": {
+    "city": "New York",
+    "country": "United States",
+    "iata": "JFK",
+    "icao": "KJFK"
+  },
+  "KJFK": {
+    "city": "New York",
+    "country": "United States",
+    "iata": "JFK",
+    "icao": "KJFK"
+  },
+  "NRT": {
+    "city": "Tokyo",
+    "country": "Japan",
+    "iata": "NRT",
+    "icao": "RJAA"
+  },
+  "RJAA": {
+    "city": "Tokyo",
+    "country": "Japan",
+    "iata": "NRT",
+    "icao": "RJAA"
+  },
+  "FCO": {
+    "city": "Rome",
+    "country": "Italy",
+    "iata": "FCO",
+    "icao": "LIRF"
+  },
+  "LIRF": {
+    "city": "Rome",
+    "country": "Italy",
+    "iata": "FCO",
+    "icao": "LIRF"
+  },
+  "DXB": {
+    "city": "Dubai",
+    "country": "United Arab Emirates",
+    "iata": "DXB",
+    "icao": "OMDB"
+  },
+  "OMDB": {
+    "city": "Dubai",
+    "country": "United Arab Emirates",
+    "iata": "DXB",
+    "icao": "OMDB"
+  },
+  "SYD": {
+    "city": "Sydney",
+    "country": "Australia",
+    "iata": "SYD",
+    "icao": "YSSY"
+  },
+  "YSSY": {
+    "city": "Sydney",
+    "country": "Australia",
+    "iata": "SYD",
+    "icao": "YSSY"
+  },
+  "LAX": {
+    "city": "Los Angeles",
+    "country": "United States",
+    "iata": "LAX",
+    "icao": "KLAX"
+  },
+  "KLAX": {
+    "city": "Los Angeles",
+    "country": "United States",
+    "iata": "LAX",
+    "icao": "KLAX"
+  },
+  "SIN": {
+    "city": "Singapore",
+    "country": "Singapore",
+    "iata": "SIN",
+    "icao": "WSSS"
+  },
+  "WSSS": {
+    "city": "Singapore",
+    "country": "Singapore",
+    "iata": "SIN",
+    "icao": "WSSS"
+  },
+  "LXR": {
+    "city": "Luxor",
+    "country": "Egypt",
+    "iata": "LXR",
+    "icao": "HELX"
+  },
+  "HELX": {
+    "city": "Luxor",
+    "country": "Egypt",
+    "iata": "LXR",
+    "icao": "HELX"
+  },
+  "HRG": {
+    "city": "Hurghada",
+    "country": "Egypt",
+    "iata": "HRG",
+    "icao": "HEGN"
+  },
+  "HEGN": {
+    "city": "Hurghada",
+    "country": "Egypt",
+    "iata": "HRG",
+    "icao": "HEGN"
+  },
+  "SSH": {
+    "city": "Sharm El Sheikh",
+    "country": "Egypt",
+    "iata": "SSH",
+    "icao": "HESH"
+  },
+  "HESH": {
+    "city": "Sharm El Sheikh",
+    "country": "Egypt",
+    "iata": "SSH",
+    "icao": "HESH"
+  },
+  "FRA": {
+    "city": "Frankfurt",
+    "country": "Germany",
+    "iata": "FRA",
+    "icao": "EDDF"
+  },
+  "EDDF": {
+    "city": "Frankfurt",
+    "country": "Germany",
+    "iata": "FRA",
+    "icao": "EDDF"
+  },
+  "DOH": {
+    "city": "Doha",
+    "country": "Qatar",
+    "iata": "DOH",
+    "icao": "OTHH"
+  },
+  "OTHH": {
+    "city": "Doha",
+    "country": "Qatar",
+    "iata": "DOH",
+    "icao": "OTHH"
+  }
+}

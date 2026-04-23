@@ -1,0 +1,82 @@
+{
+  "data": {
+    "airportCode": "HECA",
+    "cityName": "Cairo",
+    "country": "Egypt",
+    "places": [
+      {
+        "name": "Liberation Square",
+        "category": "landmark",
+        "description": "Tahrir Square (Egyptian Arabic: ميدان التحرير, romanized: Meydān et-Taḥrīr, Egyptian Arabic pronunciation: [meˈdæːn ettæħˈɾiːɾ]; English: \"Liberation Square\"), also known as Martyr Square, is a public town square in downtown Cairo, Cairo, Egypt. I...",
+        "rating": 4.5,
+        "vicinity": "Cairo",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/TahrirSQ-2020%281%29.jpg/1280px-TahrirSQ-2020%281%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/0/09/Tahrir_Square_-_February_10%2C_2011.png",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Tahrir_Square_on_July_29_2011.jpg/1280px-Tahrir_Square_on_July_29_2011.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Tahrir_Square%2C_Cairo%2C_Egypt_1.jpg/1280px-Tahrir_Square%2C_Cairo%2C_Egypt_1.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Tahrir_square_1896.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Tahrir_square_Cairo2.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Liberation%20Square%20Cairo"
+      },
+      {
+        "name": "Karnak Temple",
+        "category": "landmark",
+        "description": "The Karnak Temple Complex, commonly known as Karnak (), comprises a vast mix of temples, pylons, chapels, and other buildings near Luxor, Egypt. Construction at the complex began during the reign of Senusret I (reigned 1971–1926 BC) in the Middle ...",
+        "rating": 4.4,
+        "vicinity": "Cairo",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Egypt_terrain_map_Cairo_Karnak.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_photo_87_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV17_007.jpg/1280px-Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_photo_87_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV17_007.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Karnak_-_The_Amon_Temple_%283588098691%29.jpg/1280px-Karnak_-_The_Amon_Temple_%283588098691%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_1870-1888%2C_photo_29_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV36_002.jpg/1280px-Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_1870-1888%2C_photo_29_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV36_002.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_photo_73_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_Album2_068.jpg/1280px-Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_photo_73_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_Album2_068.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_1870-1880%2C_photo_75_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV04_006.jpg/1280px-Theban_region%2C_Temple_Complex_of_Amon_in_Karnak%2C_19th_century_pictures%2C_1870-1880%2C_photo_75_of_91_-_Archivio_fotografico_Museo_Egizio%2C_Turin_INV04_006.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Karnak%20Temple%20Cairo"
+      }
+    ],
+    "message": "Top places to visit in Cairo, Egypt",
+    "scrapedAt": "2026-03-05T01:50:00.979693"
+  },
+  "cached_at": "2026-03-05T01:50:00.982745",
+  "expires_at": "2026-03-06T01:50:00.982774",
+  "key": "HECA"
+}

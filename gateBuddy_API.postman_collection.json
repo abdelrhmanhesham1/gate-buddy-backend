@@ -1,0 +1,623 @@
+{
+  "info": {
+    "name": "GateBuddy API",
+    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**Main API URL:** http://localhost:3001/api/v1/\n**Recommendation Service:** http://localhost:8000/\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 791 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Live Scraper**: Python-based real-time destination tips.\n5. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n6. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔐 AUTH & PROFILE",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\",\n  \"passwordConfirm\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/signup",
+              "host": ["{{base_url}}"],
+              "path": ["users", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/login",
+              "host": ["{{base_url}}"],
+              "path": ["users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/logout",
+              "host": ["{{base_url}}"],
+              "path": ["users", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["users", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/forgotPassword",
+              "host": ["{{base_url}}"],
+              "path": ["users", "forgotPassword"]
+            }
+          }
+        },
+        {
+          "name": "Verify Reset Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"resetCode\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/verifyResetCode",
+              "host": ["{{base_url}}"],
+              "path": ["users", "verifyResetCode"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewSecurePass123\",\n  \"passwordConfirm\": \"NewSecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/resetPassword",
+              "host": ["{{base_url}}"],
+              "path": ["users", "resetPassword"]
+            }
+          }
+        },
+        {
+          "name": "Social: Google Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"YOUR_GOOGLE_ID_TOKEN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/google",
+              "host": ["{{base_url}}"],
+              "path": ["users", "google"]
+            }
+          }
+        },
+        {
+          "name": "Social: GitHub Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"GITHUB_CODE_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/github",
+              "host": ["{{base_url}}"],
+              "path": ["users", "github"]
+            }
+          }
+        },
+        {
+          "name": "Social: Facebook Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accessToken\": \"FB_ACCESS_TOKEN_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/facebook",
+              "host": ["{{base_url}}"],
+              "path": ["users", "facebook"]
+            }
+          }
+        },
+        {
+          "name": "Get Me (Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "✈️ FLIGHTS & TRAVEL",
+      "item": [
+        {
+          "name": "Get Updated Flights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/flights/updated",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "updated"]
+            }
+          }
+        },
+        {
+          "name": "Scan Boarding Pass",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barcodeData\": \"M1TRAVELER/JOHN       E1234567LXRCAIMS 101  064                                               \"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/flights/scan",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "scan"]
+            }
+          }
+        },
+        {
+          "name": "Get My Active Tracked Flight",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/flights/my-flight",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "my-flight"]
+            }
+          }
+        },
+        {
+          "name": "Track Flight (Manual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reminderMinutes\": 30\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/flights/{{flight_id}}/track",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "{{flight_id}}", "track"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Flight Tracking",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/flights/{{flight_id}}/cancel-track",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "{{flight_id}}", "cancel-track"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🗺️ MAP & SERVICES",
+      "item": [
+        {
+          "name": "Home Dashboard Payload",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home",
+              "host": ["{{base_url}}"],
+              "path": ["home"]
+            }
+          }
+        },
+        {
+          "name": "Search Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/search?q=Shop",
+              "host": ["{{base_url}}"],
+              "path": ["services", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Shop"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Nearby Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/nearby?lng=31.4&lat=30.1",
+              "host": ["{{base_url}}"],
+              "path": ["services", "nearby"],
+              "query": [
+                {
+                  "key": "lng",
+                  "value": "31.4"
+                },
+                {
+                  "key": "lat",
+                  "value": "30.1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Service Counter Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/counters/stats",
+              "host": ["{{base_url}}"],
+              "path": ["services", "counters", "stats"]
+            }
+          }
+        },
+        {
+          "name": "All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": ["{{base_url}}"],
+              "path": ["services"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🤖 AI & NOTIFICATIONS",
+      "item": [
+        {
+          "name": "AI Chat Assistant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What is the status of flight MS731?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat/query",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "query"]
+            }
+          }
+        },
+        {
+          "name": "Register Device Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\",\n  \"deviceType\": \"ios\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/devices/register",
+              "host": ["{{base_url}}"],
+              "path": ["devices", "register"]
+            }
+          }
+        },
+        {
+          "name": "All My Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"]
+            }
+          }
+        },
+        {
+          "name": "Mark All As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "read-all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❓ FAQS & RATINGS",
+      "item": [
+        {
+          "name": "Get All FAQs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/faqs",
+              "host": ["{{base_url}}"],
+              "path": ["faqs"]
+            }
+          }
+        },
+        {
+          "name": "Get FAQ by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/faqs/{{faq_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["faqs", "{{faq_id}}"]
+            }
+          }
+        },
+        {
+          "name": "System Stats (Global)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats",
+              "host": ["{{base_url}}"],
+              "path": ["stats"]
+            }
+          }
+        },
+        {
+          "name": "Submit Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"review\": \"The app is amazing and very helpful!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/stats/rate",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "rate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐍 PYTHON SERVICE (SCRAPER)",
+      "item": [
+        {
+          "name": "Get Recommendations (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"airportCode\": \"DXB\",\n  \"limit\": 6\n}"
+            },
+            "url": {
+              "raw": "{{recommend_url}}/recommend",
+              "host": ["{{recommend_url}}"],
+              "path": ["recommend"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "recommend_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_JWT_TOKEN",
+      "type": "string"
+    },
+    {
+      "key": "flight_id",
+      "value": "FLIGHT_ID",
+      "type": "string"
+    },
+    {
+      "key": "faq_id",
+      "value": "FAQ_ID",
+      "type": "string"
+    }
+  ]
+}

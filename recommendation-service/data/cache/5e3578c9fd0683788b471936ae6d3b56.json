@@ -1,0 +1,252 @@
+{
+  "data": {
+    "airportCode": "CDG",
+    "cityName": "Paris",
+    "country": "France",
+    "places": [
+      {
+        "name": "Eiffel Tower",
+        "category": "monument",
+        "description": "The Eiffel Tower (  EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889.",
+        "rating": 4.7,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/1200px-Tour_Eiffel_Wikimedia_Commons.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg/1200px-Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Lightning_striking_the_Eiffel_Tower_-_NOAA.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Reflet-tour-Eiffel-Paris-Luc-Viatour.jpg/1200px-Reflet-tour-Eiffel-Paris-Luc-Viatour.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888.jpg/1200px-Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Eiffel_Tower_and_Pont_Alexandre_III_at_night.jpg/1200px-Eiffel_Tower_and_Pont_Alexandre_III_at_night.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Eiffel%20Tower%20Paris"
+      },
+      {
+        "name": "National Museum",
+        "category": "museum",
+        "description": "There are around 130 museums in Paris, France, within city limits. This list also includes suburban museums within the \"Grand Paris\" area, such as the Air and Space Museum.",
+        "rating": 4.5,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/National_museum_of_natural_History_Paris_3D_%2837172396810%29.jpg/1200px-National_museum_of_natural_History_Paris_3D_%2837172396810%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Anna_Bili%C5%84ska-Bohdanowiczowa_-_Black_girl_-_MP_5531_-_National_Museum_in_Warsaw.jpg/1200px-Anna_Bili%C5%84ska-Bohdanowiczowa_-_Black_girl_-_MP_5531_-_National_Museum_in_Warsaw.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Mus%C3%A9um_national_d%27histoire_naturelle_France.jpg/1200px-Mus%C3%A9um_national_d%27histoire_naturelle_France.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Skeletons_of_different_types_of_whales%2C_National_Museum_of_Natural_History_-_Paris%2C_2025.jpg/1200px-Skeletons_of_different_types_of_whales%2C_National_Museum_of_Natural_History_-_Paris%2C_2025.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Homo_neanderthalensis_skull_-_National_Museum_of_Natural_History_%288587341141%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Cycadeoidea_dacotensis_-_National_Museum_of_Natural_History_-_IMG_1981.JPG/1200px-Cycadeoidea_dacotensis_-_National_Museum_of_Natural_History_-_IMG_1981.JPG",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/National%20Museum%20Paris"
+      },
+      {
+        "name": "French Revolution\nThe Eiffel Tower",
+        "category": "monument",
+        "description": "The Eiffel Tower (  EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889.",
+        "rating": 4.3,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888.jpg/1200px-Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Tour_Saint-Jacques_au_cr%C3%A9puscule.jpg/1200px-Tour_Saint-Jacques_au_cr%C3%A9puscule.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Models_of_the_Eiffel_Tower%2C_TEDxParis_2015_001.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888%2C_grayscale.jpg/1200px-Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888%2C_grayscale.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/French_Revolution_Centennial_medal%2C_Exposition_Universelle_of_1889._%2813549486993%29.jpg/1200px-French_Revolution_Centennial_medal%2C_Exposition_Universelle_of_1889._%2813549486993%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888-B%26W5ctr.jpg/1200px-Louis-Emile_Durandelle%2C_The_Eiffel_Tower_-_State_of_the_Construction%2C_1888-B%26W5ctr.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/French%20Revolution%0AThe%20Eiffel%20Tower%20Paris"
+      },
+      {
+        "name": "Grand Mosque",
+        "category": "religious",
+        "description": "The Grand Mosque of Paris (French: Grande Mosquée de Paris, pronounced [ɡʁɑ̃d mɔske də paʁi]; Arabic: مسجد باريس الكبير), also known as the Great Mosque of Paris or simply the Paris Mosque, located in the 5th arrondissement of Paris, is one of the...",
+        "rating": 4.7,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Grande_Mosqu%C3%A9e_de_Paris.JPG/1200px-Grande_Mosqu%C3%A9e_de_Paris.JPG",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Grand-Mosquee-de-Paris.jpg/1200px-Grand-Mosquee-de-Paris.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Tea_at_Aux_Portes_de_l%27Orient_in_Grand_Mosque_of_Paris.jpg/1200px-Tea_at_Aux_Portes_de_l%27Orient_in_Grand_Mosque_of_Paris.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Les_obs%C3%A8ques_de_Gali_Meziane_%C3%A0_la_Mosqu%C3%A9e_de_Paris_le_16_f%C3%A9vrier_1934.png",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Paris_Grand_Mosque%2C_3_June_2015.jpg/1200px-Paris_Grand_Mosque%2C_3_June_2015.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Mosqu%C3%A9e_Paris_fen%C3%AAtre.jpg/1200px-Mosqu%C3%A9e_Paris_fen%C3%AAtre.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Grand%20Mosque%20Paris"
+      },
+      {
+        "name": "Luxembourg Garden",
+        "category": "landmark",
+        "description": "The Jardin du Luxembourg (French pronunciation: [ʒaʁdɛ̃ dy lyksɑ̃buʁ]), known in English as the Luxembourg Garden, colloquially referred to as the Jardin du Sénat (Senate Garden), is located in the 6th arrondissement of Paris, France. The creation...",
+        "rating": 4.5,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Albert_Edelfelt_-_The_Luxembourg_Gardens%2C_Paris.jpg/1200px-Albert_Edelfelt_-_The_Luxembourg_Gardens%2C_Paris.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Luxembourg_Gardens%2C_the_Medici_fountains%2C_Paris%2C_France%2C_ca._1890-1900.jpg/1200px-Luxembourg_Gardens%2C_the_Medici_fountains%2C_Paris%2C_France%2C_ca._1890-1900.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Palais_du_Luxembourg%2C_South_View_140116_1.jpg/1200px-Palais_du_Luxembourg%2C_South_View_140116_1.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Palais_Luxembourg_Sunset_Edit.JPG/1200px-Palais_Luxembourg_Sunset_Edit.JPG",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Albert_Edelfelt_%281854%E2%80%931905%29-_The_Luxembourg_Gardens%2C_Paris_-_Pariisin_Luxembourgin_puistossa_%2829614654616%29.jpg/1200px-Albert_Edelfelt_%281854%E2%80%931905%29-_The_Luxembourg_Gardens%2C_Paris_-_Pariisin_Luxembourgin_puistossa_%2829614654616%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Jardin_d%27hiver_lux1.JPG/1200px-Jardin_d%27hiver_lux1.JPG",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Luxembourg%20Garden%20Paris"
+      },
+      {
+        "name": "Vincennes Castle",
+        "category": "landmark",
+        "description": "Vincennes (; French: [vɛ̃sɛn] ) is a commune in the Val-de-Marne department in the eastern suburbs of Paris, France. It is located 6.7 km (4.2 mi) from the centre of Paris.",
+        "rating": 4.7,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Marathon_de_Paris_2023-_We_run_next_the_castle_of_Vincennes-_km_14A-_TWPH.jpg/1200px-Marathon_de_Paris_2023-_We_run_next_the_castle_of_Vincennes-_km_14A-_TWPH.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Le_Fort_de_Vincennes_dans_le_bois_de_Vincennes%2C_1981.jpg/1200px-Le_Fort_de_Vincennes_dans_le_bois_de_Vincennes%2C_1981.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_04.jpg/1200px-Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_04.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_08.jpg/1200px-Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_08.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_07.jpg/1200px-Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_07.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_05.jpg/1200px-Vincennes_Ch%C3%A2teau_de_Vincennes_Au%C3%9Fenmauer_05.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Vincennes%20Castle%20Paris"
+      },
+      {
+        "name": "Sceaux Castle",
+        "category": "landmark",
+        "description": "Sceaux (French pronunciation: [so] ) is a commune in the Hauts-de-Seine department in the southern suburbs of Paris, France. It is located 9.7 km (6.0 mi) from the centre of Paris.",
+        "rating": 4.7,
+        "vicinity": "Paris",
+        "photos": [
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Castle_%40_Parc_de_Sceaux_%40_Ile-de-France_%40_Paris_%2828192828953%29.jpg/1200px-Castle_%40_Parc_de_Sceaux_%40_Ile-de-France_%40_Paris_%2828192828953%29.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_005.jpg/1200px-Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_005.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_003.jpg/1200px-Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_003.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_004.jpg/1200px-Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_004.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_002.jpg/1200px-Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_002.jpg",
+            "credit": "Wikimedia Commons"
+          },
+          {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_001.jpg/1200px-Ch%C3%A2teau_de_Sceaux%2C_6_August_2016_001.jpg",
+            "credit": "Wikimedia Commons"
+          }
+        ],
+        "googleMapsLink": "https://www.google.com/maps/search/Sceaux%20Castle%20Paris"
+      }
+    ],
+    "message": "Top places to visit in Paris, France",
+    "scrapedAt": "2025-12-22T07:36:34.144697"
+  },
+  "cached_at": "2025-12-22T07:36:34.144907",
+  "expires_at": "2025-12-23T07:36:34.144916",
+  "key": "CDG"
+}
