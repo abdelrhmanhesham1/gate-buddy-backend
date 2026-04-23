@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "GateBuddy API",
-    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**Main API URL:** http://localhost:3001/api/v1/\n**Recommendation Service:** http://localhost:8000/\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 791 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Live Scraper**: Python-based real-time destination tips.\n5. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n6. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
+    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://your-app.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 791 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -20,7 +20,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\",\n  \"passwordConfirm\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/users/signup",
@@ -41,12 +41,71 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/users/login",
               "host": ["{{base_url}}"],
               "path": ["users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Me (Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update Me",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/updateMe",
+              "host": ["{{base_url}}"],
+              "path": ["users", "updateMe"]
+            }
+          }
+        },
+        {
+          "name": "Delete Me (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/deleteMe",
+              "host": ["{{base_url}}"],
+              "path": ["users", "deleteMe"]
             }
           }
         },
@@ -112,7 +171,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"resetCode\": \"123456\"\n}"
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"code\": \"123456\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/users/verifyResetCode",
@@ -133,7 +192,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"password\": \"NewSecurePass123\",\n  \"passwordConfirm\": \"NewSecurePass123\"\n}"
+              "raw": "{\n  \"password\": \"NewSecurePass123!\",\n  \"passwordConfirm\": \"NewSecurePass123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/users/resetPassword",
@@ -202,23 +261,6 @@
               "raw": "{{base_url}}/users/facebook",
               "host": ["{{base_url}}"],
               "path": ["users", "facebook"]
-            }
-          }
-        },
-        {
-          "name": "Get Me (Profile)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/users/me",
-              "host": ["{{base_url}}"],
-              "path": ["users", "me"]
             }
           }
         }
@@ -412,6 +454,50 @@
       ]
     },
     {
+      "name": "📍 NAVIGATION",
+      "item": [
+        {
+          "name": "Find Path (Dijkstra)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromNodeId\": \"gate_A1\",\n  \"toNodeId\": \"gate_B2\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/navigation/find-path",
+              "host": ["{{base_url}}"],
+              "path": ["navigation", "find-path"]
+            }
+          }
+        },
+        {
+          "name": "Get Navigation Nodes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/navigation/nodes?level=1",
+              "host": ["{{base_url}}"],
+              "path": ["navigation", "nodes"],
+              "query": [
+                {
+                  "key": "level",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "🤖 AI & NOTIFICATIONS",
       "item": [
         {
@@ -480,11 +566,16 @@
               "path": ["notifications"]
             }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "🛡️ ADMIN",
+      "item": [
         {
-          "name": "Mark All As Read",
+          "name": "Get All Users",
           "request": {
-            "method": "PATCH",
+            "method": "GET",
             "header": [
               {
                 "key": "Authorization",
@@ -492,101 +583,43 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/notifications/read-all",
+              "raw": "{{base_url}}/users",
               "host": ["{{base_url}}"],
-              "path": ["notifications", "read-all"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "❓ FAQS & RATINGS",
-      "item": [
-        {
-          "name": "Get All FAQs",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/faqs",
-              "host": ["{{base_url}}"],
-              "path": ["faqs"]
+              "path": ["users"]
             }
           }
         },
         {
-          "name": "Get FAQ by ID",
+          "name": "Get User by ID",
           "request": {
             "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/faqs/{{faq_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["faqs", "{{faq_id}}"]
-            }
-          }
-        },
-        {
-          "name": "System Stats (Global)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/stats",
-              "host": ["{{base_url}}"],
-              "path": ["stats"]
-            }
-          }
-        },
-        {
-          "name": "Submit Rating",
-          "request": {
-            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"rating\": 5,\n  \"review\": \"The app is amazing and very helpful!\"\n}"
-            },
             "url": {
-              "raw": "{{base_url}}/stats/rate",
+              "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
-              "path": ["stats", "rate"]
+              "path": ["users", "{{user_id}}"]
             }
           }
-        }
-      ]
-    },
-    {
-      "name": "🐍 PYTHON SERVICE (SCRAPER)",
-      "item": [
+        },
         {
-          "name": "Get Recommendations (Direct)",
+          "name": "Delete User (Admin)",
           "request": {
-            "method": "POST",
+            "method": "DELETE",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"airportCode\": \"DXB\",\n  \"limit\": 6\n}"
-            },
             "url": {
-              "raw": "{{recommend_url}}/recommend",
-              "host": ["{{recommend_url}}"],
-              "path": ["recommend"]
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
             }
           }
         }
@@ -596,12 +629,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:3001/api/v1",
-      "type": "string"
-    },
-    {
-      "key": "recommend_url",
-      "value": "http://localhost:8000",
+      "value": "https://your-app.up.railway.app/api/v1",
       "type": "string"
     },
     {
@@ -615,8 +643,8 @@
       "type": "string"
     },
     {
-      "key": "faq_id",
-      "value": "FAQ_ID",
+      "key": "user_id",
+      "value": "USER_ID",
       "type": "string"
     }
   ]
