@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const serviceSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    category: { type: String, required: true, enum: ["COUNTERS", "FINANCIAL", "VIP_SERVICES", "ACCESSIBILITY", "SHOPS", "RESTAURANTS"] },
+    category: { type: String, required: true, enum: ["COUNTERS", "FINANCIAL", "VIP_SERVICES", "ACCESSIBILITY", "SHOPS", "RESTAURANTS", "GATES"] },
     subCategory: String,
     description: String,
     status: { type: String, default: "Open", enum: ["Open", "Closed", "Busy", "Available"] },

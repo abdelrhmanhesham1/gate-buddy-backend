@@ -12,8 +12,8 @@ const flightSchema = new mongoose.Schema(
       to: String,
       toCode: { type: String, uppercase: true, minlength: 3, maxlength: 3 },
     },
-    departure: { terminal: String, gate: String, nodeId: String, scheduledTime: { type: Date, required: true }, actualTime: Date },
-    arrival: { terminal: String, gate: String, nodeId: String, scheduledTime: { type: Date, required: true }, actualTime: Date },
+    departure: { terminal: String, gate: String, nodeId: String, scheduledTime: { type: Date, required: true }, estimatedTime: Date, actualTime: Date },
+    arrival: { terminal: String, gate: String, nodeId: String, scheduledTime: { type: Date, required: true }, estimatedTime: Date, actualTime: Date },
     status: { 
       type: String, 
       default: "ON_TIME", 
@@ -27,8 +27,15 @@ const flightSchema = new mongoose.Schema(
 flightSchema.virtual("updates", { ref: "FlightUpdate", foreignField: "flight", localField: "_id" });
 
 flightSchema.pre("save", function (next) {
+  // Use actual time if available, otherwise fallback to scheduled time + 48 hours
   const completionTime = this.arrival?.actualTime || this.departure?.actualTime;
-  if (completionTime) this.expireAt = new Date(completionTime.getTime() + 30 * 60 * 1000);
+  
+  if (completionTime) {
+    this.expireAt = new Date(completionTime.getTime() + 30 * 60 * 1000); // 30 mins after event
+  } else {
+    // Safety fallback: 48 hours after scheduled departure to prevent DB bloat
+    this.expireAt = new Date(this.departure.scheduledTime.getTime() + 48 * 60 * 60 * 1000);
+  }
   next();
 });
 

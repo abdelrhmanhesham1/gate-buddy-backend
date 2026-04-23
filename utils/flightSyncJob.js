@@ -6,7 +6,8 @@ const NavigationNode = require("../models/NavigationNode");
 
 const API_KEY = process.env.AIRLABS_API_KEY;
 const BASE_URL = "https://airlabs.co/api/v9";
-const AIRPORT_IATA = "AMS"; // Amsterdam Schiphol Airport
+const AIRPORT_IATA = process.env.AIRPORT_IATA || "AMS";
+const DOMESTIC_AIRPORTS = (process.env.DOMESTIC_AIRPORTS || "").split(",").map(a => a.trim()).filter(Boolean);
 
 // ─── In-memory airline lookup (populated once on startup) ───
 let airlineMap = {}; // { "MS": { name: "EgyptAir", logo: "https://..." }, ... }
@@ -44,18 +45,23 @@ const loadAirlines = async () => {
 
 /**
  * Map AirLabs flight object → our Flight model status enum.
- * AirLabs never returns 'delayed' — it keeps status='scheduled' but
- * sets dep_delayed (minutes). We check that field explicitly.
+ * Focuses on delays specifically at our airport (AMS).
  * @param {object} f — raw AirLabs flight object
+ * @param {"departure"|"arrival"} direction
  */
-const mapStatus = (f) => {
+const mapStatus = (f, direction) => {
   const s = f.status || "";
   if (s === "cancelled") return "CANCELLED";
   if (s === "landed")    return "LANDED";
   if (s === "active")    return "IN_FLIGHT";
   if (s === "incident" || s === "diverted") return "DELAYED";
-  // A scheduled flight with any departure or arrival delay → DELAYED
-  if ((f.dep_delayed && f.dep_delayed > 0) || (f.arr_delayed && f.arr_delayed > 0)) return "DELAYED";
+
+  // Focus only on the delay at our airport (AMS)
+  const isDelayed = direction === "departure" 
+    ? (f.dep_delayed && f.dep_delayed > 0) 
+    : (f.arr_delayed && f.arr_delayed > 0);
+
+  if (isDelayed) return "DELAYED";
   return "ON_TIME";
 };
 
@@ -114,17 +120,20 @@ const syncFlights = async (direction) => {
         logo: null,
       };
 
-      // Determine domestic vs international (Netherlands = domestic)
-      const isDepHome = f.dep_iata === "AMS" || ["RTM", "EIN", "MST", "GRQ"].includes(f.dep_iata);
-      const isArrHome = f.arr_iata === "AMS" || ["RTM", "EIN", "MST", "GRQ"].includes(f.arr_iata);
+      // Determine domestic vs international
+      // A flight is domestic if both departure and arrival are within the "home" set
+      const isDepHome = f.dep_iata === AIRPORT_IATA || DOMESTIC_AIRPORTS.includes(f.dep_iata);
+      const isArrHome = f.arr_iata === AIRPORT_IATA || DOMESTIC_AIRPORTS.includes(f.arr_iata);
       const flightType = (isDepHome && isArrHome) ? "domestic" : "international";
 
       // Build the flight document fields
       const depScheduled = new Date(f.dep_time);
       const arrScheduled = new Date(f.arr_time);
+      const depEstimated = f.dep_estimated ? new Date(f.dep_estimated) : undefined;
+      const arrEstimated = f.arr_estimated ? new Date(f.arr_estimated) : undefined;
       const depActual = f.dep_actual ? new Date(f.dep_actual) : undefined;
       const arrActual = f.arr_actual ? new Date(f.arr_actual) : undefined;
-      const newStatus = mapStatus(f);
+      const newStatus = mapStatus(f, direction);
 
       // Register this flight as seen in current batch
       seenFlightKeys.add(`${f.flight_iata}|${depScheduled.toISOString()}`);
@@ -174,10 +183,22 @@ const syncFlights = async (direction) => {
           existing.departure.actualTime = depActual;
         }
 
+        // ── Estimated departure time ────────────────────────────────────
+        if (depEstimated && (!existing.departure.estimatedTime || existing.departure.estimatedTime.getTime() !== depEstimated.getTime())) {
+          changes.push({ updateType: "TIME", field: "departure.estimatedTime", before: existing.departure.estimatedTime?.toISOString() || "N/A", after: depEstimated.toISOString() });
+          existing.departure.estimatedTime = depEstimated;
+        }
+
         // ── Actual arrival time ────────────────────────────────────────
         if (arrActual && (!existing.arrival.actualTime || existing.arrival.actualTime.getTime() !== arrActual.getTime())) {
           changes.push({ updateType: "TIME", field: "arrival.actualTime", before: existing.arrival.actualTime?.toISOString() || "N/A", after: arrActual.toISOString() });
           existing.arrival.actualTime = arrActual;
+        }
+
+        // ── Estimated arrival time ──────────────────────────────────────
+        if (arrEstimated && (!existing.arrival.estimatedTime || existing.arrival.estimatedTime.getTime() !== arrEstimated.getTime())) {
+          changes.push({ updateType: "TIME", field: "arrival.estimatedTime", before: existing.arrival.estimatedTime?.toISOString() || "N/A", after: arrEstimated.toISOString() });
+          existing.arrival.estimatedTime = arrEstimated;
         }
 
         // ── Terminal info (fill if newly available) ────────────────────
@@ -217,6 +238,7 @@ const syncFlights = async (direction) => {
             gate: f.dep_gate || null,
             nodeId: depNodeId,
             scheduledTime: depScheduled,
+            estimatedTime: depEstimated,
             actualTime: depActual,
           },
           arrival: {
@@ -224,9 +246,10 @@ const syncFlights = async (direction) => {
             gate: f.arr_gate || null,
             nodeId: arrNodeId,
             scheduledTime: arrScheduled,
+            estimatedTime: arrEstimated,
             actualTime: arrActual,
           },
-          status: mapStatus(f),
+          status: mapStatus(f, direction),
         });
         synced++;
       }
