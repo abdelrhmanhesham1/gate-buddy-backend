@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, select: false, minlength: 8, required: [function () { return !this.auth_providers || this.auth_providers.length === 0; }, "Password is required"] },
     passwordConfirm: { type: String, required: [function () { return !this.auth_providers || this.auth_providers.length === 0; }, "Please confirm password"], validate: { validator: function (el) { return el === this.password; }, message: "Passwords do not match!" } },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    photo: { type: String, default: "default.jpg" },
     active: { type: Boolean, default: true, select: false },
     auth_providers: [{ provider: { type: String, enum: ["google", "facebook", "github"], required: true }, provider_id: { type: String, required: true }, email_verified: Boolean, linked_at: { type: Date, default: Date.now } }],
     passwordChangedAt: Date,

@@ -45,6 +45,7 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: "10kb" }));
+app.use(express.static("public"));
 app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(xss());
