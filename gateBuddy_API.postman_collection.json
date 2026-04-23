@@ -22,6 +22,7 @@
               "mode": "raw",
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
             },
+            "description": "Registers a new user in the system. Requires name, email, password, and password confirmation. Returns a JWT token upon successful registration.",
             "event": [
               {
                 "listen": "test",
@@ -57,6 +58,7 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
             },
+            "description": "Authenticates a user with email and password. Returns a JWT token and sets authentication cookies. Includes rate limiting for failed attempts.",
             "event": [
               {
                 "listen": "test",
@@ -92,7 +94,8 @@
               "raw": "{{base_url}}/users/me",
               "host": ["{{base_url}}"],
               "path": ["users", "me"]
-            }
+            },
+            "description": "Retrieves the current authenticated user's profile information, including preferences and active status."
           }
         },
         {
@@ -111,8 +114,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\"\n}"
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"preferences\": {\n    \"darkMode\": true,\n    \"language\": \"en\"\n  }\n}"
             },
+            "description": "Updates the current user's personal details like name, photo, or application preferences (darkMode, language).",
             "url": {
               "raw": "{{base_url}}/users/updateMe",
               "host": ["{{base_url}}"],
@@ -134,7 +138,8 @@
               "raw": "{{base_url}}/users/deleteMe",
               "host": ["{{base_url}}"],
               "path": ["users", "deleteMe"]
-            }
+            },
+            "description": "Performs a soft delete of the user's account by setting 'active' to false. Data remains in the database but the user can no longer login."
           }
         },
         {
@@ -151,7 +156,8 @@
               "raw": "{{base_url}}/users/logout",
               "host": ["{{base_url}}"],
               "path": ["users", "logout"]
-            }
+            },
+            "description": "Logs out the user by clearing the JWT and Refresh Token cookies on the server side."
           }
         },
         {
@@ -163,7 +169,8 @@
               "raw": "{{base_url}}/users/refresh",
               "host": ["{{base_url}}"],
               "path": ["users", "refresh"]
-            }
+            },
+            "description": "Uses the refresh token (sent via cookie) to generate a new access token. Essential for maintaining long-lived sessions without re-authenticating."
           }
         },
         {
@@ -180,6 +187,7 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"john.doe@example.com\"\n}"
             },
+            "description": "Sends a 6-digit reset code to the user's email address if they've forgotten their password. The code expires in 10 minutes.",
             "url": {
               "raw": "{{base_url}}/users/forgotPassword",
               "host": ["{{base_url}}"],
@@ -201,6 +209,7 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"code\": \"123456\"\n}"
             },
+            "description": "Verifies the 6-digit code sent via email. If successful, it returns a temporary reset token to be used in the Reset Password step.",
             "url": {
               "raw": "{{base_url}}/users/verifyResetCode",
               "host": ["{{base_url}}"],
@@ -222,6 +231,7 @@
               "mode": "raw",
               "raw": "{\n  \"password\": \"NewSecurePass123!\",\n  \"passwordConfirm\": \"NewSecurePass123!\"\n}"
             },
+            "description": "Sets a new password for the user. Requires the temporary reset token provided after verifying the reset code.",
             "url": {
               "raw": "{{base_url}}/users/resetPassword",
               "host": ["{{base_url}}"],
@@ -243,6 +253,7 @@
               "mode": "raw",
               "raw": "{\n  \"idToken\": \"YOUR_GOOGLE_ID_TOKEN\"\n}"
             },
+            "description": "Authenticates or registers a user using a Google ID token. Integrates with the application's unified OAuth 2.0 system.",
             "url": {
               "raw": "{{base_url}}/users/google",
               "host": ["{{base_url}}"],
@@ -264,6 +275,7 @@
               "mode": "raw",
               "raw": "{\n  \"code\": \"GITHUB_CODE_HERE\"\n}"
             },
+            "description": "Authenticates or registers a user using a GitHub authorization code.",
             "url": {
               "raw": "{{base_url}}/users/github",
               "host": ["{{base_url}}"],
@@ -285,6 +297,7 @@
               "mode": "raw",
               "raw": "{\n  \"accessToken\": \"FB_ACCESS_TOKEN_HERE\"\n}"
             },
+            "description": "Authenticates or registers a user using a Facebook access token.",
             "url": {
               "raw": "{{base_url}}/users/facebook",
               "host": ["{{base_url}}"],
@@ -303,10 +316,23 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/flights/updated",
+              "raw": "{{base_url}}/flights/updated?limit=30&sort=-updatedAt",
               "host": ["{{base_url}}"],
-              "path": ["flights", "updated"]
-            }
+              "path": ["flights", "updated"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "30",
+                  "description": "Number of flight records to return"
+                },
+                {
+                  "key": "sort",
+                  "value": "-updatedAt",
+                  "description": "Sort order (default: -updatedAt)"
+                }
+              ]
+            },
+            "description": "Retrieves a list of flights that have recently had status changes (e.g., delays, gate changes). Supports pagination and sorting."
           }
         },
         {
@@ -327,6 +353,7 @@
               "mode": "raw",
               "raw": "{\n  \"barcodeData\": \"M1TRAVELER/JOHN       E1234567LXRCAIMS 101  064                                               \"\n}"
             },
+            "description": "Parses IATA BCBP (Resolution 792) format barcode data from a boarding pass. Returns flight details, destination weather, and local recommendations.",
             "url": {
               "raw": "{{base_url}}/flights/scan",
               "host": ["{{base_url}}"],
@@ -348,7 +375,8 @@
               "raw": "{{base_url}}/flights/my-flight",
               "host": ["{{base_url}}"],
               "path": ["flights", "my-flight"]
-            }
+            },
+            "description": "Returns the details of the flight currently being tracked by the authenticated user, including real-time status and destination info."
           }
         },
         {
@@ -369,6 +397,7 @@
               "mode": "raw",
               "raw": "{\n  \"reminderMinutes\": 30\n}"
             },
+            "description": "Enables push notification tracking for a specific flight. Users can optionally set how many minutes before departure they want to be reminded.",
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}/track",
               "host": ["{{base_url}}"],
@@ -390,7 +419,8 @@
               "raw": "{{base_url}}/flights/{{flight_id}}/cancel-track",
               "host": ["{{base_url}}"],
               "path": ["flights", "{{flight_id}}", "cancel-track"]
-            }
+            },
+            "description": "Disables tracking and push notifications for a previously tracked flight."
           }
         }
       ]
@@ -412,7 +442,8 @@
               "raw": "{{base_url}}/home",
               "host": ["{{base_url}}"],
               "path": ["home"]
-            }
+            },
+            "description": "Fetches a consolidated payload for the app's home screen, including recent flight updates, featured services, and overall system metrics. If authenticated, it also returns the user's tracked flight."
           }
         },
         {
@@ -427,10 +458,12 @@
               "query": [
                 {
                   "key": "q",
-                  "value": "Shop"
+                  "value": "Shop",
+                  "description": "The search keyword (e.g., 'Coffee', 'Duty Free', 'Lounge')"
                 }
               ]
-            }
+            },
+            "description": "Performs a text-based search across all airport services (shops, restaurants, lounges, etc.)."
           }
         },
         {
@@ -439,20 +472,28 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/services/nearby?lng=31.4&lat=30.1",
+              "raw": "{{base_url}}/services/nearby?lng=31.4&lat=30.1&distance=500",
               "host": ["{{base_url}}"],
               "path": ["services", "nearby"],
               "query": [
                 {
                   "key": "lng",
-                  "value": "31.4"
+                  "value": "31.4",
+                  "description": "Longitude of current location"
                 },
                 {
                   "key": "lat",
-                  "value": "30.1"
+                  "value": "30.1",
+                  "description": "Latitude of current location"
+                },
+                {
+                  "key": "distance",
+                  "value": "500",
+                  "description": "Maximum distance in meters (default: 500)"
                 }
               ]
-            }
+            },
+            "description": "Finds airport services within a specified distance of a given geographic coordinate. Ideal for 'What's near me?' features."
           }
         },
         {
@@ -464,7 +505,8 @@
               "raw": "{{base_url}}/services/counters/stats",
               "host": ["{{base_url}}"],
               "path": ["services", "counters", "stats"]
-            }
+            },
+            "description": "Provides a quick summary of airport counters, including total number of counters and how many are currently open."
           }
         },
         {
@@ -473,10 +515,28 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/services",
+              "raw": "{{base_url}}/services?category=SHOPS&limit=10&page=1",
               "host": ["{{base_url}}"],
-              "path": ["services"]
-            }
+              "path": ["services"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "SHOPS",
+                  "description": "Filter by category (e.g., SHOPS, RESTAURANTS, VIP_SERVICES)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Results per page"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all airport services. Supports filtering by category and sorting."
           }
         }
       ]
@@ -498,6 +558,7 @@
               "mode": "raw",
               "raw": "{\n  \"fromNodeId\": \"gate_A1\",\n  \"toNodeId\": \"gate_B2\"\n}"
             },
+            "description": "Calculates the shortest indoor path between two navigation nodes (e.g., gates, elevators, services) using Dijkstra's algorithm. Returns an array of coordinates and floor levels.",
             "url": {
               "raw": "{{base_url}}/navigation/find-path",
               "host": ["{{base_url}}"],
@@ -517,10 +578,12 @@
               "query": [
                 {
                   "key": "level",
-                  "value": "1"
+                  "value": "1",
+                  "description": "Filter nodes by floor level (e.g., 0, 1, 2)"
                 }
               ]
-            }
+            },
+            "description": "Retrieves all navigation nodes (waypoints) within the airport, optionally filtered by floor level. These nodes are used as endpoints for pathfinding."
           }
         }
       ]
@@ -544,8 +607,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"message\": \"What is the status of flight MS731?\"\n}"
+              "raw": "{\n  \"message\": \"What is the status of flight MS731?\",\n  \"context\": {\n    \"destination\": \"Cairo\",\n    \"arrivalTime\": \"2026-04-23T22:00:00Z\"\n  }\n}"
             },
+            "description": "Interacts with the Google Gemini-powered AI concierge. It can answer questions about flights, airport services, and general travel advice, using the provided context for personalized responses.",
             "url": {
               "raw": "{{base_url}}/chat/query",
               "host": ["{{base_url}}"],
@@ -569,8 +633,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\",\n  \"deviceType\": \"ios\"\n}"
+              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\",\n  \"deviceType\": \"ios\",\n  \"deviceName\": \"iPhone 13\",\n  \"osVersion\": \"16.2\"\n}"
             },
+            "description": "Registers a device's Firebase Cloud Messaging (FCM) token to enable push notifications for flight updates and alerts.",
             "url": {
               "raw": "{{base_url}}/devices/register",
               "host": ["{{base_url}}"],
@@ -589,10 +654,23 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/notifications",
+              "raw": "{{base_url}}/notifications?limit=20&page=1",
               "host": ["{{base_url}}"],
-              "path": ["notifications"]
-            }
+              "path": ["notifications"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of notifications per page"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            },
+            "description": "Retrieves the history of push notifications sent to the user, including flight updates, gate changes, and system alerts."
           }
         }
       ]
@@ -611,10 +689,28 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/users",
+              "raw": "{{base_url}}/users?page=1&limit=20&role=user",
               "host": ["{{base_url}}"],
-              "path": ["users"]
-            }
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page"
+                },
+                {
+                  "key": "role",
+                  "value": "user",
+                  "description": "Filter by role (e.g., user, admin)"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all users in the system. Restricted to administrators."
           }
         },
         {
@@ -631,7 +727,8 @@
               "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
               "path": ["users", "{{user_id}}"]
-            }
+            },
+            "description": "Retrieves detailed information for a specific user by their ID. Restricted to administrators."
           }
         },
         {
@@ -648,7 +745,8 @@
               "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
               "path": ["users", "{{user_id}}"]
-            }
+            },
+            "description": "Permanently deletes a user from the system. Restricted to administrators."
           }
         }
       ]
