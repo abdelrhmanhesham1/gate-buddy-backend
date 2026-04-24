@@ -20,6 +20,21 @@
       "item": [
         {
           "name": "Signup",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -33,21 +48,6 @@
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
             },
             "description": "Registers a new user in the GateBuddy ecosystem.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `name` | string | Yes | Full name (min 3 chars) |\n| `email` | string | Yes | Unique valid email address |\n| `password` | string | Yes | Min 8 chars, with uppercase, number, and special char |\n| `passwordConfirm` | string | Yes | Must match `password` |\n\n### Response Codes\n*   **201 Created**: Successful registration. Returns JWT token.\n*   **400 Bad Request**: Validation error (e.g., passwords don't match).\n*   **409 Conflict**: Email already registered.",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.token) {",
-                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ],
             "url": {
               "raw": "{{base_url}}/users/signup",
               "host": ["{{base_url}}"],
@@ -57,6 +57,21 @@
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -70,21 +85,6 @@
               "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
             },
             "description": "Authenticates a user and starts a session.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | Registered user email |\n| `password` | string | Yes | User password |\n\n### Response Codes\n*   **200 OK**: Login successful. Returns JWT token and sets `jwt` cookie.\n*   **401 Unauthorized**: Incorrect email or password.\n*   **423 Locked**: Account locked after 5 failed attempts.",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.token) {",
-                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ],
             "url": {
               "raw": "{{base_url}}/users/login",
               "host": ["{{base_url}}"],
@@ -155,6 +155,21 @@
         },
         {
           "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -163,22 +178,7 @@
               "host": ["{{base_url}}"],
               "path": ["users", "refresh"]
             },
-            "description": "Obtains a new access token using a valid refresh token cookie.\n\n### Authentication\n*   **Required**: `refreshToken` HttpOnly cookie\n\n### Response Codes\n*   **200 OK**: New access token returned.\n*   **401 Unauthorized**: Refresh token missing or expired.",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.token) {",
-                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ]
+            "description": "Obtains a new access token using a valid refresh token cookie.\n\n### Authentication\n*   **Required**: `refreshToken` HttpOnly cookie\n\n### Response Codes\n*   **200 OK**: New access token returned.\n*   **401 Unauthorized**: Refresh token missing or expired."
           }
         },
         {
@@ -227,6 +227,21 @@
         },
         {
           "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
@@ -244,22 +259,7 @@
               "raw": "{{base_url}}/users/resetPassword",
               "host": ["{{base_url}}"],
               "path": ["users", "resetPassword"]
-            },
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.token) {",
-                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ]
+            }
           }
         },
         {
@@ -335,6 +335,20 @@
       "item": [
         {
           "name": "Get Updated Flights",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.flights && jsonData.data.flights.length > 0) {",
+                  "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flights[0]._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -355,21 +369,7 @@
                 }
               ]
             },
-            "description": "Fetches flights with recent status changes.\n\n### Query Parameters\n| Param | Default | Description |\n| :--- | :--- | :--- |\n| `limit` | 30 | Number of results per page |\n| `sort` | `-updatedAt` | Mongoose sort string |\n\n### Response Codes\n*   **200 OK**: List of flights returned.\n*   **400 Bad Request**: Invalid sort or limit parameters.",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.data && jsonData.data.flights && jsonData.data.flights.length > 0) {",
-                    "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flights[0]._id);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ]
+            "description": "Fetches flights with recent status changes.\n\n### Query Parameters\n| Param | Default | Description |\n| :--- | :--- | :--- |\n| `limit` | 30 | Number of results per page |\n| `sort` | `-updatedAt` | Mongoose sort string |\n\n### Response Codes\n*   **200 OK**: List of flights returned.\n*   **400 Bad Request**: Invalid sort or limit parameters."
           }
         },
         {
@@ -396,6 +396,20 @@
         },
         {
           "name": "Get My Active Tracked Flight",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.flight) {",
+                  "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flight._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -404,21 +418,7 @@
               "host": ["{{base_url}}"],
               "path": ["flights", "my-flight"]
             },
-            "description": "Retrieves the user's currently tracked flight and destination info.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Flight data and destination recommendations returned.\n*   **404 Not Found**: No active flight tracking for this user.",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var jsonData = pm.response.json();",
-                    "if (jsonData.data && jsonData.data.flight) {",
-                    "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flight._id);",
-                    "}"
-                  ],
-                  "type": "text/javascript"
-                }
-              }
-            ]
+            "description": "Retrieves the user's currently tracked flight and destination info.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Flight data and destination recommendations returned.\n*   **404 Not Found**: No active flight tracking for this user."
           }
         },
         {
