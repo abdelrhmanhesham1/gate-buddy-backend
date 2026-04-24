@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "GateBuddy API",
-    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://your-app.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 791 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
+    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://your-app.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 792 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

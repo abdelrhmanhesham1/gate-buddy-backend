@@ -12,7 +12,7 @@
 ## 🌟 Core Ecosystem Features
 
 ### 🎫 Smart Boarding Pass Intelligence
-*   **IATA 791 (BCBP) Parser**: Instantly extracts seat, gate, flight, and destination data from barcode strings.
+*   **IATA 792 (BCBP) Parser**: Instantly extracts seat, gate, flight, and destination data from barcode strings.
 *   **Automated Tracking**: Scanned flights are automatically tracked for live status changes.
 *   **Weather & Context**: Real-time arrival weather and destination recommendations delivered upon scanning.
 
