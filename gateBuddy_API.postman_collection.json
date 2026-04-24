@@ -1,8 +1,18 @@
 {
   "info": {
     "name": "GateBuddy API",
-    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://your-app.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** Use `Bearer {{token}}` in the Authorization header for protected endpoints.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 792 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
+    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://gate-buddy-backend-production.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** This collection uses a Bearer Token. The token is automatically updated in the `token` collection variable after a successful Login or Signup.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 792 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
   },
   "item": [
     {
@@ -31,6 +41,7 @@
                     "var jsonData = pm.response.json();",
                     "if (jsonData.token) {",
                     "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
                     "}"
                   ],
                   "type": "text/javascript"
@@ -67,6 +78,7 @@
                     "var jsonData = pm.response.json();",
                     "if (jsonData.token) {",
                     "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
                     "}"
                   ],
                   "type": "text/javascript"
@@ -84,12 +96,7 @@
           "name": "Get Me (Profile)",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users/me",
               "host": ["{{base_url}}"],
@@ -103,10 +110,6 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -128,12 +131,7 @@
           "name": "Delete Me (Soft Delete)",
           "request": {
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users/deleteMe",
               "host": ["{{base_url}}"],
@@ -146,12 +144,7 @@
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users/logout",
               "host": ["{{base_url}}"],
@@ -179,6 +172,7 @@
                     "var jsonData = pm.response.json();",
                     "if (jsonData.token) {",
                     "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
                     "}"
                   ],
                   "type": "text/javascript"
@@ -250,7 +244,22 @@
               "raw": "{{base_url}}/users/resetPassword",
               "host": ["{{base_url}}"],
               "path": ["users", "resetPassword"]
-            }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData.token) {",
+                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                    "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ]
           }
         },
         {
@@ -369,10 +378,6 @@
             "method": "POST",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
               }
@@ -393,12 +398,7 @@
           "name": "Get My Active Tracked Flight",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/flights/my-flight",
               "host": ["{{base_url}}"],
@@ -427,10 +427,6 @@
             "method": "POST",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
               }
@@ -451,12 +447,7 @@
           "name": "Cancel Flight Tracking",
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}/cancel-track",
               "host": ["{{base_url}}"],
@@ -474,12 +465,7 @@
           "name": "Home Dashboard Payload",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/home",
               "host": ["{{base_url}}"],
@@ -639,10 +625,6 @@
             "method": "POST",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
               }
@@ -665,10 +647,6 @@
             "method": "POST",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
               }
@@ -689,12 +667,7 @@
           "name": "All My Notifications",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/notifications?limit=20&page=1",
               "host": ["{{base_url}}"],
@@ -724,12 +697,7 @@
           "name": "Get All Users",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users?page=1&limit=20&role=user",
               "host": ["{{base_url}}"],
@@ -759,12 +727,7 @@
           "name": "Get User by ID",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
@@ -777,12 +740,7 @@
           "name": "Delete User (Admin)",
           "request": {
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
