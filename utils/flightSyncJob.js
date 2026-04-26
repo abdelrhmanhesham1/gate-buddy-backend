@@ -86,14 +86,31 @@ const syncFlights = async (direction) => {
   try {
     console.log(`🔄 Syncing ${label} for ${AIRPORT_IATA}...`);
 
-    const { data } = await axios.get(`${BASE_URL}/schedules`, {
-      params: {
-        api_key: API_KEY,
-        [paramKey]: AIRPORT_IATA,
-      },
-    });
+    let allFlights = [];
+    let offset = 0;
+    
+    while (true) {
+      const { data } = await axios.get(`${BASE_URL}/schedules`, {
+        params: {
+          api_key: API_KEY,
+          [paramKey]: AIRPORT_IATA,
+          offset
+        },
+      });
 
-    if (!data?.response || !Array.isArray(data.response)) {
+      const flights = data?.response || [];
+      allFlights = allFlights.concat(flights);
+      
+      // If we received fewer flights than the default limit (usually 100 or 250), we reached the end
+      if (flights.length < 50) break;
+      
+      offset += flights.length;
+      
+      // Safety break to prevent infinite loops and API quota exhaustion (max ~3000 flights)
+      if (offset >= 3000) break;
+    }
+
+    if (allFlights.length === 0) {
       console.warn(`⚠️  No ${label} data returned from AirLabs.`);
       return { synced: 0, updated: 0 };
     }
@@ -106,7 +123,7 @@ const syncFlights = async (direction) => {
     // Track every flight processed in this batch for stale-detection
     const seenFlightKeys = new Set(); // "flightNumber|depScheduledISO"
 
-    for (const f of data.response) {
+    for (const f of allFlights) {
       // Skip flights without essential data
       if (!f.flight_iata || !f.dep_time || !f.arr_time) continue;
 
@@ -219,6 +236,12 @@ const syncFlights = async (direction) => {
         }
       } else {
         // ─── INSERT PATH: new flight ───
+        
+        // Prevent polluting the database with flights that have already finished
+        if (newStatus === "LANDED" || newStatus === "CANCELLED") {
+          continue;
+        }
+
         const depNodeId = await findGateNodeId(f.dep_gate);
         const arrNodeId = await findGateNodeId(f.arr_gate);
 
@@ -265,7 +288,7 @@ const syncFlights = async (direction) => {
     const cancellationWindow = new Date(now.getTime() + 4 * 60 * 60 * 1000); // 4 hour look-ahead
 
     // Safety: If the API returned almost no data, don't trust it for cancellations
-    if (data.response.length > 5) {
+    if (allFlights.length > 5) {
       const staleFlights = await Flight.find({
         direction,
         status: { $nin: ["CANCELLED", "LANDED", "IN_FLIGHT"] },
@@ -287,11 +310,11 @@ const syncFlights = async (direction) => {
         }
       }
     } else {
-      console.warn(`⚠️  API response too small (${data.response.length}). Skipping stale cancellation to protect future data.`);
+      console.warn(`⚠️  API response too small (${allFlights.length}). Skipping stale cancellation to protect future data.`);
     }
     // ─────────────────────────────────────────────────────────────────────
 
-    console.log(`✅ ${label}: ${synced} new, ${updated} updated, ${cancelled} auto-cancelled (${data.response.length} total from API)`);
+    console.log(`✅ ${label}: ${synced} new, ${updated} updated, ${cancelled} auto-cancelled (${allFlights.length} total from API)`);
     return { synced, updated, cancelled };
   } catch (err) {
     console.error(`❌ Failed to sync ${label}:`, err.message);
