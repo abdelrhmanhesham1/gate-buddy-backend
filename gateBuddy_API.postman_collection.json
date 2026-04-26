@@ -334,6 +334,31 @@
       "name": "✈️ FLIGHTS & TRAVEL",
       "item": [
         {
+          "name": "Get All Flights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/flights?page=1&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["flights"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Number of results per page"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all flights in the system. Now accessible to all registered users.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
+          }
+        },
+        {
           "name": "Get Updated Flights",
           "event": [
             {

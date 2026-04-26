@@ -10,6 +10,7 @@ router.get("/updated", flightController.getUpdatedFlights);
 // --- 2. PROTECTED ---
 router.use(authController.protect);
 
+router.get("/", flightController.getAllFlights);
 router.get("/my-flight", flightController.getTrackedFlight);
 router.get("/:id", flightController.getFlight); // Moved below specific routes
 
@@ -21,7 +22,6 @@ router.patch("/:id/cancel-track", flightController.cancelTrack);
 router.use(authController.restrictTo("admin"));
 
 router.route("/")
-  .get(flightController.getAllFlights)
   .post(flightController.createFlight);
 
 router.route("/:id")

@@ -257,28 +257,37 @@ const syncFlights = async (direction) => {
 
     // ─── STALE FLIGHT CANCELLATION ───────────────────────────────────────
     // AirLabs silently drops cancelled flights from the schedules response.
-    // Any upcoming flight in our DB that wasn't in this batch is now stale
-    // → auto-cancel it and log the change.
+    // However, the API only returns a limited window of time (usually a few hours).
+    // To avoid "auto-cancelling" perfectly valid future flights (e.g. tomorrow),
+    // we only cancel flights scheduled within the NEXT 4 HOURS that are missing.
+    
     const now = new Date();
-    const staleFlights = await Flight.find({
-      direction,
-      status: { $nin: ["CANCELLED", "LANDED", "IN_FLIGHT"] },
-      "departure.scheduledTime": { $gte: now, $lte: sevenDaysFromNow },
-    }).lean();
+    const cancellationWindow = new Date(now.getTime() + 4 * 60 * 60 * 1000); // 4 hour look-ahead
 
-    for (const stale of staleFlights) {
-      const key = `${stale.flightNumber}|${stale.departure.scheduledTime.toISOString()}`;
-      if (!seenFlightKeys.has(key)) {
-        await Flight.findByIdAndUpdate(stale._id, { status: "CANCELLED" });
-        await FlightUpdate.create({
-          flight: stale._id,
-          updateType: "STATUS",
-          field: "status",
-          before: stale.status,
-          after: "CANCELLED",
-        });
-        cancelled++;
+    // Safety: If the API returned almost no data, don't trust it for cancellations
+    if (data.response.length > 5) {
+      const staleFlights = await Flight.find({
+        direction,
+        status: { $nin: ["CANCELLED", "LANDED", "IN_FLIGHT"] },
+        "departure.scheduledTime": { $gte: now, $lte: cancellationWindow },
+      }).lean();
+
+      for (const stale of staleFlights) {
+        const key = `${stale.flightNumber}|${stale.departure.scheduledTime.toISOString()}`;
+        if (!seenFlightKeys.has(key)) {
+          await Flight.findByIdAndUpdate(stale._id, { status: "CANCELLED" });
+          await FlightUpdate.create({
+            flight: stale._id,
+            updateType: "STATUS",
+            field: "status",
+            before: stale.status,
+            after: "CANCELLED",
+          });
+          cancelled++;
+        }
       }
+    } else {
+      console.warn(`⚠️  API response too small (${data.response.length}). Skipping stale cancellation to protect future data.`);
     }
     // ─────────────────────────────────────────────────────────────────────
 
