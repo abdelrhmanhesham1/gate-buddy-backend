@@ -50,8 +50,13 @@
             "description": "Registers a new user in the GateBuddy ecosystem.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `name` | string | Yes | Full name (min 3 chars) |\n| `email` | string | Yes | Unique valid email address |\n| `password` | string | Yes | Min 8 chars, with uppercase, number, and special char |\n| `passwordConfirm` | string | Yes | Must match `password` |\n\n### Response Codes\n*   **201 Created**: Successful registration. Returns JWT token.\n*   **400 Bad Request**: Validation error (e.g., passwords don't match).\n*   **409 Conflict**: Email already registered.",
             "url": {
               "raw": "{{base_url}}/users/signup",
-              "host": ["{{base_url}}"],
-              "path": ["users", "signup"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "signup"
+              ]
             }
           }
         },
@@ -87,8 +92,13 @@
             "description": "Authenticates a user and starts a session.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | Registered user email |\n| `password` | string | Yes | User password |\n\n### Response Codes\n*   **200 OK**: Login successful. Returns JWT token and sets `jwt` cookie.\n*   **401 Unauthorized**: Incorrect email or password.\n*   **423 Locked**: Account locked after 5 failed attempts.",
             "url": {
               "raw": "{{base_url}}/users/login",
-              "host": ["{{base_url}}"],
-              "path": ["users", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "login"
+              ]
             }
           }
         },
@@ -99,8 +109,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/me",
-              "host": ["{{base_url}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             },
             "description": "Returns the profile data of the currently logged-in user.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Profile data retrieved.\n*   **401 Unauthorized**: Missing or invalid token."
           }
@@ -122,8 +137,13 @@
             "description": "Updates non-security profile fields.\n\n### Request Body Fields (All Optional)\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `name` | string | New full name |\n| `photo` | string | URL to new profile image |\n| `preferences` | object | App settings like `darkMode` (bool), `language` (string) |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Profile updated successfully.\n*   **400 Bad Request**: Invalid field or value provided.",
             "url": {
               "raw": "{{base_url}}/users/updateMe",
-              "host": ["{{base_url}}"],
-              "path": ["users", "updateMe"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "updateMe"
+              ]
             }
           }
         },
@@ -134,8 +154,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/deleteMe",
-              "host": ["{{base_url}}"],
-              "path": ["users", "deleteMe"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "deleteMe"
+              ]
             },
             "description": "Deactivates the user account without removing data.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **204 No Content**: Account successfully deactivated.\n*   **401 Unauthorized**: Missing or invalid token."
           }
@@ -147,8 +172,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/logout",
-              "host": ["{{base_url}}"],
-              "path": ["users", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "logout"
+              ]
             },
             "description": "Ends the user session and clears authentication cookies.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Logged out successfully.\n*   **401 Unauthorized**: Not logged in."
           }
@@ -175,8 +205,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/refresh",
-              "host": ["{{base_url}}"],
-              "path": ["users", "refresh"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "refresh"
+              ]
             },
             "description": "Obtains a new access token using a valid refresh token cookie.\n\n### Authentication\n*   **Required**: `refreshToken` HttpOnly cookie\n\n### Response Codes\n*   **200 OK**: New access token returned.\n*   **401 Unauthorized**: Refresh token missing or expired."
           }
@@ -198,8 +233,13 @@
             "description": "Initiates password recovery via email.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | The email associated with the account |\n\n### Response Codes\n*   **200 OK**: Reset code sent successfully.\n*   **404 Not Found**: No user found with that email address.",
             "url": {
               "raw": "{{base_url}}/users/forgotPassword",
-              "host": ["{{base_url}}"],
-              "path": ["users", "forgotPassword"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "forgotPassword"
+              ]
             }
           }
         },
@@ -220,8 +260,13 @@
             "description": "Validates the 6-digit code from email.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | User email address |\n| `code` | string | Yes | 6-digit verification code |\n\n### Response Codes\n*   **200 OK**: Code verified. Returns a temporary `resetToken`.\n*   **400 Bad Request**: Invalid or expired code.",
             "url": {
               "raw": "{{base_url}}/users/verifyResetCode",
-              "host": ["{{base_url}}"],
-              "path": ["users", "verifyResetCode"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "verifyResetCode"
+              ]
             }
           }
         },
@@ -257,8 +302,13 @@
             "description": "Sets the new password using the token from the verification step.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `password` | string | Yes | New password (min 8 chars) |\n| `passwordConfirm` | string | Yes | Must match `password` |\n\n### Response Codes\n*   **200 OK**: Password reset successful. Returns new JWT token.\n*   **400 Bad Request**: Token expired or passwords do not match.",
             "url": {
               "raw": "{{base_url}}/users/resetPassword",
-              "host": ["{{base_url}}"],
-              "path": ["users", "resetPassword"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "resetPassword"
+              ]
             }
           }
         },
@@ -279,8 +329,13 @@
             "description": "Authenticates or registers a user using a Google ID token. Integrates with the application's unified OAuth 2.0 system.",
             "url": {
               "raw": "{{base_url}}/users/google",
-              "host": ["{{base_url}}"],
-              "path": ["users", "google"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "google"
+              ]
             }
           }
         },
@@ -301,8 +356,13 @@
             "description": "Authenticates or registers a user using a GitHub authorization code.",
             "url": {
               "raw": "{{base_url}}/users/github",
-              "host": ["{{base_url}}"],
-              "path": ["users", "github"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "github"
+              ]
             }
           }
         },
@@ -323,8 +383,13 @@
             "description": "Authenticates or registers a user using a Facebook access token.",
             "url": {
               "raw": "{{base_url}}/users/facebook",
-              "host": ["{{base_url}}"],
-              "path": ["users", "facebook"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "facebook"
+              ]
             }
           }
         }
@@ -340,8 +405,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/flights?page=1&limit=50",
-              "host": ["{{base_url}}"],
-              "path": ["flights"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -365,8 +434,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "{{flight_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "{{flight_id}}"
+              ]
             },
             "description": "Retrieves real-time status and details for a specific flight by ID.\n\n### Authentication\n*   **None Required** (Public access enabled)"
           }
@@ -392,8 +466,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/flights/updated?limit=30&sort=-updatedAt",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "updated"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "updated"
+              ],
               "query": [
                 {
                   "key": "limit",
@@ -427,8 +506,13 @@
             "description": "Extracts flight information from a boarding pass barcode string.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `barcodeData` | string | Yes | Full IATA BCBP string |\n\n### Response Codes\n*   **200 OK**: Flight found and data returned (including weather and recommendations).\n*   **400 Bad Request**: Invalid barcode format or missing data.\n*   **404 Not Found**: Flight not found in our database.",
             "url": {
               "raw": "{{base_url}}/flights/scan",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "scan"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "scan"
+              ]
             }
           }
         },
@@ -453,8 +537,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/flights/my-flight",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "my-flight"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "my-flight"
+              ]
             },
             "description": "Retrieves the user's currently tracked flight and destination info.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Flight data and destination recommendations returned.\n*   **404 Not Found**: No active flight tracking for this user."
           }
@@ -476,8 +565,14 @@
             "description": "Subscribes to notifications for a specific flight.\n\n### Request Body Fields\n| Field | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `reminderMinutes` | number | 25 | Minutes before departure to send reminder |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Tracking successfully enabled.\n*   **404 Not Found**: Flight ID does not exist.",
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}/track",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "{{flight_id}}", "track"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "{{flight_id}}",
+                "track"
+              ]
             }
           }
         },
@@ -488,8 +583,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}/cancel-track",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "{{flight_id}}", "cancel-track"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "{{flight_id}}",
+                "cancel-track"
+              ]
             },
             "description": "Stops tracking a flight and disables related notifications.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Tracking cancelled.\n*   **404 Not Found**: Tracking record not found."
           }
@@ -506,8 +607,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/home",
-              "host": ["{{base_url}}"],
-              "path": ["home"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home"
+              ]
             },
             "description": "Aggregated data for the mobile home screen.\n\n### Included Data\n*   `updatedFlights`: Recent status changes\n*   `featuredServices`: Highly rated shops/lounges\n*   `metrics`: App-wide stats\n*   `userTrack`: Active flight (if authenticated)\n\n### Authentication\n*   **Optional**: Returns general data without token."
           }
@@ -519,8 +624,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/services/search?q=Shop",
-              "host": ["{{base_url}}"],
-              "path": ["services", "search"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "search"
+              ],
               "query": [
                 {
                   "key": "q",
@@ -539,8 +649,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/services/nearby?lng=31.4&lat=30.1&distance=500",
-              "host": ["{{base_url}}"],
-              "path": ["services", "nearby"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "nearby"
+              ],
               "query": [
                 {
                   "key": "lng",
@@ -569,8 +684,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/services/counters/stats",
-              "host": ["{{base_url}}"],
-              "path": ["services", "counters", "stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "counters",
+                "stats"
+              ]
             },
             "description": "Provides a quick summary of airport counters, including total number of counters and how many are currently open."
           }
@@ -582,8 +703,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/services?category=SHOPS&limit=10&page=1",
-              "host": ["{{base_url}}"],
-              "path": ["services"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services"
+              ],
               "query": [
                 {
                   "key": "category",
@@ -611,8 +736,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/services/{{service_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["services", "{{service_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "{{service_id}}"
+              ]
             },
             "description": "Retrieves details for a specific airport service by ID."
           }
@@ -623,8 +753,12 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/stats",
-              "host": ["{{base_url}}"],
-              "path": ["stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stats"
+              ]
             },
             "description": "Returns aggregated statistics for the airport (e.g., total active flights, average delay time)."
           }
@@ -645,9 +779,15 @@
             },
             "url": {
               "raw": "{{base_url}}/stats/rate",
-              "host": ["{{base_url}}"],
-              "path": ["stats", "rate"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stats",
+                "rate"
+              ]
+            },
+            "description": "Submits a user rating and review for the app experience.\n\n### Request Body\n*   **`rating`**: Number between 1 and 5.\n*   **`comment`**: Optional text feedback.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
           }
         },
         {
@@ -656,9 +796,14 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/faqs",
-              "host": ["{{base_url}}"],
-              "path": ["faqs"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "faqs"
+              ]
+            },
+            "description": "Retrieves all Frequently Asked Questions for the support section.\n\n### Authentication\n*   **None Required**"
           }
         }
       ]
@@ -683,8 +828,13 @@
             "description": "Generates a routing path between two terminal points.\n\n### Request Body Fields\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `fromNodeId` | string | ID of starting waypoint |\n| `toNodeId` | string | ID of destination waypoint |\n\n### Response Codes\n*   **200 OK**: Path nodes and total distance returned.\n*   **404 Not Found**: One or both nodes do not exist.",
             "url": {
               "raw": "{{base_url}}/navigation/find-path",
-              "host": ["{{base_url}}"],
-              "path": ["navigation", "find-path"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "navigation",
+                "find-path"
+              ]
             }
           }
         },
@@ -695,8 +845,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/navigation/nodes?level=1",
-              "host": ["{{base_url}}"],
-              "path": ["navigation", "nodes"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "navigation",
+                "nodes"
+              ],
               "query": [
                 {
                   "key": "level",
@@ -730,8 +885,13 @@
             "description": "Natural language interaction with the AI concierge.\n\n### Request Body Fields\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `message` | string | User's question |\n| `context` | object | (Optional) relevant flight/location data |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: AI reply returned.\n*   **503 Service Unavailable**: AI service (Gemini) is down.",
             "url": {
               "raw": "{{base_url}}/chat/query",
-              "host": ["{{base_url}}"],
-              "path": ["chat", "query"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat",
+                "query"
+              ]
             }
           }
         },
@@ -752,8 +912,13 @@
             "description": "Links a mobile device for Firebase push notifications.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `deviceToken` | string | Yes | FCM registration token |\n| `deviceType` | string | Yes | `ios`, `android`, or `web` |\n| `deviceName` | string | No | Friendly name (e.g., 'iPhone 13') |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Device registered successfully.\n*   **400 Bad Request**: Token or type missing.",
             "url": {
               "raw": "{{base_url}}/devices/register",
-              "host": ["{{base_url}}"],
-              "path": ["devices", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devices",
+                "register"
+              ]
             }
           }
         },
@@ -774,8 +939,13 @@
             "description": "Removes a device from push notification registration.",
             "url": {
               "raw": "{{base_url}}/devices/unregister",
-              "host": ["{{base_url}}"],
-              "path": ["devices", "unregister"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devices",
+                "unregister"
+              ]
             }
           }
         },
@@ -786,8 +956,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/notifications?limit=20&page=1",
-              "host": ["{{base_url}}"],
-              "path": ["notifications"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ],
               "query": [
                 {
                   "key": "limit",
@@ -810,9 +984,15 @@
             "method": "PATCH",
             "url": {
               "raw": "{{base_url}}/notifications/read-all",
-              "host": ["{{base_url}}"],
-              "path": ["notifications", "read-all"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ]
+            },
+            "description": "Marks all unread notifications for the current user as read.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
           }
         },
         {
@@ -821,9 +1001,16 @@
             "method": "PATCH",
             "url": {
               "raw": "{{base_url}}/notifications/{{notification_id}}/read",
-              "host": ["{{base_url}}"],
-              "path": ["notifications", "{{notification_id}}", "read"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "{{notification_id}}",
+                "read"
+              ]
+            },
+            "description": "Marks a specific notification as read by its ID.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
           }
         }
       ]
@@ -838,8 +1025,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users?page=1&limit=20&role=user",
-              "host": ["{{base_url}}"],
-              "path": ["users"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -868,8 +1059,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["users", "{{user_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
             },
             "description": "Admin endpoint to view user details.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`\n\n### Response Codes\n*   **200 OK**: Full user object returned.\n*   **403 Forbidden**: Insufficient permissions.\n*   **404 Not Found**: User not found."
           }
@@ -890,9 +1086,15 @@
             },
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["users", "{{user_id}}"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            },
+            "description": "Admin endpoint to update user details, such as changing their role to 'admin'.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -901,8 +1103,13 @@
             "method": "DELETE",
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["users", "{{user_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
             },
             "description": "Permanently removes a user record from the database."
           }
@@ -923,9 +1130,14 @@
             },
             "url": {
               "raw": "{{base_url}}/users",
-              "host": ["{{base_url}}"],
-              "path": ["users"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Admin endpoint to manually create a new user or administrator.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -944,9 +1156,14 @@
             },
             "url": {
               "raw": "{{base_url}}/flights",
-              "host": ["{{base_url}}"],
-              "path": ["flights"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights"
+              ]
+            },
+            "description": "Admin endpoint to add a new flight to the database manually.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -965,9 +1182,15 @@
             },
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "{{flight_id}}"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "{{flight_id}}"
+              ]
+            },
+            "description": "Admin endpoint to update the status, gate, or time of a flight.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -976,9 +1199,15 @@
             "method": "DELETE",
             "url": {
               "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["flights", "{{flight_id}}"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "flights",
+                "{{flight_id}}"
+              ]
+            },
+            "description": "Admin endpoint to permanently delete a flight.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -997,9 +1226,14 @@
             },
             "url": {
               "raw": "{{base_url}}/services",
-              "host": ["{{base_url}}"],
-              "path": ["services"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services"
+              ]
+            },
+            "description": "Admin endpoint to add a new service (Shop, Lounge, etc.) to the airport map.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -1018,9 +1252,15 @@
             },
             "url": {
               "raw": "{{base_url}}/services/{{service_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["services", "{{service_id}}"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "{{service_id}}"
+              ]
+            },
+            "description": "Admin endpoint to update the details, rating, or location of a service.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         },
         {
@@ -1029,9 +1269,15 @@
             "method": "DELETE",
             "url": {
               "raw": "{{base_url}}/services/{{service_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["services", "{{service_id}}"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "{{service_id}}"
+              ]
+            },
+            "description": "Admin endpoint to permanently remove a service from the database.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
           }
         }
       ]
