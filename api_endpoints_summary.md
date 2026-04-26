@@ -158,6 +158,28 @@ This document provides the **exact** JSON payloads required by the backend and t
 
 ---
 
+## 📊 Stats & Analytics (`/stats`)
+
+### 1. Get Dynamic Global Stats
+- **Method & Endpoint:** `GET /stats`
+- **Exact Response:**
+```json
+{
+  "status": "success",
+  "data": {
+    "metrics": {
+      "activeUsers": 1250,      // Dynamic: Total active users
+      "flightsTracked": 450,    // Dynamic: Flights currently being tracked
+      "delays": 12,              // Dynamic: Current delayed flights count
+      "airportsCovered": 1,      // Static/Config: Currently Schiphol (AMS)
+      "userRating": "4.8/5"      // Dynamic: Calculated average app rating
+    }
+  }
+}
+```
+
+---
+
 ## 🔔 Notifications (`/notifications`)
 
 ### 1. Register Device

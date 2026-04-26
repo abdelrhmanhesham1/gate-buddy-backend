@@ -1447,21 +1447,13 @@ RESPONSE (200 OK):
 {
   "status": "success",
   "data": {
-    "totalFlights": 1250,
-    "trackedFlights": 450,
-    "totalUsers": 3200,
-    "activeUsers": 1250,
-    "delayedFlights": 12,
-    "averageRating": 4.6,
-    "topDestinations": [
-      { "code": "LAX", "city": "Los Angeles", "count": 156 },
-      { "code": "ORD", "city": "Chicago", "count": 128 },
-      { "code": "DFW", "city": "Dallas", "count": 102 }
-    ],
-    "topServices": [
-      { "_id": "507f1f77bcf86cd799439011", "name": "Premium Lounge", "rating": 4.8 }
-    ],
-    "lastUpdated": "2026-04-21T14:30:00Z"
+    "metrics": {
+      "activeUsers": 1250,  // Dynamic: Total count of active users
+      "flightsTracked": 450, // Dynamic: Count of active flight tracks
+      "delays": 12,          // Dynamic: Count of currently delayed flights
+      "airportsCovered": 1,  // Dynamic: Supported airports (Currently 1: AMS)
+      "userRating": "4.8/5"  // Dynamic: Average app rating from users
+    },
   }
 }
 ```
