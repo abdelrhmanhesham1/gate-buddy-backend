@@ -359,6 +359,19 @@
           }
         },
         {
+          "name": "Get Single Flight",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/flights/{{flight_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "{{flight_id}}"]
+            },
+            "description": "Retrieves real-time status and details for a specific flight by ID.\n\n### Authentication\n*   **None Required** (Public access enabled)"
+          }
+        },
+        {
           "name": "Get Updated Flights",
           "event": [
             {
@@ -588,8 +601,64 @@
                   "description": "Page number"
                 }
               ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/{{service_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["services", "{{service_id}}"]
             },
-            "description": "Complete catalog of airport services.\n\n### Query Parameters\n| Param | Default | Description |\n| :--- | :--- | :--- |\n| `category` | All | Filter by category |\n| `limit` | 100 | Items per page |\n| `page` | 1 | Current page number |\n| `sort` | `createdAt` | Sort order |\n\n### Response Codes\n*   **200 OK**: Paginated list of services returned."
+            "description": "Retrieves details for a specific airport service by ID."
+          }
+        },
+        {
+          "name": "Global Airport Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/stats",
+              "host": ["{{base_url}}"],
+              "path": ["stats"]
+            },
+            "description": "Returns aggregated statistics for the airport (e.g., total active flights, average delay time)."
+          }
+        },
+        {
+          "name": "Submit App Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great navigation features!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/stats/rate",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "rate"]
+            }
+          }
+        },
+        {
+          "name": "Get All FAQs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/faqs",
+              "host": ["{{base_url}}"],
+              "path": ["faqs"]
+            }
           }
         }
       ]
@@ -689,6 +758,28 @@
           }
         },
         {
+          "name": "Unregister Device Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\"\n}"
+            },
+            "description": "Removes a device from push notification registration.",
+            "url": {
+              "raw": "{{base_url}}/devices/unregister",
+              "host": ["{{base_url}}"],
+              "path": ["devices", "unregister"]
+            }
+          }
+        },
+        {
           "name": "All My Notifications",
           "request": {
             "method": "GET",
@@ -711,6 +802,28 @@
               ]
             },
             "description": "Retrieves the history of push notifications sent to the user, including flight updates, gate changes, and system alerts."
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "read-all"]
+            }
+          }
+        },
+        {
+          "name": "Mark Single Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/notifications/{{notification_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "{{notification_id}}", "read"]
+            }
           }
         }
       ]
@@ -762,16 +875,163 @@
           }
         },
         {
-          "name": "Delete User (Admin)",
+          "name": "User: Update User (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "User: Delete User (Admin)",
           "request": {
             "method": "DELETE",
-            "header": [],
             "url": {
               "raw": "{{base_url}}/users/{{user_id}}",
               "host": ["{{base_url}}"],
               "path": ["users", "{{user_id}}"]
             },
-            "description": "Permanently removes a user record from the database.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`\n\n### Response Codes\n*   **204 No Content**: User deleted successfully.\n*   **403 Forbidden**: Current user is not an administrator.\n*   **404 Not Found**: User ID not found."
+            "description": "Permanently removes a user record from the database."
+          }
+        },
+        {
+          "name": "User: Create User (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Admin\",\n  \"email\": \"admin@gatebuddy.app\",\n  \"role\": \"admin\",\n  \"password\": \"AdminPass123!\",\n  \"passwordConfirm\": \"AdminPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Flight: Create Flight",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"flightNumber\": \"MS123\",\n  \"airline\": { \"name\": \"EgyptAir\", \"logo\": \"https://...\" },\n  \"direction\": \"departure\",\n  \"departure\": {\n    \"terminal\": \"3\",\n    \"gate\": \"G4\",\n    \"scheduledTime\": \"2026-04-26T20:00:00Z\"\n  },\n  \"arrival\": {\n    \"scheduledTime\": \"2026-04-26T23:00:00Z\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/flights",
+              "host": ["{{base_url}}"],
+              "path": ["flights"]
+            }
+          }
+        },
+        {
+          "name": "Flight: Update Flight",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"DELAYED\",\n  \"departure\": { \"gate\": \"G5\" }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/flights/{{flight_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "{{flight_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Flight: Delete Flight",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/flights/{{flight_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "{{flight_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Service: Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"GateBuddy Lounge\",\n  \"category\": \"VIP_SERVICES\",\n  \"location\": { \"type\": \"Point\", \"coordinates\": [31.4, 30.1] },\n  \"level\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": ["{{base_url}}"],
+              "path": ["services"]
+            }
+          }
+        },
+        {
+          "name": "Service: Update Service",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Upgraded lounge access\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services/{{service_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["services", "{{service_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Service: Delete Service",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/services/{{service_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["services", "{{service_id}}"]
+            }
           }
         }
       ]
@@ -796,6 +1056,16 @@
     {
       "key": "user_id",
       "value": "USER_ID",
+      "type": "string"
+    },
+    {
+      "key": "service_id",
+      "value": "SERVICE_ID",
+      "type": "string"
+    },
+    {
+      "key": "notification_id",
+      "value": "NOTIFICATION_ID",
       "type": "string"
     }
   ]

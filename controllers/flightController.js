@@ -145,6 +145,11 @@ exports.trackFlight = catchAsync(async (req, res, next) => {
   const flight = await Flight.findById(flightId);
   if (!flight) return next(new AppError("Flight not found.", 404));
 
+  // Business Logic: Only track active/on-time flights
+  if (flight.status === "CANCELLED" || flight.status === "LANDED") {
+    return next(new AppError("Cannot track a cancelled or landed flight.", 400));
+  }
+
   const track = await FlightTrack.findOneAndUpdate(
     { user: req.user.id, flight: flightId },
     { isActive: true, reminderMinutes },
