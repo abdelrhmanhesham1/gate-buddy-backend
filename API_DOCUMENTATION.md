@@ -1,6 +1,7 @@
 # 🔌 GateBuddy Complete API Documentation
 
-**Base URL**: `http://localhost:3001/api/v1`
+**Base URL (Development)**: `http://localhost:3001/api/v1`
+**Base URL (Production)**: `https://gate-buddy-backend-production.up.railway.app/api/v1`
 
 **Authentication**: Most endpoints require JWT token in header: `Authorization: Bearer <token>` or in HttpOnly cookie `jwt`
 
@@ -12,13 +13,14 @@
 2. [User Profile APIs](#-user-profile-apis)
 3. [Flight Management APIs](#-flight-management-apis)
 4. [Airport Services APIs](#-airport-services-apis)
-5. [Home Dashboard API](#-home-dashboard-api)
-6. [Chat Assistant API](#-chat-assistant-api)
-7. [Notification APIs](#-notification-apis)
-8. [Device Management APIs](#-device-management-apis)
-9. [FAQ APIs](#-faq-apis)
-10. [Stats & Analytics APIs](#-stats--analytics-apis)
-11. [Admin APIs](#-admin-apis)
+5. [Indoor Navigation APIs](#-indoor-navigation-apis)
+6. [Home Dashboard API](#-home-dashboard-api)
+7. [Chat Assistant API](#-chat-assistant-api)
+8. [Notification APIs](#-notification-apis)
+9. [Device Management APIs](#-device-management-apis)
+10. [FAQ APIs](#-faq-apis)
+11. [Stats & Analytics APIs](#-stats--analytics-apis)
+12. [Admin APIs](#-admin-apis)
 
 ---
 
@@ -56,10 +58,10 @@ RESPONSE (201 Created):
 }
 
 VALIDATION ERRORS (400):
-- Name required and must be at least 3 characters
-- Valid email format required
-- Password must be at least 8 characters with uppercase, lowercase, number, special char
-- Passwords must match
+- `name`: Required, 2-50 characters.
+- `email`: Required, valid email format.
+- `password`: Required, min 8 characters, must contain at least one uppercase letter, one lowercase letter, and one number.
+- `passwordConfirm`: Required, must exactly match `password`.
 ```
 
 ### 2. User Login
@@ -120,6 +122,7 @@ CLEARS:
 ```
 POST /users/forgotPassword
 Content-Type: application/json
+Header (Optional): x-client-type: mobile
 
 REQUEST BODY:
 {
@@ -129,13 +132,13 @@ REQUEST BODY:
 RESPONSE (200 OK):
 {
   "status": "success",
-  "message": "Password reset token sent to email"
+  "message": "Instructions sent to email"
 }
 
 SIDE EFFECTS:
-- Sends email with reset token
-- Reset token expires in 10 minutes
-- User receives password reset link via email
+- If Header `x-client-type: mobile` is provided: Sends a 6-digit verification code.
+- Otherwise: Sends a password reset link (web flow).
+- Reset code/link expires in 10 minutes.
 ```
 
 ### 5. Verify Reset Code
@@ -579,7 +582,7 @@ ERROR RESPONSES:
 
 ```
 GET /flights/:id
-Authorization: Optional
+Authorization: Bearer <token>
 
 URL PARAMETER:
 - id: MongoDB ObjectId of flight
@@ -1012,6 +1015,72 @@ ERROR RESPONSES:
 
 ---
 
+## 🗺️ Indoor Navigation APIs
+
+### 1. Get Navigation Nodes
+
+```
+GET /navigation/nodes
+Authorization: Optional
+
+QUERY PARAMETERS:
+- level: number (filter by floor level, e.g., 0, 1, 2)
+
+RESPONSE (200 OK):
+{
+  "status": "success",
+  "results": 15,
+  "data": [
+    {
+      "nodeId": "gate_a1",
+      "name": "Gate A1",
+      "type": "gate",  // gate, elevator, path, shop, etc.
+      "level": 1,
+      "location": {
+        "type": "Point",
+        "coordinates": [4.7641, 52.3086]
+      },
+      "connectedTo": [
+        { "nodeId": "path_01", "distanceMeters": 15 }
+      ]
+    }
+  ]
+}
+```
+
+### 2. Find Path (Dijkstra)
+
+```
+POST /navigation/find-path
+Content-Type: application/json
+Authorization: Optional
+
+REQUEST BODY:
+{
+  "fromNodeId": "gate_a1",  // nodeId of start point
+  "toNodeId": "shop_duty_free"  // nodeId of destination
+}
+
+RESPONSE (200 OK):
+{
+  "status": "success",
+  "data": {
+    "path": [
+      { "nodeId": "gate_a1", ... },
+      { "nodeId": "path_01", ... },
+      { "nodeId": "shop_duty_free", ... }
+    ],
+    "totalNodes": 3
+  }
+}
+
+ERROR RESPONSES:
+- 400: "fromNodeId and toNodeId are required"
+- 404: "No path found"
+```
+
+---
+
 ## 🏠 Home Dashboard API
 
 ### Get Dashboard Data
@@ -1087,12 +1156,7 @@ Content-Type: application/json
 
 REQUEST BODY:
 {
-  "message": "What are the popular attractions in Los Angeles?",
-  "context": {  // Optional
-    "flightNumber": "AA1234",
-    "destination": "Los Angeles",
-    "arrivalTime": "2026-04-21T17:45:00Z"
-  }
+  "message": "What are the popular attractions in Los Angeles?"
 }
 
 RESPONSE (200 OK):
@@ -1149,7 +1213,7 @@ RESPONSE (200 OK):
         "title": "Flight AA1234 Gate Changed",
         "message": "Your flight to LAX has been assigned to gate A45",
         "isRead": false,
-        "data": {
+        "metadata": {
           "flightId": "507f1f77bcf86cd799439012",
           "newGate": "A45"
         },
@@ -1230,10 +1294,8 @@ Content-Type: application/json
 
 REQUEST BODY:
 {
-  "fcmToken": "cP_JfT2QVgY:APA91bE...",  // Firebase Cloud Messaging token
-  "deviceType": "ios",  // "ios", "android", "web"
-  "deviceName": "iPhone 12",
-  "osVersion": "15.0"
+  "deviceToken": "cP_JfT2QVgY:APA91bE...",  // FCM token
+  "deviceType": "ios"  // "ios", "android", "web"
 }
 
 RESPONSE (201 Created):
@@ -1272,7 +1334,7 @@ Content-Type: application/json
 
 REQUEST BODY:
 {
-  "fcmToken": "cP_JfT2QVgY:APA91bE..."  // FCM token to unregister
+  "deviceToken": "cP_JfT2QVgY:APA91bE..."  // Token to unregister
 }
 
 RESPONSE (200 OK):
@@ -1413,10 +1475,8 @@ Content-Type: application/json
 
 REQUEST BODY:
 {
-  "rating": 5,  // 1-5 stars
-  "comment": "Excellent service! Very helpful staff.",
-  "serviceType": "counter",  // "counter", "lounge", "shop", "restaurant", etc.
-  "serviceName": "Check-in Counter A"
+  "rating": 5,  // 1-5 (Required)
+  "review": "Excellent app! Very helpful for finding my gate." // (Optional)
 }
 
 RESPONSE (201 Created):
@@ -1427,23 +1487,21 @@ RESPONSE (201 Created):
       "_id": "507f1f77bcf86cd799439011",
       "user": "507f1f77bcf86cd799439010",
       "rating": 5,
-      "comment": "Excellent service! Very helpful staff.",
-      "serviceType": "counter",
-      "serviceName": "Check-in Counter A",
+      "review": "Excellent app! Very helpful for finding my gate.",
       "createdAt": "2026-04-21T14:30:00Z"
     }
   }
 }
 
 VALIDATION:
-- rating: 1-5 (required)
-- comment: optional, max 500 characters
-- serviceType: required
-- serviceName: optional
+- `rating`: 1-5 (Required)
+- `review`: Optional text feedback
+- Note: Users can only submit ONE rating for the app (enforced by unique user field).
 
 ERROR RESPONSES:
 - 401: Unauthorized
 - 400: "Rating must be between 1 and 5"
+- 400: "Duplicate key error" (if user already rated)
 ```
 
 ---

@@ -3,7 +3,7 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 
 exports.getNotifications = catchAsync(async (req, res, next) => {
-  const notifications = await Notification.find({ user: req.user._id })
+  const notifications = await Notification.find({ recipient: req.user._id })
     .sort({ createdAt: -1 })
     .limit(50);
 
@@ -18,7 +18,7 @@ exports.getNotifications = catchAsync(async (req, res, next) => {
 
 exports.markNotificationAsRead = catchAsync(async (req, res, next) => {
   const notification = await Notification.findOneAndUpdate(
-    { _id: req.params.id, user: req.user._id },
+    { _id: req.params.id, recipient: req.user._id },
     { read: true },
     { new: true }
   );
@@ -38,7 +38,7 @@ exports.markNotificationAsRead = catchAsync(async (req, res, next) => {
 exports.deleteNotification = catchAsync(async (req, res, next) => {
   const notification = await Notification.findOneAndDelete({
     _id: req.params.id,
-    user: req.user._id,
+    recipient: req.user._id,
   });
 
   if (!notification) {
@@ -75,7 +75,7 @@ exports.subscribeToNotifications = catchAsync(async (req, res, next) => {
 
 exports.getUnreadCount = catchAsync(async (req, res, next) => {
   const count = await Notification.countDocuments({
-    user: req.user._id,
+    recipient: req.user._id,
     read: false,
   });
   res.status(200).json({ status: "success", data: { unreadCount: count } });
@@ -83,7 +83,7 @@ exports.getUnreadCount = catchAsync(async (req, res, next) => {
 
 exports.markAllAsRead = catchAsync(async (req, res, next) => {
   await Notification.updateMany(
-    { user: req.user._id, read: false },
+    { recipient: req.user._id, read: false },
     { read: true }
   );
   res
