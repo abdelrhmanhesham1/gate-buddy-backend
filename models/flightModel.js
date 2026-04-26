@@ -27,13 +27,13 @@ const flightSchema = new mongoose.Schema(
 flightSchema.virtual("updates", { ref: "FlightUpdate", foreignField: "flight", localField: "_id" });
 
 flightSchema.pre("save", function (next) {
-  // Use actual time if available, otherwise fallback to scheduled time + 48 hours
-  const completionTime = this.arrival?.actualTime || this.departure?.actualTime;
-  
-  if (completionTime) {
-    this.expireAt = new Date(completionTime.getTime() + 30 * 60 * 1000); // 30 mins after event
+  // If the flight is definitely over, clear it out soon
+  if (this.status === "LANDED" || this.status === "CANCELLED") {
+    // If we have actual completion time, use it + 30 mins. Otherwise, use NOW + 30 mins
+    const baseTime = this.arrival?.actualTime || this.departure?.actualTime || new Date();
+    this.expireAt = new Date(baseTime.getTime() + 30 * 60 * 1000);
   } else {
-    // Safety fallback: 48 hours after scheduled departure to prevent DB bloat
+    // For active/future flights, safety fallback is 48 hours after scheduled departure
     this.expireAt = new Date(this.departure.scheduledTime.getTime() + 48 * 60 * 60 * 1000);
   }
   next();
