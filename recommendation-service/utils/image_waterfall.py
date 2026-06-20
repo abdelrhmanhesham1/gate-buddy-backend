@@ -38,7 +38,7 @@ async def _strategy_wikipedia_pageimage(
     name    = place.get("name", "").strip()
     city    = place.get("cityName") or place.get("city", "")
     lang    = place.get("wikipediaLang", "en")
-    titles  = f"{name} {city}".strip()
+    titles  = place.get("wikipediaTitle") or f"{name} {city}".strip()
 
     url = (
         f"https://{lang}.wikipedia.org/w/api.php"
@@ -209,6 +209,43 @@ async def _strategy_mapillary(
 
 # ── Strategy 4: Identity-Locked Bing Scrape ───────────────────────────────────
 
+async def _strategy_pexels(
+    place: dict,
+    session: aiohttp.ClientSession,
+    pexels_api_key: str | None,
+    resolved_name: str | None
+) -> tuple[str | None, str | None]:
+    if not pexels_api_key:
+        return None, None
+
+    name = (resolved_name or place.get("name", "")).strip()
+    city = (place.get("cityName") or place.get("city", "")).strip()
+    country = place.get("country", "").strip()
+    query = " ".join(part for part in (name, city, country, "landmark") if part)
+    if not query:
+        return None, None
+
+    try:
+        async with session.get(
+            "https://api.pexels.com/v1/search",
+            params={"query": query, "per_page": 3, "orientation": "landscape"},
+            headers={"Authorization": pexels_api_key},
+            timeout=aiohttp.ClientTimeout(total=6)
+        ) as resp:
+            if resp.status != 200:
+                return None, None
+            data = await resp.json(content_type=None)
+            for photo in data.get("photos", []):
+                src = photo.get("src", {})
+                image_url = src.get("large2x") or src.get("large") or src.get("original")
+                if image_url and await validate_image_url(image_url, session):
+                    return image_url, "Pexels"
+            return None, None
+    except Exception as exc:
+        logger.debug("Pexels fetch failed for '%s': %s", name, exc)
+        return None, None
+
+
 async def _strategy_bing_identity_locked(
     place: dict,
     session: aiohttp.ClientSession,
@@ -289,6 +326,7 @@ async def image_waterfall(
     bing_scraper=None,
     google_api_key: str | None = None,
     mapillary_token: str | None = None,
+    pexels_api_key: str | None = None,
 ) -> tuple[str | None, str | None]:
     """
     Executes a ranked waterfall of image sourcing strategies, returning the
@@ -352,21 +390,27 @@ async def image_waterfall(
         logger.debug("[S3-Mapillary] %s → %s", name, url)
         return url, credit
 
-    # Strategy 4: Identity-locked Bing
+    # Strategy 4: Pexels
+    url, credit = await _strategy_pexels(place, session, pexels_api_key, resolved_name)
+    if url:
+        logger.debug("[S4-Pexels] %s -> %s", name, url)
+        return url, credit
+
+    # Strategy 5: Identity-locked Bing
     if bing_scraper:
         url, credit = await _strategy_bing_identity_locked(
             place, session, bing_scraper, resolved_name
         )
         if url:
-            logger.debug("[S4-Bing] %s → %s", name, url)
+            logger.debug("[S5-Bing] %s -> %s", name, url)
             return url, credit
 
-    # Strategy 5: OSM static map tile
+    # Strategy 6: OSM static map tile
     url, credit = await _strategy_osm_static_map(place, session)
     if url:
-        logger.debug("[S5-OSM] %s → %s", name, url)
+        logger.debug("[S6-OSM] %s -> %s", name, url)
         return url, credit
 
-    # Strategy 6: Null — safe, intentional, frontend must handle gracefully
-    logger.warning("[S6-Null] No image found for '%s'", name)
+    # Strategy 7: Null - safe, intentional, frontend must handle gracefully
+    logger.warning("[S7-Null] No image found for '%s'", name)
     return None, None

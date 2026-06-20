@@ -12,9 +12,11 @@ import aiohttp
 import re
 import json
 import logging
+import os
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
-from urllib.parse import quote, quote_plus
+from urllib.parse import quote, quote_plus, unquote
+from utils.image_waterfall import image_waterfall
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -85,7 +87,7 @@ class ImageFetcher:
                     # Fallback structural search parsing img URLs from modern DuckDuckGo layouts
                     links = re.findall(r'//img\.duckduckgo\.com/iu/\?u=([^&]+)', html)
                     for link in links:
-                        unquoted = quote_plus(link)
+                        unquoted = unquote(link)
                         if any(unquoted.lower().endswith(ext) for ext in ImageFetcher._VALID_EXT):
                             return unquoted, "Web Media"
         except Exception as e:
@@ -101,8 +103,10 @@ class WikipediaDescriptionFetcher:
     _DEFAULT = "A popular local attraction worth visiting."
 
     @staticmethod
-    async def fetch(session: aiohttp.ClientSession, title: str) -> str:
+    async def fetch(session: aiohttp.ClientSession, title: str, lang: str = "en") -> str:
         try:
+            lang = lang if re.match(r"^[a-z-]{2,12}$", lang) else "en"
+            api = f"https://{lang}.wikipedia.org/w/api.php"
             params = {
                 "action": "query",
                 "format": "json",
@@ -114,7 +118,7 @@ class WikipediaDescriptionFetcher:
                 "redirects": 1,
             }
             async with session.get(
-                WikipediaDescriptionFetcher._API,
+                api,
                 params=params,
                 headers={"User-Agent": OVERPASS_AGENT},
                 timeout=aiohttp.ClientTimeout(total=8),
@@ -190,6 +194,8 @@ class LiveDataScraper:
         return {
             "city": airport.get("city", "Unknown"),
             "country": airport.get("country", "Unknown"),
+            "lat": airport.get("lat"),
+            "lon": airport.get("lon"),
         }
 
     def _calculate_popularity_score(self, element: Dict) -> int:
@@ -209,6 +215,14 @@ class LiveDataScraper:
             score -= 20
             
         return score
+
+    def _parse_wikipedia_tag(self, tags: Dict) -> Tuple[Optional[str], Optional[str]]:
+        value = tags.get("wikipedia")
+        if not value or ":" not in value:
+            return None, None
+        lang, title = value.split(":", 1)
+        title = title.replace("_", " ").strip()
+        return (lang.strip() or "en"), title or None
 
     async def scrape_destination_data(
         self,
@@ -252,7 +266,7 @@ class LiveDataScraper:
         candidates = unique_elements[: limit + 6]
 
         tasks = [
-            self._enrich_place(session, el, resolved_city, lat, lon)
+            self._enrich_place(session, el, resolved_city, resolved_country, lat, lon)
             for el in candidates
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -283,6 +297,7 @@ class LiveDataScraper:
         session: aiohttp.ClientSession,
         element: Dict,
         city: str,
+        country: str,
         fallback_lat: float,
         fallback_lon: float,
     ) -> Optional[Dict]:
@@ -297,21 +312,48 @@ class LiveDataScraper:
             search_query = f"{name}, {city}"
             maps_link = f"https://www.google.com/maps/search/?api=1&query={quote(search_query)}"
 
-            desc_task = WikipediaDescriptionFetcher.fetch(session, name)
-            img_task = ImageFetcher.fetch(session, f"{name} {city}")
+            wiki_lang, wiki_title = self._parse_wikipedia_tag(tags)
+            desc_title = wiki_title or name
+            desc_lang = wiki_lang or "en"
 
-            description, (image_url, image_credit) = await asyncio.gather(desc_task, img_task)
-
-            return {
+            p_lat = float(p_lat)
+            p_lon = float(p_lon)
+            place = {
                 "name": name,
                 "category": tags.get("tourism", "Attraction").title(),
-                "description": description,
-                "image": image_url,
-                "imageCredit": image_credit,
                 "rating": 4.8 if ("wikipedia" in tags or "wikidata" in tags) else 4.2,
                 "vicinity": tags.get("addr:full") or tags.get("addr:street") or f"{p_lat:.4f}, {p_lon:.4f}",
                 "googleMapsLink": maps_link,
+                "city": city,
+                "cityName": city,
+                "country": country,
+                "wikidata": tags.get("wikidata"),
+                "wikidataId": tags.get("wikidata"),
+                "wikipediaLang": desc_lang,
+                "wikipediaTitle": desc_title,
             }
+
+            desc_task = WikipediaDescriptionFetcher.fetch(session, desc_title, desc_lang)
+            img_task = image_waterfall(
+                place,
+                session,
+                google_api_key=os.getenv("GOOGLE_PLACES_API_KEY"),
+                mapillary_token=os.getenv("MAPILLARY_ACCESS_TOKEN"),
+                pexels_api_key=os.getenv("PEXELS_API_KEY"),
+            )
+
+            description, (image_url, image_credit) = await asyncio.gather(desc_task, img_task)
+
+            place["description"] = description
+            place["image"] = image_url or FALLBACK_IMAGE
+            place["imageCredit"] = image_credit or "Fallback"
+
+            place.pop("city", None)
+            place.pop("wikidata", None)
+            place.pop("wikidataId", None)
+            place.pop("wikipediaLang", None)
+            place.pop("wikipediaTitle", None)
+            return place
 
     async def close(self):
         if self._session and not self._session.closed:

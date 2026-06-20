@@ -2,6 +2,7 @@ from typing import List, Dict, Optional
 import asyncio 
 import random
 from datetime import datetime, timedelta
+from urllib.parse import quote
 from models.live_scraper import LiveDataScraper
 from models.scraping_utils import (
     RateLimiter,
@@ -107,13 +108,25 @@ class DestinationRecommender:
             }
         
         city, country = city_info['city'], city_info['country']
+        lat, lon = city_info.get('lat'), city_info.get('lon')
+        if lat is not None and lon is not None:
+            fallback_image = (
+                f"https://staticmap.openstreetmap.de/staticmap.php"
+                f"?center={lat},{lon}&zoom=12&size=600x400&markers={lat},{lon},red"
+            )
+            vicinity = f"{float(lat):.4f}, {float(lon):.4f}"
+        else:
+            fallback_image = self._get_fallback_image(city)
+            vicinity = city
+
         return {
             'airportCode': airport_code, 'cityName': city, 'country': country,
             'places': [{
                 'name': f"{city} City Center", 'category': 'Area',
                 'description': f"Explore the heart of {city} and discover local culture.",
-                'rating': 4.0, 'vicinity': city, 'image': self._get_fallback_image(city),
-                'imageCredit': None, 'googleMapsLink': f"https://www.google.com/maps/search/?api=1&query={quote(city)}"
+                'rating': 4.0, 'vicinity': vicinity, 'image': fallback_image,
+                'imageCredit': 'OpenStreetMap' if lat is not None and lon is not None else 'Fallback',
+                'googleMapsLink': f"https://www.google.com/maps/search/?api=1&query={quote(city)}"
             }],
             'message': f"Top places to visit in {country}"
         }

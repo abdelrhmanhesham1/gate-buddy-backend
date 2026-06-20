@@ -8,7 +8,36 @@ import traceback
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-load_dotenv()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
+load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
+
+
+def load_shared_env_keys():
+    shared_keys = {
+        "PEXELS_API_KEY",
+        "GOOGLE_PLACES_API_KEY",
+        "MAPILLARY_ACCESS_TOKEN",
+        "ALLOWED_ORIGIN",
+    }
+    env_path = os.path.join(ROOT_DIR, "variables.env")
+    if not os.path.exists(env_path):
+        return
+
+    with open(env_path, "r", encoding="utf-8") as env_file:
+        for line in env_file:
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            key, value = stripped.split("=", 1)
+            key = key.strip()
+            if key not in shared_keys or os.getenv(key):
+                continue
+            os.environ[key] = value.strip().rstrip(";").strip().strip('"').strip("'")
+
+
+load_shared_env_keys()
 
 from models.destination_recommender import DestinationRecommender
 

@@ -37,9 +37,36 @@ class RecommendationService {
 
   _getStaticFallbacks() {
     return [
-      { name: "Duty Free Shop", category: "Shopping", description: "Tax-free luxury goods and souvenirs.", rating: 4.5 },
-      { name: "Executive Lounge", category: "VIP", description: "Premium relaxation and business facilities.", rating: 4.8 },
-      { name: "Food Court", category: "Dining", description: "Diverse selection of international cuisines.", rating: 4.2 }
+      {
+        name: "Duty Free Shop",
+        category: "Shopping",
+        description: "Tax-free luxury goods, travel essentials, and souvenirs inside the airport.",
+        rating: 4.5,
+        vicinity: "Airport terminal",
+        image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800",
+        imageCredit: "Unsplash",
+        googleMapsLink: "https://www.google.com/maps/search/?api=1&query=duty%20free%20shop%20airport"
+      },
+      {
+        name: "Executive Lounge",
+        category: "VIP",
+        description: "Quiet seating, refreshments, and business facilities before departure.",
+        rating: 4.8,
+        vicinity: "Airport terminal",
+        image: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=800",
+        imageCredit: "Unsplash",
+        googleMapsLink: "https://www.google.com/maps/search/?api=1&query=airport%20executive%20lounge"
+      },
+      {
+        name: "Food Court",
+        category: "Dining",
+        description: "A convenient selection of quick meals, cafes, and international food options.",
+        rating: 4.2,
+        vicinity: "Airport terminal",
+        image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
+        imageCredit: "Unsplash",
+        googleMapsLink: "https://www.google.com/maps/search/?api=1&query=airport%20food%20court"
+      }
     ];
   }
 }
