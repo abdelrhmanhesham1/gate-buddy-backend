@@ -31,3 +31,4 @@ scratch/
 node_modules
 
 terminalcontext.txt
+variables.env

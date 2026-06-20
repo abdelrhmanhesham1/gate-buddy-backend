@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const Service = require("./models/serviceModel");
 
-dotenv.config();
+dotenv.config({ path: "./variables.env" });
 
 const missingPOIs = [
   // Lost & Found

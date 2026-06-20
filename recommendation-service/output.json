@@ -1,0 +1,69 @@
+{
+  "airportCode": "DXB",
+  "cityName": "Dubai",
+  "country": "AE",
+  "places": [
+    {
+      "name": "Deira Clocktower",
+      "category": "Attraction",
+      "description": "Deira Clocktower (Arabic: برج الساعة ديرة), originally referred to as the Dubai Clock Tower, is a roundabout in Deira, Dubai, United Arab Emirates (UAE).\nThe Daily Telegraph newspaper listed the Dubai...",
+      "image": "https://wallpapercave.com/wp/zWUfbBC.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.8,
+      "vicinity": "25.2587, 55.3264",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Deira%20Clocktower%2C%20Dubai"
+    },
+    {
+      "name": "معبد هندوسي",
+      "category": "Attraction",
+      "description": "معبد دبي الهندوسي هو مكان عبادة للهندوس في دبي ، الإمارات العربية المتحدة. يخدم المعبد المجتمع الهندوسي الكبير في الإمارات العربية المتحدة .\n\nيقع المبنى الضخم في منطقة ميناء جبل علي ويشكل مزيجاً بين الهندسة...",
+      "image": "https://climaway.gumlet.io/56869-thickbox_default/climatizzatore-condizionatore-hisense-console-hi-comfort-r32-dual-split-wifi-inverter-18000-18000-btu-con-ue-3amw72u4rjc-novita-classe-aa.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.8,
+      "vicinity": "شارع علي بن أبي طالب",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B9%D8%A8%D8%AF%20%D9%87%D9%86%D8%AF%D9%88%D8%B3%D9%8A%2C%20Dubai"
+    },
+    {
+      "name": "دوار السمك",
+      "category": "Attraction",
+      "description": "A popular local attraction worth visiting.",
+      "image": "https://i.ytimg.com/vi/F2gEtGVvrIw/maxresdefault.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.2,
+      "vicinity": "25.2701, 55.3164",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=%D8%AF%D9%88%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B3%D9%85%D9%83%2C%20Dubai"
+    },
+    {
+      "name": "The Waterfall",
+      "category": "Attraction",
+      "description": "The Dubai Aquarium and Underwater Zoo is a public aquarium located in the Dubai Mall. It is the biggest aquarium in Dubai and one of the largest in the world. It has the largest glass tank viewing panel...",
+      "image": "https://wtop.com/wp-content/uploads/2019/04/GettyImages-892494008.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.2,
+      "vicinity": "25.1953, 55.2795",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=The%20Waterfall%2C%20Dubai"
+    },
+    {
+      "name": "قصر البديع",
+      "category": "Attraction",
+      "description": "A popular local attraction worth visiting.",
+      "image": "https://arabic.arabianbusiness.com/cloud/2023/06/15/10.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.2,
+      "vicinity": "25.2791, 55.5558",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=%D9%82%D8%B5%D8%B1%20%D8%A7%D9%84%D8%A8%D8%AF%D9%8A%D8%B9%2C%20Dubai"
+    },
+    {
+      "name": "Sightseeing Cruise at Pier 1",
+      "category": "Attraction",
+      "description": "A popular local attraction worth visiting.",
+      "image": "https://bilder.deutschlandfunk.de/15/08/c1/4c/1508c14c-5b62-4988-8f1f-8bdd4fc3074f/papst-leo-126-1280x720.jpg",
+      "imageCredit": "Bing Search",
+      "rating": 4.2,
+      "vicinity": "25.2584, 55.3177",
+      "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Sightseeing%20Cruise%20at%20Pier%201%2C%20Dubai"
+    }
+  ],
+  "message": "Top places to visit in Dubai, AE",
+  "scrapedAt": "2026-06-20T12:20:08.782834"
+}

@@ -20,7 +20,16 @@ const navigationNodeSchema = new mongoose.Schema(
     },
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
-      coordinates: { type: [Number], required: true },
+      coordinates: { 
+        type: [Number], 
+        required: true,
+        validate: {
+          validator: function(val) {
+            return Array.isArray(val) && val.length === 2 && !isNaN(val[0]) && !isNaN(val[1]);
+          },
+          message: "Location coordinates must be an array of two numbers [longitude, latitude]"
+        }
+      },
     },
     level: { type: Number, default: 0 },
     connectedTo: [

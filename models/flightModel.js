@@ -27,14 +27,17 @@ const flightSchema = new mongoose.Schema(
 flightSchema.virtual("updates", { ref: "FlightUpdate", foreignField: "flight", localField: "_id" });
 
 flightSchema.pre("save", function (next) {
-  // If the flight is definitely over, clear it out soon
-  if (this.status === "LANDED" || this.status === "CANCELLED") {
-    // If we have actual completion time, use it + 30 mins. Otherwise, use NOW + 30 mins
-    const baseTime = this.arrival?.actualTime || this.departure?.actualTime || new Date();
-    this.expireAt = new Date(baseTime.getTime() + 30 * 60 * 1000);
-  } else {
-    // For active/future flights, safety fallback is 48 hours after scheduled departure
-    this.expireAt = new Date(this.departure.scheduledTime.getTime() + 48 * 60 * 60 * 1000);
+  try {
+    if (this.status === "LANDED" || this.status === "CANCELLED") {
+      const baseTime = (this.arrival && this.arrival.actualTime) || (this.departure && this.departure.actualTime) || new Date();
+      const baseMs = baseTime instanceof Date ? baseTime.getTime() : new Date(baseTime).getTime();
+      this.expireAt = new Date((isNaN(baseMs) ? Date.now() : baseMs) + 30 * 60 * 1000);
+    } else {
+      const depTime = this.departure && this.departure.scheduledTime ? new Date(this.departure.scheduledTime).getTime() : Date.now();
+      this.expireAt = new Date((isNaN(depTime) ? Date.now() : depTime) + 48 * 60 * 60 * 1000);
+    }
+  } catch (err) {
+    this.expireAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
   }
   next();
 });

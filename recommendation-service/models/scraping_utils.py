@@ -10,7 +10,7 @@ import asyncio
 import json
 import hashlib
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from collections import deque
 from typing import Optional, Dict, Any, Callable
 import logging
@@ -35,7 +35,7 @@ class RateLimiter:
     async def acquire(self):
         """Wait if necessary to respect rate limit"""
         async with self.lock:
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             cutoff = now - timedelta(seconds=self.time_window)
             
             # Remove old requests outside time window
@@ -44,15 +44,14 @@ class RateLimiter:
             
             # Check if we're at limit
             if len(self.requests) >= self.max_requests:
-                # Calculate wait time
                 oldest = self.requests[0]
                 wait_seconds = (oldest + timedelta(seconds=self.time_window) - now).total_seconds()
                 
                 logger.warning(f"Rate limit reached. Waiting {wait_seconds:.1f}s")
-                await asyncio.sleep(wait_seconds + 0.1)  # Add small buffer
+                await asyncio.sleep(max(wait_seconds + 0.1, 0.1))
             
             # Record this request
-            self.requests.append(datetime.now())
+            self.requests.append(datetime.now(timezone.utc))
 
 
 class CircuitBreaker:
@@ -74,9 +73,8 @@ class CircuitBreaker:
     async def call(self, func: Callable, *args, **kwargs):
         """Execute function with circuit breaker protection"""
         async with self.lock:
-            # If circuit is OPEN, check if we should try again
             if self.state == 'OPEN':
-                time_since_failure = (datetime.now() - self.last_failure_time).total_seconds()
+                time_since_failure = (datetime.now(timezone.utc) - self.last_failure_time).total_seconds()
                 
                 if time_since_failure > self.timeout:
                     self.state = 'HALF_OPEN'
@@ -90,7 +88,7 @@ class CircuitBreaker:
             result = await func(*args, **kwargs)
             await self._on_success()
             return result
-        except Exception as e:
+        except Exception:
             await self._on_failure()
             raise
     
@@ -106,10 +104,9 @@ class CircuitBreaker:
         """Increment failure count and potentially open circuit"""
         async with self.lock:
             self.failure_count += 1
-            
             if self.failure_count >= self.failure_threshold:
                 self.state = 'OPEN'
-                self.last_failure_time = datetime.now()
+                self.last_failure_time = datetime.now(timezone.utc)
                 logger.error(
                     f"Circuit breaker OPENED - {self.failure_count} failures. "
                     f"Retry in {self.timeout}s"
@@ -127,10 +124,10 @@ class DiskCache:
     def __init__(self, cache_dir: str = "data/cache"):
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self._io_lock = asyncio.Lock()
     
     def _get_cache_path(self, key: str) -> Path:
         """Get cache file path for a key"""
-        # Use hash to avoid filesystem issues with special characters
         key_hash = hashlib.md5(key.encode()).hexdigest()
         return self.cache_dir / f"{key_hash}.json"
     
@@ -138,16 +135,15 @@ class DiskCache:
         """Retrieve cached data"""
         try:
             cache_file = self._get_cache_path(key)
-            
             if not cache_file.exists():
                 return None
             
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                cached = json.load(f)
+            async with self._io_lock:
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cached = json.load(f)
             
-            # Check expiration
-            expires_at = datetime.fromisoformat(cached['expires_at'])
-            if datetime.utcnow() >= expires_at:
+            expires_at = datetime.fromisoformat(cached['expires_at'].replace('Z', '+00:00'))
+            if datetime.now(timezone.utc) >= expires_at:
                 logger.info(f"Disk cache expired for {key}")
                 return None
             
@@ -162,16 +158,18 @@ class DiskCache:
         """Store data in cache"""
         try:
             cache_file = self._get_cache_path(key)
+            now = datetime.now(timezone.utc)
             
             cached = {
                 'data': data,
-                'cached_at': datetime.utcnow().isoformat(),
-                'expires_at': (datetime.utcnow() + timedelta(hours=ttl_hours)).isoformat(),
-                'key': key  # Store original key for debugging
+                'cached_at': now.isoformat(),
+                'expires_at': (now + timedelta(hours=ttl_hours)).isoformat(),
+                'key': key
             }
             
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(cached, f, indent=2, ensure_ascii=False)
+            async with self._io_lock:
+                with open(cache_file, 'w', encoding='utf-8') as f:
+                    json.dump(cached, f, indent=2, ensure_ascii=False)
             
             logger.info(f"Stored in disk cache: {key} (TTL: {ttl_hours}h)")
             
@@ -182,12 +180,12 @@ class DiskCache:
         """Get cached data even if expired (fallback)"""
         try:
             cache_file = self._get_cache_path(key)
-            
             if not cache_file.exists():
                 return None
             
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                cached = json.load(f)
+            async with self._io_lock:
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cached = json.load(f)
             
             logger.warning(f"Using STALE cache for {key}")
             return cached['data']
@@ -224,15 +222,7 @@ async def retry_with_backoff(
     backoff_factor: float = 2.0,
     **kwargs
 ):
-    """
-    Retry a function with exponential backoff
-    
-    Args:
-        func: Async function to retry
-        max_retries: Maximum number of retry attempts
-        initial_delay: Initial delay in seconds
-        backoff_factor: Multiply delay by this factor each retry
-    """
+    """Retry an async function with exponential backoff"""
     last_exception = None
     
     for attempt in range(max_retries + 1):
@@ -240,7 +230,6 @@ async def retry_with_backoff(
             return await func(*args, **kwargs)
         except Exception as e:
             last_exception = e
-            
             if attempt == max_retries:
                 logger.error(f"All {max_retries} retries failed: {e}")
                 break

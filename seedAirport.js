@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Service = require('./models/serviceModel');
 
-dotenv.config();
+dotenv.config({ path: "./variables.env" });
 
 const mapCategory = (tags) => {
-  if (tags.aeroway === 'gate') return "COUNTERS";
+  if (tags.aeroway === 'gate') return "GATES";
+  if (tags.aeroway === 'check_in' || tags.aeroway === 'ticket') return "COUNTERS";
   if (tags.amenity === 'bank' || tags.amenity === 'atm') return "FINANCIAL";
   if (tags.amenity === 'restaurant' || tags.amenity === 'cafe') return "RESTAURANTS";
   if (tags.shop) return "SHOPS";
@@ -49,10 +50,11 @@ out body;`;
     for (const element of elements) {
       const tags = element.tags || {};
       
-      if (!tags.name) continue;
+      const name = tags.name || (tags.aeroway === 'gate' && tags.ref ? `Gate ${tags.ref}` : null);
+      if (!name) continue;
 
       documents.push({
-        name: tags.name,
+        name: name,
         category: mapCategory(tags),
         location: {
           type: "Point",

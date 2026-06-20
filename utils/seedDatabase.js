@@ -7,7 +7,8 @@ const Faq = require("../models/faqModel");
 const Airport = require("../models/airportModel");
 const Rating = require("../models/ratingModel");
 
-dotenv.config();
+const path = require("path");
+dotenv.config({ path: path.join(__dirname, "../variables.env") });
 
 const DB = process.env.DATABASE_URL;
 

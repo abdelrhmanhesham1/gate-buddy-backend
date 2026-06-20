@@ -11,10 +11,37 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       validate: [validator.isEmail, "Please provide a valid email"],
-      required: [function () { return !this.auth_providers || this.auth_providers.length === 0; }, "Email is required"],
+      required: [function () {
+        const doc = this instanceof mongoose.Document ? this : null;
+        if (!doc) return false;
+        return !doc.auth_providers || doc.auth_providers.length === 0;
+      }, "Email is required"],
     },
-    password: { type: String, select: false, minlength: 8, required: [function () { return !this.auth_providers || this.auth_providers.length === 0; }, "Password is required"] },
-    passwordConfirm: { type: String, required: [function () { return !this.auth_providers || this.auth_providers.length === 0; }, "Please confirm password"], validate: { validator: function (el) { return el === this.password; }, message: "Passwords do not match!" } },
+    password: { 
+      type: String, 
+      select: false, 
+      minlength: 8, 
+      required: [function () {
+        const doc = this instanceof mongoose.Document ? this : null;
+        if (!doc) return false;
+        return !doc.auth_providers || doc.auth_providers.length === 0;
+      }, "Password is required"] 
+    },
+    passwordConfirm: { 
+      type: String, 
+      required: [function () {
+        const doc = this instanceof mongoose.Document ? this : null;
+        if (!doc) return false;
+        return !doc.auth_providers || doc.auth_providers.length === 0;
+      }, "Please confirm password"], 
+      validate: { 
+        validator: function (el) {
+          if (!this || this.password === undefined) return true;
+          return el === this.password; 
+        }, 
+        message: "Passwords do not match!" 
+      } 
+    },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     photo: { type: String, default: "default.jpg" },
     active: { type: Boolean, default: true, select: false },

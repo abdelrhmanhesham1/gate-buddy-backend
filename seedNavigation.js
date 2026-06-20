@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const NavigationNode = require('./models/NavigationNode');
 
-dotenv.config();
+dotenv.config({ path: "./variables.env" });
 
 // Helper to calculate distance in meters between two coordinates
 const getDistance = (lon1, lat1, lon2, lat2) => {

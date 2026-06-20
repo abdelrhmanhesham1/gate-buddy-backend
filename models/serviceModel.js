@@ -9,7 +9,16 @@ const serviceSchema = new mongoose.Schema(
     status: { type: String, default: "Open", enum: ["Open", "Closed", "Busy", "Available"] },
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
-      coordinates: { type: [Number], required: true },
+      coordinates: { 
+        type: [Number], 
+        required: true,
+        validate: {
+          validator: function(val) {
+            return Array.isArray(val) && val.length === 2 && !isNaN(val[0]) && !isNaN(val[1]);
+          },
+          message: "Location coordinates must be an array of two numbers [longitude, latitude]"
+        }
+      },
     },
     terminal: String,
     gate: String,

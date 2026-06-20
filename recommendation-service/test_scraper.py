@@ -15,10 +15,10 @@ async def test():
         
     print(f"Scraped {len(res['places'])} places")
     for p in res['places']:
-        credits = [ph['credit'] for ph in p['photos']]
-        pexels = sum(1 for c in credits if 'Pexels' in c)
-        wiki = sum(1 for c in credits if 'Wikimedia' in c)
-        print(f"  {p['name']}: {pexels} Pexels + {wiki} Wikimedia = {len(p['photos'])} photos")
+        name = p.get('name', '').encode('ascii', 'backslashreplace').decode('ascii')
+        credit = p.get('imageCredit', '').encode('ascii', 'backslashreplace').decode('ascii')
+        image = p.get('image', '').encode('ascii', 'backslashreplace').decode('ascii')
+        print(f"  {name}: image={image} | credit={credit}")
         
     await scraper.close()
 

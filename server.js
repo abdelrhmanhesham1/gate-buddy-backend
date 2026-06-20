@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ path: "./variables.env" });
 
 const notificationJob = require("./utils/notificationJob");
 const flightSyncJob = require("./utils/flightSyncJob");
