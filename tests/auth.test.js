@@ -1,8 +1,14 @@
+const dotenv = require("dotenv");
+dotenv.config({ path: "./variables.env" });
 const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
 
 describe("Auth & Stats API", () => {
+  beforeAll(async () => {
+    await mongoose.connect(process.env.DATABASE_URL);
+  });
+
   // Gracefully close connection after tests
   afterAll(async () => {
     await mongoose.connection.close();

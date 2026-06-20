@@ -6,9 +6,15 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  // get duplicate val
+  const field = err.keyValue ? Object.keys(err.keyValue)[0] : "";
   const value = err.keyValue ? Object.values(err.keyValue)[0] : "unknown";
-  const message = `Duplicate field value: ${value}. Please use another value!`;
+  
+  let message;
+  if (field === "email") {
+    message = "This email is already registered. Please use another email or log in.";
+  } else {
+    message = `Duplicate field value: ${value}. Please use another value!`;
+  }
   return new AppError(message, 400);
 };
 
@@ -63,6 +69,10 @@ module.exports = (err, req, res, next) => {
     error.message = err.message;
     error.name = err.name;
     error.code = err.code;
+    error.errors = err.errors;
+    error.keyValue = err.keyValue;
+    error.path = err.path;
+    error.value = err.value;
 
     // specific error types
     if (error.name === "CastError") error = handleCastErrorDB(error);
