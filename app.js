@@ -25,6 +25,7 @@ const deviceRouter = require("./routes/deviceRoutes");
 const faqRouter = require("./routes/faqRoutes");
 const statsRouter = require("./routes/statsRoutes");
 const navigationRouter = require("./routes/navigation");
+const adminRouter = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -93,6 +94,7 @@ app.use("/api/v1/devices", deviceRouter);
 app.use("/api/v1/faqs", faqRouter);
 app.use("/api/v1/stats", statsRouter);
 app.use("/api/v1/navigation", navigationRouter);
+app.use("/api/v1/admin", adminRouter);
 
 app.all("*", (req, res, next) => {
 

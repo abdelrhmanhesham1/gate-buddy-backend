@@ -61,9 +61,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   res.status(204).json({ status: "success", data: null });
 });
 
-exports.createUser = (req, res) => {
-  res.status(500).json({ status: "error", message: "Use /signup instead." });
-};
+exports.createUser = catchAsync(async (req, res, next) => {
+  return next(new AppError("Please use POST /users/signup to create a new account.", 400));
+});
 
 exports.getUser = factory.getOne(User);
 exports.getAllUsers = factory.getAll(User);

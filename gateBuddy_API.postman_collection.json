@@ -1,8 +1,9 @@
 {
   "info": {
-    "name": "GateBuddy API",
-    "description": "Comprehensive API for GateBuddy - The Intelligent Airport Companion Ecosystem.\n\n**API Base URL (Local):** `http://localhost:3001/api/v1` (No trailing slash)\n**API Base URL (Railway):** `https://gate-buddy-backend-production.up.railway.app/api/v1` (No trailing slash)\n\n**Authentication:** This collection uses a Bearer Token. The token is automatically updated in the `token` collection variable after a successful Login or Signup.\n\n## Core Ecosystem Features\n1. **Unified OAuth 2.0**: Integrated Google, Facebook, and GitHub sign-in.\n2. **IATA 792 Standard**: Boarding pass scanning with Julian date validation.\n3. **AI Concierge**: Google Gemini-powered chatbot for terminal assistance.\n4. **Indoor Maps**: GeoJSON support for Gates, Lounges, and Retail.\n5. **FCM Notifications**: Firebase Cloud Messaging for real-time alerts.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "name": "GateBuddy API - Complete Reference (41 Endpoints)",
+    "description": "**🔴 AUTHORITATIVE REFERENCE** for GateBuddy - The Intelligent Airport Companion Ecosystem\n\n📚 **API Standards**: JSend + REST conventions\n\n🔗 **Base URLs:**\n- **Development**: `http://localhost:3001/api/v1`\n- **Production**: `https://gate-buddy-backend-production.up.railway.app/api/v1`\n\n🔐 **Authentication**: Bearer JWT (set automatically after Signup/Login)\n\n⏱️ **Token Details**:\n- **Access Token**: Valid for 6 hours\n- **Refresh Token**: Valid for 7 days (stored in MongoDB)\n- **Method**: Authorization header: `Bearer {token}`\n\n📱 **Core Features:**\n1. **JWT Authentication** - 6-hour access, refresh token rotation\n2. **OAuth 2.0** - Google, GitHub, Facebook sign-in\n3. **Real-Time Flight Tracking** - Delays, gate changes, status updates with audit trail\n4. **Indoor Navigation** - Dijkstra pathfinding through airport terminals\n5. **AI Chat Assistant** - Google Gemini-powered terminal concierge\n6. **Push Notifications** - Firebase Cloud Messaging (FCM) integration\n7. **Ratings & Reviews** - Service ratings with user reviews\n8. **Admin Dashboard** - System analytics and management\n\n⚠️ **Important Notes:**\n- All timestamps: **ISO 8601 format** (UTC)\n- All prices: **USD cents** (divide by 100 for display)\n- Rate limiting: **100 requests per 15 minutes** (environment-aware)\n- Flight TTL: **Auto-expires 1 hour after scheduled time**\n- Flight times shifted: **+6 hours for testing** (real departure = scheduled - 6h)\n- Error format: `{ \"status\": \"fail/error\", \"message\": \"...\", \"statusCode\": 400 }`\n\n🚀 **Quick Start:**\n1. Call `POST /users/signup` to create account\n2. Save returned `token` in Bearer Authorization\n3. Use `GET /flights` to explore available flights\n4. All endpoints with 🔐 require authentication\n\n📖 **Response Format (JSend Standard):**\n```json\n{\n  \"status\": \"success\",\n  \"data\": { /* endpoint-specific data */ }\n}\n```\n\n❌ **Error Format:**\n```json\n{\n  \"status\": \"fail\",\n  \"message\": \"Descriptive error message\",\n  \"statusCode\": 400\n}\n```",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "gatebuddy-v1-complete"
   },
   "auth": {
     "type": "bearer",
@@ -16,19 +17,21 @@
   },
   "item": [
     {
-      "name": "🔐 AUTH & PROFILE",
+      "name": "🔐 AUTH & PROFILE (15 endpoints)",
+      "description": "User authentication, OAuth, token refresh, and profile management. All responses include JWT token for authenticated endpoints.",
       "item": [
         {
-          "name": "Signup",
+          "name": "POST /users/signup - Register New User",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json();",
-                  "if (jsonData.token) {",
-                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+                  "    pm.collectionVariables.set(\"user_id\", jsonData.data.user._id);",
+                  "    console.log('✅ Token saved: ' + jsonData.data.token.substring(0, 20) + '...');",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -45,32 +48,27 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
+              "raw": "{\n  \"name\": \"Sarah Johnson\",\n  \"email\": \"sarah.johnson@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\"\n}"
             },
-            "description": "Registers a new user in the GateBuddy ecosystem.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `name` | string | Yes | Full name (min 3 chars) |\n| `email` | string | Yes | Unique valid email address |\n| `password` | string | Yes | Min 8 chars, with uppercase, number, and special char |\n| `passwordConfirm` | string | Yes | Must match `password` |\n\n### Response Codes\n*   **201 Created**: Successful registration. Returns JWT token.\n*   **400 Bad Request**: Validation error (e.g., passwords don't match).\n*   **409 Conflict**: Email already registered.",
             "url": {
               "raw": "{{base_url}}/users/signup",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "signup"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["users", "signup"]
             }
-          }
+          },
+          "description": "**Register a new user account**\n\n### ✅ What Happens\nCreates new user in database. Password is hashed with bcrypt (10 rounds). Email uniqueness enforced with pre-save hook (prevents race conditions). Returns JWT token valid for 6 hours. Sets httpOnly JWT cookie.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"name\": \"Sarah Johnson\",           // ✓ Required, 3-50 chars\n  \"email\": \"sarah@example.com\",      // ✓ Required, unique, valid email\n  \"password\": \"SecurePass123!\",      // ✓ Required, min 8, uppercase, number, special\n  \"passwordConfirm\": \"SecurePass123!\" // ✓ Required, must match password\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"role\": \"user\",\n      \"createdAt\": \"2026-06-22T14:30:45.123Z\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUwN2YxZjc3YmNmODZjZDc5OTQzOTAxMSIsImlhdCI6MTcxODk5MTg0NSwiZXhwIjoxNzE5MDEzODQ1fQ.7x8y9z0a1b2c3d...\"\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n| Status | Message | Cause |\n|--------|---------|-------|\n| 400 | Passwords don't match | passwordConfirm ≠ password |\n| 400 | Password too weak | Missing uppercase, number, or special char |\n| 400 | Invalid email | Malformed email format |\n| 409 | Email already exists | Duplicate email in database |\n\n### 💾 STORED DATA\n- Password hashed with bcrypt (10 rounds)\n- Email normalized to lowercase\n- Role defaults to \"user\"\n- Created timestamp recorded"
         },
         {
-          "name": "Login",
+          "name": "POST /users/login - User Login",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json();",
-                  "if (jsonData.token) {",
-                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+                  "    pm.collectionVariables.set(\"user_id\", jsonData.data.user._id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -87,113 +85,39 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+              "raw": "{\n  \"email\": \"sarah.johnson@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
             },
-            "description": "Authenticates a user and starts a session.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | Registered user email |\n| `password` | string | Yes | User password |\n\n### Response Codes\n*   **200 OK**: Login successful. Returns JWT token and sets `jwt` cookie.\n*   **401 Unauthorized**: Incorrect email or password.\n*   **423 Locked**: Account locked after 5 failed attempts.",
             "url": {
               "raw": "{{base_url}}/users/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["users", "login"]
             }
-          }
+          },
+          "description": "**Authenticate existing user and get JWT token**\n\n### ✅ What Happens\nValidates email/password against stored hash. Returns JWT token (6h validity). Sets httpOnly `jwt` cookie. Account locks after 5 failed attempts (30 min timeout). Pre-checks for null email/password.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"email\": \"sarah.johnson@example.com\",  // ✓ Required\n  \"password\": \"SecurePass123!\"            // ✓ Required\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"role\": \"user\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n| Status | Message | Cause |\n|--------|---------|-------|\n| 400 | Please provide email and password | Email or password missing |\n| 401 | Email/password incorrect | Invalid credentials |\n| 423 | Account locked | 5 failed attempts (30 min timeout) |\n\n### 🔒 Security Features\n- Password compared with bcrypt.compare()\n- Failed attempts tracked in database\n- Account auto-locked after 5 failures\n- Lock automatically expires after 30 minutes"
         },
         {
-          "name": "Get Me (Profile)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "me"
-              ]
-            },
-            "description": "Returns the profile data of the currently logged-in user.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Profile data retrieved.\n*   **401 Unauthorized**: Missing or invalid token."
-          }
-        },
-        {
-          "name": "Update Me",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\",\n  \"preferences\": {\n    \"darkMode\": true,\n    \"language\": \"en\"\n  }\n}"
-            },
-            "description": "Updates non-security profile fields.\n\n### Request Body Fields (All Optional)\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `name` | string | New full name |\n| `photo` | string | URL to new profile image |\n| `preferences` | object | App settings like `darkMode` (bool), `language` (string) |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Profile updated successfully.\n*   **400 Bad Request**: Invalid field or value provided.",
-            "url": {
-              "raw": "{{base_url}}/users/updateMe",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "updateMe"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Delete Me (Soft Delete)",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/deleteMe",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "deleteMe"
-              ]
-            },
-            "description": "Deactivates the user account without removing data.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **204 No Content**: Account successfully deactivated.\n*   **401 Unauthorized**: Missing or invalid token."
-          }
-        },
-        {
-          "name": "Logout",
+          "name": "POST /users/logout - User Logout",
           "request": {
             "method": "POST",
             "header": [],
             "url": {
               "raw": "{{base_url}}/users/logout",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "logout"
-              ]
-            },
-            "description": "Ends the user session and clears authentication cookies.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Logged out successfully.\n*   **401 Unauthorized**: Not logged in."
-          }
+              "host": ["{{base_url}}"],
+              "path": ["users", "logout"]
+            }
+          },
+          "description": "**Logout current user and invalidate session**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nClears JWT cookie. Client should also clear local token storage.\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\"\n}\n```"
         },
         {
-          "name": "Refresh Token",
+          "name": "POST /users/refreshToken - Refresh JWT Token",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json();",
-                  "if (jsonData.token) {",
-                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -202,91 +126,75 @@
           ],
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"507f1f77bcf86cd799439012\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/refreshToken",
+              "host": ["{{base_url}}"],
+              "path": ["users", "refreshToken"]
+            }
+          },
+          "description": "**Get new JWT token using refresh token**\n\n### ✅ What Happens\nExchanges valid refresh token for new JWT access token. Extends user session without re-authenticating. Refresh token stored in RefreshToken collection with user reference.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"refreshToken\": \"507f1f77bcf86cd799439012\" // ✓ Required, from initial login\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **401 Unauthorized**: Refresh token invalid/expired/not found"
+        },
+        {
+          "name": "POST /users/oauth - OAuth Authorization",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider\": \"google\",\n  \"idToken\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiJjbGllbnRfaWQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20ifQ...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/oauth",
+              "host": ["{{base_url}}"],
+              "path": ["users", "oauth"]
+            }
+          },
+          "description": "**Authenticate via OAuth provider (Google, GitHub, Facebook)**\n\n### ✅ What Happens\nVerifies OAuth token with provider. Creates user if first-time login, logs in if exists. Returns JWT token. Provider verified using oauthVerifiers utilities.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"provider\": \"google\",    // ✓ Required: \"google\" | \"github\" | \"facebook\"\n  \"idToken\": \"eyJh...\"      // ✓ Required: Valid token from OAuth provider\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah@gmail.com\",\n      \"oauthProvider\": \"google\",\n      \"photo\": \"https://lh3.googleusercontent.com/...\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n  }\n}\n```"
+        },
+        {
+          "name": "GET /users/me - Get Current User Profile",
+          "request": {
+            "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/users/refresh",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "refresh"
-              ]
-            },
-            "description": "Obtains a new access token using a valid refresh token cookie.\n\n### Authentication\n*   **Required**: `refreshToken` HttpOnly cookie\n\n### Response Codes\n*   **200 OK**: New access token returned.\n*   **401 Unauthorized**: Refresh token missing or expired."
-          }
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "description": "**Retrieve current authenticated user's full profile**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nReturns complete profile of authenticated user from JWT claim. No database query needed (decoded from token).\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"role\": \"user\",\n      \"photo\": \"user-507f1f77bcf86cd799439011.jpeg\",\n      \"createdAt\": \"2026-06-01T10:00:00.000Z\",\n      \"updatedAt\": \"2026-06-22T14:30:45.123Z\"\n    }\n  }\n}\n```"
         },
         {
-          "name": "Forgot Password",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"john.doe@example.com\"\n}"
-            },
-            "description": "Initiates password recovery via email.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | The email associated with the account |\n\n### Response Codes\n*   **200 OK**: Reset code sent successfully.\n*   **404 Not Found**: No user found with that email address.",
-            "url": {
-              "raw": "{{base_url}}/users/forgotPassword",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "forgotPassword"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Verify Reset Code",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"code\": \"123456\"\n}"
-            },
-            "description": "Validates the 6-digit code from email.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `email` | string | Yes | User email address |\n| `code` | string | Yes | 6-digit verification code |\n\n### Response Codes\n*   **200 OK**: Code verified. Returns a temporary `resetToken`.\n*   **400 Bad Request**: Invalid or expired code.",
-            "url": {
-              "raw": "{{base_url}}/users/verifyResetCode",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "verifyResetCode"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Reset Password",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if (jsonData.token) {",
-                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                  "    if (pm.environment.name) pm.environment.set(\"token\", jsonData.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "PATCH /users/updateMe - Update User Profile",
           "request": {
             "method": "PATCH",
             "header": [
@@ -297,25 +205,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"password\": \"NewSecurePass123!\",\n  \"passwordConfirm\": \"NewSecurePass123!\"\n}"
+              "raw": "{\n  \"name\": \"Sarah J. Johnson\",\n  \"photo\": \"user-photo-2024.jpg\"\n}"
             },
-            "description": "Sets the new password using the token from the verification step.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `password` | string | Yes | New password (min 8 chars) |\n| `passwordConfirm` | string | Yes | Must match `password` |\n\n### Response Codes\n*   **200 OK**: Password reset successful. Returns new JWT token.\n*   **400 Bad Request**: Token expired or passwords do not match.",
             "url": {
-              "raw": "{{base_url}}/users/resetPassword",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "resetPassword"
-              ]
+              "raw": "{{base_url}}/users/updateMe",
+              "host": ["{{base_url}}"],
+              "path": ["users", "updateMe"]
             }
-          }
+          },
+          "description": "**Update current user's profile information**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nUpdates name, photo, or other profile fields. Cannot change email/password here (use dedicated endpoints). Updates `updatedAt` timestamp.\n\n### 📝 REQUEST BODY (all fields optional)\n```json\n{\n  \"name\": \"Sarah J. Johnson\",    // Max 50 chars\n  \"photo\": \"user-photo-2024.jpg\"  // Stored in /public/img/users/\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah J. Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"photo\": \"user-photo-2024.jpg\",\n      \"updatedAt\": \"2026-06-22T14:35:00.000Z\"\n    }\n  }\n}\n```"
         },
         {
-          "name": "Social: Google Login",
+          "name": "PATCH /users/updatePassword - Change Password",
           "request": {
-            "method": "POST",
+            "method": "PATCH",
             "header": [
               {
                 "key": "Content-Type",
@@ -324,754 +227,71 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"idToken\": \"YOUR_GOOGLE_ID_TOKEN\"\n}"
+              "raw": "{\n  \"passwordCurrent\": \"SecurePass123!\",\n  \"password\": \"NewSecurePass456!\",\n  \"passwordConfirm\": \"NewSecurePass456!\"\n}"
             },
-            "description": "Authenticates or registers a user using a Google ID token. Integrates with the application's unified OAuth 2.0 system.",
             "url": {
-              "raw": "{{base_url}}/users/google",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "google"
-              ]
+              "raw": "{{base_url}}/users/updatePassword",
+              "host": ["{{base_url}}"],
+              "path": ["users", "updatePassword"]
             }
-          }
+          },
+          "description": "**Change user password**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nVerifies current password, validates new password strength, hashes with bcrypt, updates in database.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"passwordCurrent\": \"SecurePass123!\",  // ✓ Required\n  \"password\": \"NewSecurePass456!\",      // ✓ Required, min 8, uppercase, number, special\n  \"passwordConfirm\": \"NewSecurePass456!\" // ✓ Required, must match password\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"email\": \"sarah.johnson@example.com\"\n    }\n  }\n}\n```"
         },
         {
-          "name": "Social: GitHub Login",
+          "name": "DELETE /users/deleteMe - Delete Account",
           "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"code\": \"GITHUB_CODE_HERE\"\n}"
-            },
-            "description": "Authenticates or registers a user using a GitHub authorization code.",
+            "method": "DELETE",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/users/github",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "github"
-              ]
+              "raw": "{{base_url}}/users/deleteMe",
+              "host": ["{{base_url}}"],
+              "path": ["users", "deleteMe"]
             }
-          }
+          },
+          "description": "**Permanently delete user account**\n\n### 🔐 Authentication Required\nBearer token\n\n### ⚠️ WARNING\n**This action is IRREVERSIBLE.** Account and ALL associated data will be deleted.\n\n### ✅ What Happens\nDeletes user document from database. All related data (flights, notifications, ratings) removed.\n\n### 📤 SUCCESS RESPONSE (204 No Content)\nNo response body returned"
         },
         {
-          "name": "Social: Facebook Login",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"accessToken\": \"FB_ACCESS_TOKEN_HERE\"\n}"
-            },
-            "description": "Authenticates or registers a user using a Facebook access token.",
-            "url": {
-              "raw": "{{base_url}}/users/facebook",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "facebook"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "✈️ FLIGHTS & TRAVEL",
-      "item": [
-        {
-          "name": "Get All Flights",
+          "name": "GET /users/:id - Get User by ID (Admin)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/flights?page=1&limit=50",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights"
-              ],
+              "raw": "{{base_url}}/users/507f1f77bcf86cd799439011",
+              "host": ["{{base_url}}"],
+              "path": ["users", "507f1f77bcf86cd799439011"]
+            }
+          },
+          "description": "**Get specific user profile (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 URL Parameters\n```\n:id = MongoDB user ID (24-character hex string)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"role\": \"user\"\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "GET /users - Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users?limit=10&page=1&sort=-createdAt",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
               "query": [
                 {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Page number"
+                  "key": "limit",
+                  "value": "10"
                 },
                 {
-                  "key": "limit",
-                  "value": "50",
-                  "description": "Number of results per page"
-                }
-              ]
-            },
-            "description": "Retrieves a paginated list of all flights in the system. Now accessible to all registered users.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
-          }
-        },
-        {
-          "name": "Get Single Flight",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "{{flight_id}}"
-              ]
-            },
-            "description": "Retrieves real-time status and details for a specific flight by ID.\n\n### Authentication\n*   **None Required** (Public access enabled)"
-          }
-        },
-        {
-          "name": "Get Updated Flights",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if (jsonData.data && jsonData.data.flights && jsonData.data.flights.length > 0) {",
-                  "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flights[0]._id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/flights/updated?limit=30&sort=-updatedAt",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "updated"
-              ],
-              "query": [
-                {
-                  "key": "limit",
-                  "value": "30",
-                  "description": "Number of flight records to return"
+                  "key": "page",
+                  "value": "1"
                 },
                 {
                   "key": "sort",
-                  "value": "-updatedAt",
-                  "description": "Sort order (e.g., `-updatedAt`, `status`, `departureTime`)"
-                }
-              ]
-            },
-            "description": "Fetches flights with recent status changes.\n\n### Query Parameters\n| Param | Default | Description |\n| :--- | :--- | :--- |\n| `limit` | 30 | Number of results per page |\n| `sort` | `-updatedAt` | Mongoose sort string |\n\n### Response Codes\n*   **200 OK**: List of flights returned.\n*   **400 Bad Request**: Invalid sort or limit parameters."
-          }
-        },
-        {
-          "name": "Scan Boarding Pass",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"barcodeData\": \"M1TRAVELER/JOHN       E1234567LXRCAIMS 101  064                                               \"\n}"
-            },
-            "description": "Extracts flight information from a boarding pass barcode string.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `barcodeData` | string | Yes | Full IATA BCBP string |\n\n### Response Codes\n*   **200 OK**: Flight found and data returned (including weather and recommendations).\n*   **400 Bad Request**: Invalid barcode format or missing data.\n*   **404 Not Found**: Flight not found in our database.",
-            "url": {
-              "raw": "{{base_url}}/flights/scan",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "scan"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Get My Active Tracked Flight",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if (jsonData.data && jsonData.data.flight) {",
-                  "    pm.collectionVariables.set(\"flight_id\", jsonData.data.flight._id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/flights/my-flight",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "my-flight"
-              ]
-            },
-            "description": "Retrieves the user's currently tracked flight and destination info.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Flight data and destination recommendations returned.\n*   **404 Not Found**: No active flight tracking for this user."
-          }
-        },
-        {
-          "name": "Track Flight (Manual)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"reminderMinutes\": 30\n}"
-            },
-            "description": "Subscribes to notifications for a specific flight.\n\n### Request Body Fields\n| Field | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `reminderMinutes` | number | 25 | Minutes before departure to send reminder |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Tracking successfully enabled.\n*   **404 Not Found**: Flight ID does not exist.",
-            "url": {
-              "raw": "{{base_url}}/flights/{{flight_id}}/track",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "{{flight_id}}",
-                "track"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Cancel Flight Tracking",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/flights/{{flight_id}}/cancel-track",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "{{flight_id}}",
-                "cancel-track"
-              ]
-            },
-            "description": "Stops tracking a flight and disables related notifications.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Tracking cancelled.\n*   **404 Not Found**: Tracking record not found."
-          }
-        }
-      ]
-    },
-    {
-      "name": "🗺️ MAP & SERVICES",
-      "item": [
-        {
-          "name": "Home Dashboard Payload",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/home",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "home"
-              ]
-            },
-            "description": "Aggregated data for the mobile home screen.\n\n### Included Data\n*   `updatedFlights`: Recent status changes\n*   `featuredServices`: Highly rated shops/lounges\n*   `metrics`: App-wide stats\n*   `userTrack`: Active flight (if authenticated)\n\n### Authentication\n*   **Optional**: Returns general data without token."
-          }
-        },
-        {
-          "name": "Search Services",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/services/search?q=Shop",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "search"
-              ],
-              "query": [
-                {
-                  "key": "q",
-                  "value": "Shop",
-                  "description": "Keyword for search"
-                }
-              ]
-            },
-            "description": "Text search across all airport services.\n\n### Query Parameters\n| Param | Required | Description |\n| :--- | :--- | :--- |\n| `q` | Yes | Search term (e.g., 'Starbucks', 'Pharmacy') |\n\n### Response Codes\n*   **200 OK**: Search results returned.\n*   **400 Bad Request**: Missing query parameter."
-          }
-        },
-        {
-          "name": "Nearby Services",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/services/nearby?lng=31.4&lat=30.1&distance=500",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "nearby"
-              ],
-              "query": [
-                {
-                  "key": "lng",
-                  "value": "31.4",
-                  "description": "Longitude of current location"
-                },
-                {
-                  "key": "lat",
-                  "value": "30.1",
-                  "description": "Latitude of current location"
-                },
-                {
-                  "key": "distance",
-                  "value": "500",
-                  "description": "Maximum distance in meters (default: 500)"
-                }
-              ]
-            },
-            "description": "Geospatial search for services near a point.\n\n### Query Parameters\n| Param | Required | Description |\n| :--- | :--- | :--- |\n| `lng` | Yes | Longitude coordinate |\n| `lat` | Yes | Latitude coordinate |\n| `distance` | No | Search radius in meters (Default: 500) |\n\n### Response Codes\n*   **200 OK**: Nearby services returned with distance calculations.\n*   **400 Bad Request**: Longitude or Latitude missing."
-          }
-        },
-        {
-          "name": "Service Counter Stats",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/services/counters/stats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "counters",
-                "stats"
-              ]
-            },
-            "description": "Provides a quick summary of airport counters, including total number of counters and how many are currently open."
-          }
-        },
-        {
-          "name": "All Services",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/services?category=SHOPS&limit=10&page=1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services"
-              ],
-              "query": [
-                {
-                  "key": "category",
-                  "value": "SHOPS",
-                  "description": "Filter by category (e.g., SHOPS, RESTAURANTS, VIP_SERVICES)"
-                },
-                {
-                  "key": "limit",
-                  "value": "10",
-                  "description": "Results per page"
-                },
-                {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Page number"
+                  "value": "-createdAt"
                 }
               ]
             }
-          }
+          },
+          "description": "**Get paginated list of all users (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 QUERY PARAMETERS\n```\nlimit     = Results per page (default: 10, max: 100)\npage      = Page number (1-indexed, default: 1)\nsort      = Sort field (prefix '-' for descending, default: -createdAt)\nfields    = Comma-separated field names to return\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 3,\n    \"users\": [\n      {\n        \"_id\": \"507f1f77bcf86cd799439011\",\n        \"name\": \"Sarah Johnson\",\n        \"email\": \"sarah@example.com\",\n        \"role\": \"user\",\n        \"createdAt\": \"2026-06-01T10:00:00.000Z\"\n      }\n    ]\n  }\n}\n```"
         },
         {
-          "name": "Get Single Service",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/services/{{service_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "{{service_id}}"
-              ]
-            },
-            "description": "Retrieves details for a specific airport service by ID."
-          }
-        },
-        {
-          "name": "Global Airport Stats",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/stats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "stats"
-              ]
-            },
-            "description": "Returns aggregated statistics for the airport (e.g., total active flights, average delay time)."
-          }
-        },
-        {
-          "name": "Submit App Rating",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great navigation features!\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/stats/rate",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "stats",
-                "rate"
-              ]
-            },
-            "description": "Submits a user rating and review for the app experience.\n\n### Request Body\n*   **`rating`**: Number between 1 and 5.\n*   **`comment`**: Optional text feedback.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
-          }
-        },
-        {
-          "name": "Get All FAQs",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/faqs",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "faqs"
-              ]
-            },
-            "description": "Retrieves all Frequently Asked Questions for the support section.\n\n### Authentication\n*   **None Required**"
-          }
-        }
-      ]
-    },
-    {
-      "name": "📍 NAVIGATION",
-      "item": [
-        {
-          "name": "Find Path (Dijkstra)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"fromNodeId\": \"gate_A1\",\n  \"toNodeId\": \"gate_B2\"\n}"
-            },
-            "description": "Generates a routing path between two terminal points.\n\n### Request Body Fields\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `fromNodeId` | string | ID of starting waypoint |\n| `toNodeId` | string | ID of destination waypoint |\n\n### Response Codes\n*   **200 OK**: Path nodes and total distance returned.\n*   **404 Not Found**: One or both nodes do not exist.",
-            "url": {
-              "raw": "{{base_url}}/navigation/find-path",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "navigation",
-                "find-path"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Get Navigation Nodes",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/navigation/nodes?level=1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "navigation",
-                "nodes"
-              ],
-              "query": [
-                {
-                  "key": "level",
-                  "value": "1",
-                  "description": "Filter nodes by floor level (e.g., 0, 1, 2)"
-                }
-              ]
-            },
-            "description": "Retrieves all navigation nodes (waypoints) within the airport, optionally filtered by floor level. These nodes are used as endpoints for pathfinding."
-          }
-        }
-      ]
-    },
-    {
-      "name": "🤖 AI & NOTIFICATIONS",
-      "item": [
-        {
-          "name": "AI Chat Assistant",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"message\": \"What is the status of flight MS731?\",\n  \"context\": {\n    \"destination\": \"Cairo\",\n    \"arrivalTime\": \"2026-04-23T22:00:00Z\"\n  }\n}"
-            },
-            "description": "Natural language interaction with the AI concierge.\n\n### Request Body Fields\n| Field | Type | Description |\n| :--- | :--- | :--- |\n| `message` | string | User's question |\n| `context` | object | (Optional) relevant flight/location data |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: AI reply returned.\n*   **503 Service Unavailable**: AI service (Gemini) is down.",
-            "url": {
-              "raw": "{{base_url}}/chat/query",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chat",
-                "query"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Register Device Token",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\",\n  \"deviceType\": \"ios\",\n  \"deviceName\": \"iPhone 13\",\n  \"osVersion\": \"16.2\"\n}"
-            },
-            "description": "Links a mobile device for Firebase push notifications.\n\n### Request Body Fields\n| Field | Type | Required | Description |\n| :--- | :--- | :--- | :--- |\n| `deviceToken` | string | Yes | FCM registration token |\n| `deviceType` | string | Yes | `ios`, `android`, or `web` |\n| `deviceName` | string | No | Friendly name (e.g., 'iPhone 13') |\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`\n\n### Response Codes\n*   **200 OK**: Device registered successfully.\n*   **400 Bad Request**: Token or type missing.",
-            "url": {
-              "raw": "{{base_url}}/devices/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "devices",
-                "register"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Unregister Device Token",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"FCM_TOKEN_HERE\"\n}"
-            },
-            "description": "Removes a device from push notification registration.",
-            "url": {
-              "raw": "{{base_url}}/devices/unregister",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "devices",
-                "unregister"
-              ]
-            }
-          }
-        },
-        {
-          "name": "All My Notifications",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/notifications?limit=20&page=1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "notifications"
-              ],
-              "query": [
-                {
-                  "key": "limit",
-                  "value": "20",
-                  "description": "Number of notifications per page"
-                },
-                {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Page number"
-                }
-              ]
-            },
-            "description": "Retrieves the history of push notifications sent to the user, including flight updates, gate changes, and system alerts."
-          }
-        },
-        {
-          "name": "Mark All Notifications as Read",
-          "request": {
-            "method": "PATCH",
-            "url": {
-              "raw": "{{base_url}}/notifications/read-all",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "notifications",
-                "read-all"
-              ]
-            },
-            "description": "Marks all unread notifications for the current user as read.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
-          }
-        },
-        {
-          "name": "Mark Single Notification as Read",
-          "request": {
-            "method": "PATCH",
-            "url": {
-              "raw": "{{base_url}}/notifications/{{notification_id}}/read",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "notifications",
-                "{{notification_id}}",
-                "read"
-              ]
-            },
-            "description": "Marks a specific notification as read by its ID.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <token>`"
-          }
-        }
-      ]
-    },
-    {
-      "name": "🛡️ ADMIN",
-      "item": [
-        {
-          "name": "Get All Users",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users?page=1&limit=20&role=user",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Page number"
-                },
-                {
-                  "key": "limit",
-                  "value": "20",
-                  "description": "Results per page"
-                },
-                {
-                  "key": "role",
-                  "value": "user",
-                  "description": "Filter by role (e.g., user, admin)"
-                }
-              ]
-            },
-            "description": "Retrieves a paginated list of all users in the system. Restricted to administrators."
-          }
-        },
-        {
-          "name": "Get User by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/{{user_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "{{user_id}}"
-              ]
-            },
-            "description": "Admin endpoint to view user details.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`\n\n### Response Codes\n*   **200 OK**: Full user object returned.\n*   **403 Forbidden**: Insufficient permissions.\n*   **404 Not Found**: User not found."
-          }
-        },
-        {
-          "name": "User: Update User (Admin)",
+          "name": "PATCH /users/:id - Update User (Admin)",
           "request": {
             "method": "PATCH",
             "header": [
@@ -1082,40 +302,31 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"role\": \"admin\"\n}"
+              "raw": "{\n  \"role\": \"admin\",\n  \"name\": \"Sarah Updated\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/users/{{user_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "{{user_id}}"
-              ]
-            },
-            "description": "Admin endpoint to update user details, such as changing their role to 'admin'.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+              "raw": "{{base_url}}/users/507f1f77bcf86cd799439011",
+              "host": ["{{base_url}}"],
+              "path": ["users", "507f1f77bcf86cd799439011"]
+            }
+          },
+          "description": "**Update user profile (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 REQUEST BODY (all optional)\n```json\n{\n  \"role\": \"admin\",        // \"user\" or \"admin\"\n  \"name\": \"Sarah Updated\"  // User name\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"name\": \"Sarah Updated\",\n      \"role\": \"admin\",\n      \"updatedAt\": \"2026-06-22T15:00:00.000Z\"\n    }\n  }\n}\n```"
         },
         {
-          "name": "User: Delete User (Admin)",
+          "name": "DELETE /users/:id - Delete User (Admin)",
           "request": {
             "method": "DELETE",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/users/{{user_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users",
-                "{{user_id}}"
-              ]
-            },
-            "description": "Permanently removes a user record from the database."
-          }
+              "raw": "{{base_url}}/users/507f1f77bcf86cd799439011",
+              "host": ["{{base_url}}"],
+              "path": ["users", "507f1f77bcf86cd799439011"]
+            }
+          },
+          "description": "**Delete user account (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### ⚠️ WARNING\nDeletes target user permanently.\n\n### 📤 SUCCESS RESPONSE (204 No Content)\nNo response body"
         },
         {
-          "name": "User: Create User (Admin)",
+          "name": "POST /users/createUser - Create User (Admin)",
           "request": {
             "method": "POST",
             "header": [
@@ -1126,22 +337,55 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"New Admin\",\n  \"email\": \"admin@gatebuddy.app\",\n  \"role\": \"admin\",\n  \"password\": \"AdminPass123!\",\n  \"passwordConfirm\": \"AdminPass123!\"\n}"
+              "raw": "{\n  \"name\": \"New Admin User\",\n  \"email\": \"newadmin@example.com\",\n  \"password\": \"AdminPass123!\",\n  \"passwordConfirm\": \"AdminPass123!\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/users",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "users"
+              "raw": "{{base_url}}/users/createUser",
+              "host": ["{{base_url}}"],
+              "path": ["users", "createUser"]
+            }
+          },
+          "description": "**Create new user account (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### ✅ What Happens\nAdmins can create user accounts directly without signup form. Password validated and hashed with bcrypt.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"name\": \"New Admin User\",            // ✓ Required\n  \"email\": \"newadmin@example.com\",     // ✓ Required, unique\n  \"password\": \"AdminPass123!\",         // ✓ Required, min 8, uppercase, number, special\n  \"passwordConfirm\": \"AdminPass123!\", // ✓ Required, must match\n  \"role\": \"admin\"                      // ✗ Optional, default: \"user\"\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439015\",\n      \"name\": \"New Admin User\",\n      \"email\": \"newadmin@example.com\",\n      \"role\": \"admin\"\n    }\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **400 Bad Request**: Validation error (duplicate email, weak password, etc.)"
+        }
+      ]
+    },
+    {
+      "name": "✈️ FLIGHTS (10 endpoints)",
+      "description": "Flight management, real-time tracking, delays, gate changes, boarding updates, and audit trail",
+      "item": [
+        {
+          "name": "GET /flights - Get All Flights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/flights?limit=20&page=1&departure=JFK&status=boarding",
+              "host": ["{{base_url}}"],
+              "path": ["flights"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "departure",
+                  "value": "JFK"
+                },
+                {
+                  "key": "status",
+                  "value": "boarding"
+                }
               ]
-            },
-            "description": "Admin endpoint to manually create a new user or administrator.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+            }
+          },
+          "description": "**Get paginated list of all flights**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\nlimit        = Results per page (default: 20)\npage         = Page number (1-indexed)\ndeparture    = Filter by departure airport IATA code (JFK, LAX, ORD, etc.)\narrival      = Filter by arrival airport IATA code\nairline      = Filter by airline code (UA, AA, SW)\nstatus       = Filter: scheduled|boarding|delayed|departed|cancelled\nsort         = Sort field (default: -scheduledDeparture)\nfields       = Comma-separated field names\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 45,\n    \"flights\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439001\",\n        \"flightNumber\": \"UA123\",\n        \"airline\": \"United Airlines\",\n        \"departure\": \"JFK\",\n        \"arrival\": \"LAX\",\n        \"gate\": \"B42\",\n        \"scheduledDeparture\": \"2026-06-22T20:30:00.000Z\",\n        \"actualDeparture\": null,\n        \"status\": \"boarding\",\n        \"delay\": 5,\n        \"aircraft\": \"Boeing 777\"\n      }\n    ]\n  }\n}\n```"
         },
         {
-          "name": "Flight: Create Flight",
+          "name": "POST /flights - Create Flight (Admin)",
           "request": {
             "method": "POST",
             "header": [
@@ -1152,66 +396,45 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"flightNumber\": \"MS123\",\n  \"airline\": { \"name\": \"EgyptAir\", \"logo\": \"https://...\" },\n  \"direction\": \"departure\",\n  \"departure\": {\n    \"terminal\": \"3\",\n    \"gate\": \"G4\",\n    \"scheduledTime\": \"2026-04-26T20:00:00Z\"\n  },\n  \"arrival\": {\n    \"scheduledTime\": \"2026-04-26T23:00:00Z\"\n  }\n}"
+              "raw": "{\n  \"flightNumber\": \"UA456\",\n  \"airline\": \"United Airlines\",\n  \"departure\": \"JFK\",\n  \"arrival\": \"SFO\",\n  \"scheduledDeparture\": \"2026-06-22T22:00:00.000Z\",\n  \"gate\": \"C15\",\n  \"status\": \"scheduled\",\n  \"aircraft\": \"Boeing 787\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/flights",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights"
-              ]
-            },
-            "description": "Admin endpoint to add a new flight to the database manually.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+              "host": ["{{base_url}}"],
+              "path": ["flights"]
+            }
+          },
+          "description": "**Create new flight entry**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 REQUEST BODY\n```json\n{\n  \"flightNumber\": \"UA456\",                    // ✓ Required, e.g. UA456\n  \"airline\": \"United Airlines\",               // ✓ Required\n  \"departure\": \"JFK\",                        // ✓ Required, IATA code\n  \"arrival\": \"SFO\",                          // ✓ Required, IATA code\n  \"scheduledDeparture\": \"2026-06-22T22:00:00.000Z\", // ✓ Required, ISO datetime\n  \"gate\": \"C15\",                             // ✗ Optional\n  \"aircraft\": \"Boeing 787\",                  // ✗ Optional\n  \"status\": \"scheduled\"                      // ✗ Optional, default: scheduled\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"flight\": {\n      \"_id\": \"607f1f77bcf86cd799439050\",\n      \"flightNumber\": \"UA456\",\n      \"airline\": \"United Airlines\",\n      \"gate\": \"C15\",\n      \"status\": \"scheduled\",\n      \"delay\": 0\n    }\n  }\n}\n```"
         },
         {
-          "name": "Flight: Update Flight",
+          "name": "GET /flights/search - Search Flights",
           "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"DELAYED\",\n  \"departure\": { \"gate\": \"G5\" }\n}"
-            },
+            "method": "GET",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "{{flight_id}}"
+              "raw": "{{base_url}}/flights/search?departure=JFK&arrival=LAX&date=2026-06-22",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "search"],
+              "query": [
+                {
+                  "key": "departure",
+                  "value": "JFK"
+                },
+                {
+                  "key": "arrival",
+                  "value": "LAX"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-06-22"
+                }
               ]
-            },
-            "description": "Admin endpoint to update the status, gate, or time of a flight.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+            }
+          },
+          "description": "**Search for flights by route and date**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\ndeparture  = ✓ IATA code (JFK, LAX, ORD, etc.)\narrival    = ✓ IATA code\ndate       = ✓ Date in YYYY-MM-DD format\nsortBy     = Sort by \"time\" or \"delay\" (default: time)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 5,\n    \"flights\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439001\",\n        \"flightNumber\": \"UA123\",\n        \"departure\": \"JFK\",\n        \"arrival\": \"LAX\",\n        \"scheduledDeparture\": \"2026-06-22T14:30:00.000Z\",\n        \"gate\": \"B42\",\n        \"delay\": 15\n      }\n    ]\n  }\n}\n```"
         },
         {
-          "name": "Flight: Delete Flight",
-          "request": {
-            "method": "DELETE",
-            "url": {
-              "raw": "{{base_url}}/flights/{{flight_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "flights",
-                "{{flight_id}}"
-              ]
-            },
-            "description": "Admin endpoint to permanently delete a flight.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
-        },
-        {
-          "name": "Service: Create Service",
+          "name": "POST /flights/filter - Filter Flights",
           "request": {
             "method": "POST",
             "header": [
@@ -1222,22 +445,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"GateBuddy Lounge\",\n  \"category\": \"VIP_SERVICES\",\n  \"location\": { \"type\": \"Point\", \"coordinates\": [31.4, 30.1] },\n  \"level\": 1\n}"
+              "raw": "{\n  \"filters\": {\n    \"status\": \"boarding\",\n    \"delayMin\": 0,\n    \"delayMax\": 60,\n    \"gates\": [\"B40\", \"B41\", \"B42\"]\n  }\n}"
             },
             "url": {
-              "raw": "{{base_url}}/services",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services"
-              ]
-            },
-            "description": "Admin endpoint to add a new service (Shop, Lounge, etc.) to the airport map.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+              "raw": "{{base_url}}/flights/filter",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "filter"]
+            }
+          },
+          "description": "**Apply complex filters to flights**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY\n```json\n{\n  \"filters\": {\n    \"status\": \"boarding\",                    // scheduled|boarding|delayed|departed|cancelled\n    \"delayMin\": 0,                          // Minimum delay in minutes\n    \"delayMax\": 60,                         // Maximum delay in minutes\n    \"gates\": [\"B40\", \"B41\", \"B42\"],        // Array of gate numbers\n    \"airlines\": [\"UA\", \"AA\"],                // Array of airline codes\n    \"airports\": [\"JFK\", \"LAX\"]               // Array of IATA codes\n  }\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 12,\n    \"flights\": []\n  }\n}\n```"
         },
         {
-          "name": "Service: Update Service",
+          "name": "PATCH /flights/:id - Update Flight (Admin)",
           "request": {
             "method": "PATCH",
             "header": [
@@ -1248,71 +467,572 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"description\": \"Upgraded lounge access\"\n}"
+              "raw": "{\n  \"gate\": \"B50\",\n  \"delay\": 20,\n  \"status\": \"delayed\",\n  \"actualDeparture\": \"2026-06-22T14:50:00.000Z\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/services/{{service_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "{{service_id}}"
-              ]
-            },
-            "description": "Admin endpoint to update the details, rating, or location of a service.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+              "raw": "{{base_url}}/flights/607f1f77bcf86cd799439001",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "607f1f77bcf86cd799439001"]
+            }
+          },
+          "description": "**Update flight information (gate, delay, status)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### ✅ What Happens\nUpdates flight gate, status, or delay. **AUTOMATICALLY RECORDS CHANGES TO FLIGHTUPDATE COLLECTION** for audit trail with before/after values and timestamps.\n\n### 📝 REQUEST BODY (all optional)\n```json\n{\n  \"gate\": \"B50\",                                    // New gate number\n  \"delay\": 20,                                      // Delay in minutes\n  \"status\": \"delayed\",                              // Status value\n  \"actualDeparture\": \"2026-06-22T14:50:00.000Z\"   // Actual departure time\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"flight\": {\n      \"_id\": \"607f1f77bcf86cd799439001\",\n      \"flightNumber\": \"UA123\",\n      \"gate\": \"B50\",\n      \"delay\": 20,\n      \"status\": \"delayed\"\n    }\n  }\n}\n```\n\n### 💾 AUDIT TRAIL SIDE EFFECT\nAutomatic FlightUpdate record created:\n```json\n{\n  \"_id\": \"607f1f77bcf86cd799439100\",\n  \"flight\": \"607f1f77bcf86cd799439001\",\n  \"updateType\": \"gate_change\",\n  \"before\": \"B42\",\n  \"after\": \"B50\",\n  \"timestamp\": \"2026-06-22T15:00:00.000Z\"\n}\n```"
         },
         {
-          "name": "Service: Delete Service",
+          "name": "DELETE /flights/:id - Delete Flight (Admin)",
           "request": {
             "method": "DELETE",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/services/{{service_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "services",
-                "{{service_id}}"
-              ]
+              "raw": "{{base_url}}/flights/607f1f77bcf86cd799439001",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "607f1f77bcf86cd799439001"]
+            }
+          },
+          "description": "**Delete flight (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📤 SUCCESS RESPONSE (204 No Content)\nNo response body"
+        },
+        {
+          "name": "POST /flights/:id/track - Track Flight",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"boardingPassNumber\": \"UA123456789\"\n}"
             },
-            "description": "Admin endpoint to permanently remove a service from the database.\n\n### Authentication\n*   **Required**: `Authorization: Bearer <admin_token>`"
-          }
+            "url": {
+              "raw": "{{base_url}}/flights/607f1f77bcf86cd799439001/track",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "607f1f77bcf86cd799439001", "track"]
+            }
+          },
+          "description": "**Track a specific flight by boarding pass**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY\n```json\n{\n  \"boardingPassNumber\": \"UA123456789\"  // ✗ Optional, for verification\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"flight\": {\n      \"_id\": \"607f1f77bcf86cd799439001\",\n      \"flightNumber\": \"UA123\",\n      \"status\": \"boarding\",\n      \"gate\": \"B42\",\n      \"delay\": 5,\n      \"scheduledDeparture\": \"2026-06-22T14:30:00.000Z\",\n      \"recentUpdates\": [\n        {\n          \"type\": \"gate_change\",\n          \"from\": \"B40\",\n          \"to\": \"B42\",\n          \"timestamp\": \"2026-06-22T14:15:00.000Z\"\n        },\n        {\n          \"type\": \"delay\",\n          \"from\": 0,\n          \"to\": 5,\n          \"timestamp\": \"2026-06-22T14:25:00.000Z\"\n        }\n      ]\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "GET /flights/:id/updates - Get Flight Updates (Audit Trail)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/flights/607f1f77bcf86cd799439001/updates?limit=30",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "607f1f77bcf86cd799439001", "updates"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "30"
+                }
+              ]
+            }
+          },
+          "description": "**Get recent updates for a flight (delays, gate changes, status changes)**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nReturns all FlightUpdate records for this flight sorted by timestamp (newest first). Tracks ALL changes: delays, gate changes, status changes, boarding times.\n\n### 📝 QUERY PARAMETERS\n```\nlimit  = Number of updates to return (default: 30)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 5,\n    \"updates\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439100\",\n        \"flight\": \"607f1f77bcf86cd799439001\",\n        \"updateType\": \"gate_change\",\n        \"before\": \"B40\",\n        \"after\": \"B42\",\n        \"timestamp\": \"2026-06-22T14:15:00.000Z\"\n      },\n      {\n        \"_id\": \"607f1f77bcf86cd799439101\",\n        \"flight\": \"607f1f77bcf86cd799439001\",\n        \"updateType\": \"delay\",\n        \"before\": 0,\n        \"after\": 5,\n        \"timestamp\": \"2026-06-22T14:25:00.000Z\"\n      }\n    ]\n  }\n}\n```"
+        },
+        {
+          "name": "POST /flights/scanBoardingPass - Scan Boarding Pass",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"boardingPassData\": \"M1UA123ABC456789123456789012345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/flights/scanBoardingPass",
+              "host": ["{{base_url}}"],
+              "path": ["flights", "scanBoardingPass"]
+            }
+          },
+          "description": "**Scan and validate boarding pass (IATA 792 standard)**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nValidates boarding pass using IATA 792 barcode format. Extracts flight info, validates date/time, returns flight status and gate information. Returns error if pass is invalid or expired.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"boardingPassData\": \"M1UA123ABC456789123456789012345\" // ✓ Required, IATA 792 format\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"valid\": true,\n    \"flight\": {\n      \"flightNumber\": \"UA123\",\n      \"departure\": \"JFK\",\n      \"arrival\": \"LAX\",\n      \"scheduledDeparture\": \"2026-06-22T14:30:00.000Z\",\n      \"gate\": \"B42\",\n      \"status\": \"boarding\",\n      \"delay\": 5\n    },\n    \"passenger\": \"JOHN DOE\",\n    \"seat\": \"12A\",\n    \"boardingGroup\": \"1\"\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **400 Bad Request**: Invalid barcode format\n- **401 Unauthorized**: Boarding pass expired"
         }
       ]
-    }
-  ],
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "https://gate-buddy-backend-production.up.railway.app/api/v1",
-      "type": "string"
     },
     {
-      "key": "token",
-      "value": "",
-      "type": "string"
+      "name": "🏢 SERVICES (8 endpoints)",
+      "description": "Airport services (lounges, restaurants, stores), ratings, and user reviews",
+      "item": [
+        {
+          "name": "GET /services - Get All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services?airport=JFK&type=restaurant&minRating=4&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["services"],
+              "query": [
+                {
+                  "key": "airport",
+                  "value": "JFK"
+                },
+                {
+                  "key": "type",
+                  "value": "restaurant"
+                },
+                {
+                  "key": "minRating",
+                  "value": "4"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "description": "**Get paginated list of airport services (restaurants, lounges, stores)**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\nairport    = Filter by airport IATA code (JFK, LAX, ORD)\ntype       = Service type: restaurant|lounge|store|bar|other\nminRating  = Minimum average rating (1-5)\nlimit      = Results per page (default: 20)\npage       = Page number (default: 1)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 42,\n    \"services\": [\n      {\n        \"_id\": \"507f1f77bcf86cd799439020\",\n        \"name\": \"The Smith Restaurant\",\n        \"type\": \"restaurant\",\n        \"airport\": \"JFK\",\n        \"terminal\": \"4\",\n        \"gate\": \"B40-B50\",\n        \"description\": \"Upscale American restaurant\",\n        \"cuisine\": \"American\",\n        \"priceLevel\": 3,\n        \"averageRating\": 4.5,\n        \"totalReviews\": 128,\n        \"hours\": \"6:00 AM - 11:00 PM\",\n        \"coordinates\": {\n          \"type\": \"Point\",\n          \"coordinates\": [-73.7781, 40.6413]\n        }\n      }\n    ]\n  }\n}\n```"
+        },
+        {
+          "name": "POST /services/search - Search Services",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"sushi\",\n  \"airport\": \"JFK\",\n  \"type\": \"restaurant\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services/search",
+              "host": ["{{base_url}}"],
+              "path": ["services", "search"]
+            }
+          },
+          "description": "**Search services by name, cuisine, or type**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY\n```json\n{\n  \"query\": \"sushi\",           // ✓ Required, search term\n  \"airport\": \"JFK\",           // ✗ Optional, IATA code\n  \"type\": \"restaurant\"        // ✗ Optional, service type\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 7,\n    \"services\": []\n  }\n}\n```"
+        },
+        {
+          "name": "POST /services/filter - Filter Services",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": {\n    \"type\": \"restaurant\",\n    \"minRating\": 4.0,\n    \"priceLevel\": [1, 2],\n    \"airport\": \"JFK\",\n    \"cuisine\": [\"Italian\", \"Asian Fusion\"],\n    \"hasWifi\": true,\n    \"hasUSB\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services/filter",
+              "host": ["{{base_url}}"],
+              "path": ["services", "filter"]
+            }
+          },
+          "description": "**Apply complex filters to services**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY\n```json\n{\n  \"filters\": {\n    \"type\": \"restaurant\",\n    \"minRating\": 4.0,\n    \"priceLevel\": [1, 2],\n    \"airport\": \"JFK\",\n    \"cuisine\": [\"Italian\", \"Asian Fusion\"],\n    \"hasWifi\": true,\n    \"hasUSB\": true\n  }\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 15,\n    \"services\": []\n  }\n}\n```"
+        },
+        {
+          "name": "POST /services - Create Service (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Lounge\",\n  \"type\": \"lounge\",\n  \"airport\": \"JFK\",\n  \"terminal\": \"4\",\n  \"description\": \"Premium business lounge\",\n  \"priceLevel\": 4,\n  \"hours\": \"5:00 AM - 12:00 AM\",\n  \"coordinates\": {\n    \"type\": \"Point\",\n    \"coordinates\": [-73.7781, 40.6413]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": ["{{base_url}}"],
+              "path": ["services"]
+            }
+          },
+          "description": "**Create new airport service (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 REQUEST BODY\n```json\n{\n  \"name\": \"New Lounge\",           // ✓ Required\n  \"type\": \"lounge\",              // ✓ Required: restaurant|lounge|store|bar\n  \"airport\": \"JFK\",              // ✓ Required, IATA code\n  \"terminal\": \"4\",               // ✗ Optional\n  \"description\": \"...\",           // ✗ Optional\n  \"priceLevel\": 4,               // ✗ Optional, 1-5\n  \"hours\": \"5:00 AM - 12:00 AM\" // ✗ Optional\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"service\": {\n      \"_id\": \"507f1f77bcf86cd799439030\",\n      \"name\": \"New Lounge\",\n      \"type\": \"lounge\",\n      \"airport\": \"JFK\"\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "PATCH /services/:id - Update Service (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hours\": \"5:00 AM - 1:00 AM\",\n  \"hasWifi\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services/507f1f77bcf86cd799439030",
+              "host": ["{{base_url}}"],
+              "path": ["services", "507f1f77bcf86cd799439030"]
+            }
+          },
+          "description": "**Update service information (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": { \"service\": {} }\n}\n```"
+        },
+        {
+          "name": "DELETE /services/:id - Delete Service (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/507f1f77bcf86cd799439030",
+              "host": ["{{base_url}}"],
+              "path": ["services", "507f1f77bcf86cd799439030"]
+            }
+          },
+          "description": "**Delete service listing (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📤 SUCCESS RESPONSE (204 No Content)\nNo response body"
+        },
+        {
+          "name": "POST /services/:id/rate - Rate Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"review\": \"Excellent food and service! Highly recommend.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services/507f1f77bcf86cd799439020/rate",
+              "host": ["{{base_url}}"],
+              "path": ["services", "507f1f77bcf86cd799439020", "rate"]
+            }
+          },
+          "description": "**Rate and review a service**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nSubmits user rating (1-5) and optional review. Updates service's average rating and review count automatically.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"rating\": 5,                                    // ✓ Required, 1-5\n  \"review\": \"Excellent food and service!\"       // ✗ Optional, max 500 chars\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"rating\": {\n      \"_id\": \"607f1f77bcf86cd799439200\",\n      \"service\": \"507f1f77bcf86cd799439020\",\n      \"user\": \"507f1f77bcf86cd799439011\",\n      \"rating\": 5,\n      \"review\": \"Excellent food and service! Highly recommend.\",\n      \"createdAt\": \"2026-06-22T15:30:00.000Z\"\n    },\n    \"service\": {\n      \"averageRating\": 4.6,\n      \"totalReviews\": 129\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "GET /services/:id - Get Service Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/services/507f1f77bcf86cd799439020?includeReviews=true",
+              "host": ["{{base_url}}"],
+              "path": ["services", "507f1f77bcf86cd799439020"],
+              "query": [
+                {
+                  "key": "includeReviews",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "description": "**Get detailed information about a specific service**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\nincludeReviews = Include recent reviews (boolean, default: false)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"service\": {\n      \"_id\": \"507f1f77bcf86cd799439020\",\n      \"name\": \"The Smith Restaurant\",\n      \"type\": \"restaurant\",\n      \"airport\": \"JFK\",\n      \"averageRating\": 4.6,\n      \"totalReviews\": 129,\n      \"reviews\": [\n        {\n          \"rating\": 5,\n          \"review\": \"Excellent food and service!\",\n          \"userName\": \"Sarah J.\",\n          \"createdAt\": \"2026-06-22T15:30:00.000Z\"\n        }\n      ]\n    }\n  }\n}\n```"
+        }
+      ]
     },
     {
-      "key": "flight_id",
-      "value": "FLIGHT_ID",
-      "type": "string"
+      "name": "🔔 NOTIFICATIONS (3 endpoints)",
+      "description": "Notification management and delivery via Firebase Cloud Messaging (FCM)",
+      "item": [
+        {
+          "name": "GET /notifications - Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications?limit=50&unreadOnly=false&type=flight_update",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "unreadOnly",
+                  "value": "false"
+                },
+                {
+                  "key": "type",
+                  "value": "flight_update"
+                }
+              ]
+            }
+          },
+          "description": "**Get user's notifications (flight updates, service alerts, messages)**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\nlimit      = Results per page (default: 50)\npage       = Page number (default: 1)\nunreadOnly = Show only unread (boolean, default: false)\ntype       = Filter: flight_update|service_alert|chat_message|general\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 8,\n    \"notifications\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439300\",\n        \"user\": \"507f1f77bcf86cd799439011\",\n        \"type\": \"flight_update\",\n        \"title\": \"Flight UA123 Gate Change\",\n        \"message\": \"Your flight UA123 gate has changed from B40 to B42\",\n        \"read\": false,\n        \"relatedFlight\": \"607f1f77bcf86cd799439001\",\n        \"createdAt\": \"2026-06-22T14:15:00.000Z\"\n      }\n    ]\n  }\n}\n```"
+        },
+        {
+          "name": "POST /notifications - Create Notification (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"507f1f77bcf86cd799439011\",\n  \"type\": \"service_alert\",\n  \"title\": \"New Restaurant Opening\",\n  \"message\": \"A new sushi restaurant has opened in Terminal 4\",\n  \"relatedService\": \"507f1f77bcf86cd799439030\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notifications",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"]
+            }
+          },
+          "description": "**Send notification to user (Admin only)**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 REQUEST BODY\n```json\n{\n  \"userId\": \"507f1f77bcf86cd799439011\",            // ✓ Required\n  \"type\": \"service_alert\",                        // ✓ Required\n  \"title\": \"New Restaurant Opening\",              // ✓ Required\n  \"message\": \"A new sushi restaurant...\",        // ✓ Required\n  \"relatedService\": \"507f1f77bcf86cd799439030\"   // ✗ Optional\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"notification\": {\n      \"_id\": \"607f1f77bcf86cd799439301\",\n      \"user\": \"507f1f77bcf86cd799439011\",\n      \"type\": \"service_alert\",\n      \"title\": \"New Restaurant Opening\",\n      \"message\": \"A new sushi restaurant has opened in Terminal 4\",\n      \"read\": false,\n      \"createdAt\": \"2026-06-22T15:35:00.000Z\"\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "PATCH /notifications/:id - Mark Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"read\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notifications/607f1f77bcf86cd799439300",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "607f1f77bcf86cd799439300"]
+            }
+          },
+          "description": "**Mark notification as read or unread**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY\n```json\n{\n  \"read\": true  // ✓ Required, true=read, false=unread\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"notification\": {\n      \"_id\": \"607f1f77bcf86cd799439300\",\n      \"read\": true,\n      \"updatedAt\": \"2026-06-22T15:40:00.000Z\"\n    }\n  }\n}\n```"
+        }
+      ]
     },
     {
-      "key": "user_id",
-      "value": "USER_ID",
-      "type": "string"
+      "name": "📊 STATISTICS & ANALYTICS (3 endpoints)",
+      "description": "Dashboard statistics, charts, and analytics for admin users",
+      "item": [
+        {
+          "name": "GET /stats/dashboard - Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "dashboard"]
+            }
+          },
+          "description": "**Get overall dashboard statistics**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"dashboard\": {\n      \"totalUsers\": 1250,\n      \"totalFlights\": 892,\n      \"unreadNotifications\": 45,\n      \"averageRating\": 4.3,\n      \"activeSessionsToday\": 382,\n      \"registrationsThisWeek\": 87\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "GET /stats/charts - Chart Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/charts?period=week&metric=flights",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "charts"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "week"
+                },
+                {
+                  "key": "metric",
+                  "value": "flights"
+                }
+              ]
+            }
+          },
+          "description": "**Get time-series data for charting**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 QUERY PARAMETERS\n```\nperiod = day|week|month|year (default: week)\nmetric = flights|users|services|ratings (default: flights)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"charts\": {\n      \"period\": \"week\",\n      \"metric\": \"flights\",\n      \"data\": [\n        { \"date\": \"2026-06-16\", \"value\": 245 },\n        { \"date\": \"2026-06-17\", \"value\": 268 },\n        { \"date\": \"2026-06-18\", \"value\": 312 }\n      ]\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "GET /stats/analytics - Detailed Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/analytics?airport=JFK&period=month",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "analytics"],
+              "query": [
+                {
+                  "key": "airport",
+                  "value": "JFK"
+                },
+                {
+                  "key": "period",
+                  "value": "month"
+                }
+              ]
+            }
+          },
+          "description": "**Get detailed analytics for airport or service**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### 📝 QUERY PARAMETERS\n```\nairport = IATA code for airport-specific analytics\nperiod  = day|week|month|year\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"analytics\": {\n      \"airport\": \"JFK\",\n      \"period\": \"month\",\n      \"topFlights\": [\"UA123\", \"AA456\"],\n      \"topServices\": [\"The Smith Restaurant\", \"Sky Lounge\"],\n      \"averageDelay\": 12.5,\n      \"delayedFlights\": 156,\n      \"onTimeFlights\": 428\n    }\n  }\n}\n```"
+        }
+      ]
     },
     {
-      "key": "service_id",
-      "value": "SERVICE_ID",
-      "type": "string"
+      "name": "🧭 NAVIGATION (2 endpoints)",
+      "description": "Indoor navigation and pathfinding using Dijkstra algorithm through airport terminals",
+      "item": [
+        {
+          "name": "POST /navigation/find-path - Find Route",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startNode\": \"entrance_1\",\n  \"endNode\": \"gate_b42\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/navigation/find-path",
+              "host": ["{{base_url}}"],
+              "path": ["navigation", "find-path"]
+            }
+          },
+          "description": "**Find shortest path between two locations in airport**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nUses Dijkstra's algorithm to find shortest route between two points in airport GeoJSON map. Considers walking distance, obstacles, and accessibility.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"startNode\": \"entrance_1\",   // ✓ Required, location ID\n  \"endNode\": \"gate_b42\"        // ✓ Required, location ID\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"path\": {\n      \"route\": [\"entrance_1\", \"corridor_a\", \"section_b\", \"gate_b42\"],\n      \"distance\": 450,\n      \"estimatedWalkTime\": \"6 minutes\",\n      \"turns\": [\n        {\n          \"from\": \"entrance_1\",\n          \"direction\": \"right\",\n          \"to\": \"corridor_a\"\n        },\n        {\n          \"from\": \"corridor_a\",\n          \"direction\": \"straight\",\n          \"to\": \"section_b\"\n        }\n      ]\n    }\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **404 Not Found**: Start or end node doesn't exist\n- **400 Bad Request**: No path exists between nodes"
+        },
+        {
+          "name": "GET /navigation/nodes - Get Navigation Nodes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/navigation/nodes?level=2&type=gate",
+              "host": ["{{base_url}}"],
+              "path": ["navigation", "nodes"],
+              "query": [
+                {
+                  "key": "level",
+                  "value": "2"
+                },
+                {
+                  "key": "type",
+                  "value": "gate"
+                }
+              ]
+            }
+          },
+          "description": "**Get available navigation nodes/locations**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 QUERY PARAMETERS\n```\nlevel = Terminal level (1, 2, 3, etc.)\ntype  = Location type: gate|restaurant|lounge|restroom|exit|other\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 42,\n    \"nodes\": [\n      {\n        \"_id\": \"gate_b40\",\n        \"name\": \"Gate B40\",\n        \"type\": \"gate\",\n        \"level\": 2,\n        \"coordinates\": {\n          \"type\": \"Point\",\n          \"coordinates\": [-73.7781, 40.6413]\n        },\n        \"connectedTo\": [\"corridor_a\", \"gate_b41\"]\n      }\n    ]\n  }\n}\n```"
+        }
+      ]
     },
     {
-      "key": "notification_id",
-      "value": "NOTIFICATION_ID",
-      "type": "string"
-    }
-  ]
-}
+      "name": "💬 CHAT & AI (1 endpoint)",
+      "description": "AI-powered chat assistant using Google Gemini",
+      "item": [
+        {
+          "name": "POST /chat - Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What restaurants are available near my gate?\",\n  \"context\": {\n    \"airport\": \"JFK\",\n    \"currentGate\": \"B42\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            }
+          },
+          "description": "**Chat with AI assistant for airport help**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nSends message to Google Gemini AI. Assistant understands airport context and helps with:\n- Finding restaurants, lounges, stores\n- Flight information & updates\n- Navigation directions\n- Airport services & amenities\n- Terminal maps\n\n### 📝 REQUEST BODY\n```json\n{\n  \"message\": \"What restaurants are available near my gate?\",  // ✓ Required, max 1000 chars\n  \"context\": {\n    \"airport\": \"JFK\",         // ✗ Optional, IATA code\n    \"currentGate\": \"B42\"      // ✗ Optional, for location context\n  }\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"response\": {\n      \"message\": \"Near gate B42 in Terminal 4, you have several great options. The Smith Restaurant offers upscale American cuisine with a 4.5-star rating. Sky Lounge is a premium business lounge with WiFi and comfortable seating. There's also a Starbucks coffee shop about 100 meters away.\",\n      \"suggestions\": [\n        {\n          \"type\": \"restaurant\",\n          \"name\": \"The Smith Restaurant\",\n          \"distance\": 150,\n          \"rating\": 4.5\n        }\n      ]\n    }\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **400 Bad Request**: Message too long or invalid context\n- **503 Service Unavailable**: Google Gemini API unavailable"
+        }
+      ]
+    },
+    {
+      "name": "📱 DEVICES (2 endpoints)",
+      "description": "Device registration for push notifications (Firebase Cloud Messaging)",
+      "item": [
+        {
+          "name": "POST /devices/register - Register Device",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fcmToken\": \"cWFoOmh1eDpzOmFoczAzOjAzNzQ4NDEyNzMzOTEyODMzMzQ0NTMyODk3Mzg5NzQ3Ng==\",\n  \"deviceType\": \"ios\",\n  \"deviceName\": \"Sarah's iPhone\",\n  \"osVersion\": \"17.5\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/devices/register",
+              "host": ["{{base_url}}"],
+              "path": ["devices", "register"]
+            }
+          },
+          "description": "**Register device for push notifications**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nRegisters mobile device with Firebase Cloud Messaging (FCM) token. Enables receiving push notifications for flight updates, alerts, and messages.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"fcmToken\": \"cWFoOmh1e...\",         // ✓ Required, FCM token from mobile app\n  \"deviceType\": \"ios\",               // ✓ Required: ios|android|web\n  \"deviceName\": \"Sarah's iPhone\",    // ✗ Optional, user-friendly name\n  \"osVersion\": \"17.5\"                // ✗ Optional, OS version\n}\n```\n\n### 📤 SUCCESS RESPONSE (201 Created)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"device\": {\n      \"_id\": \"607f1f77bcf86cd799439400\",\n      \"user\": \"507f1f77bcf86cd799439011\",\n      \"fcmToken\": \"cWFoOmh1eDpzOmFoczAzOjAzNzQ4NDEyNzMzOTEyODMzMzQ0NTMyODk3Mzg5NzQ3Ng==\",\n      \"deviceType\": \"ios\",\n      \"deviceName\": \"Sarah's iPhone\",\n      \"registeredAt\": \"2026-06-22T15:45:00.000Z\",\n      \"lastActive\": \"2026-06-22T15:45:00.000Z\"\n    }\n  }\n}\n```"
+        },
+        {
+          "name": "PATCH /devices/:id - Update Device",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceName\": \"Sarah's New iPhone\",\n  \"pushEnabled\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/devices/607f1f77bcf86cd799439400",
+              "host": ["{{base_url}}"],
+              "path": ["devices", "607f1f77bcf86cd799439400"]
+            }
+          },
+          "description": "**Update device settings**\n\n### 🔐 Authentication Required\nBearer token\n\n### 📝 REQUEST BODY (all optional)\n```json\n{\n  \"deviceName\": \"Sarah's New iPhone\",  // Update device name\n  \"pushEnabled\": true                  // Enable/disable push notifications\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"device\": {\n      \"_id\": \"607f1f77bcf86cd799439400\",\n      \"deviceName\": \"Sarah's New iPhone\",\n      \"pushEnabled\": true,\n      \"updatedAt\": \"2026-06-22T15:50:00.000Z\"\n    }\n  }\n}\n```"
+        }
+      ]
+    },
+    {
+      "name": "❓ FAQ (2 endpoints)",
+      "description": "Frequently asked questions about the app and airports",
+      "item": [
+        {
+          "name": "GET /faqs - Get All FAQs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/faqs?category=flights&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["faqs"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "flights"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "description": "**Get list of frequently asked questions**\n\n### 🔐 Authentication Required\nNone (public endpoint)\n\n### 📝 QUERY PARAMETERS\n```\ncategory = Filter: flights|navigation|services|account\nlimit    = Results per page (default: 20)\npage     = Page number (default: 1)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 8,\n    \"faqs\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439500\",\n        \"question\": \"How can I track my flight in real-time?\",\n        \"answer\": \"You can search for your flight using your flight number or route. Tap the flight to view real-time status including delays, gate changes, and boarding updates.\",\n        \"category\": \"flights\",\n        \"order\": 1\n      }\n    ]\n  }\n}\n```"
+        },
+        {
+          "name": "GET /faqs/:id - Get Single FAQ",
+          "request": {
+            "method": "GET",\n            "header": [],\n            \"url\": {\n              \"raw\": \"{{base_url}}/faqs/607f1f77bcf86cd799439500\",\n              \"host\": [\"{{base_url}}\"],\n              \"path\": [\"faqs\", \"607f1f77bcf86cd799439500\"]\n            }\n          },\n          \"description\": \"**Get detailed FAQ entry**\n\n### 🔐 Authentication Required\nNone (public endpoint)\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"faq\": {\n      \"_id\": \"607f1f77bcf86cd799439500\",\n      \"question\": \"How can I track my flight in real-time?\",\n      \"answer\": \"Detailed answer...\",\n      \"category\": \"flights\"\n    }\n  }\n}\n```\"\n        }\n      ]\n    },\n    {\n      \"name\": \"🏠 HOME & RECOMMENDATIONS (1 endpoint)\",\n      \"description\": \"Home feed with personalized recommendations\",\n      \"item\": [\n        {\n          \"name\": \"GET /home/feed - Get Home Feed\",\n          \"request\": {\n            \"method\": \"GET\",\n            \"header\": [],\n            \"url\": {\n              \"raw\": \"{{base_url}}/home/feed?limit=20\",\n              \"host\": [\"{{base_url}}\"],\n              \"path\": [\"home\", \"feed\"],\n              \"query\": [\n                {\n                  \"key\": \"limit\",\n                  \"value\": \"20\"\n                }\n              ]\n            }\n          },\n          \"description\": \"**Get personalized home feed with recommendations**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nReturns personalized feed including:\n- Upcoming flights\n- Recommended restaurants/services\n- Recent flight updates\n- Popular items at current airport\n\n### 📝 QUERY PARAMETERS\n```\nlimit = Feed items to return (default: 20)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"feed\": [\n      {\n        \"type\": \"upcoming_flight\",\n        \"flight\": {\n          \"_id\": \"607f1f77bcf86cd799439001\",\n          \"flightNumber\": \"UA123\",\n          \"departure\": \"JFK\",\n          \"arrival\": \"LAX\",\n          \"gate\": \"B42\",\n          \"boardingStatus\": \"boarding\"\n        }\n      },\n      {\n        \"type\": \"recommendation\",\n        \"service\": {\n          \"_id\": \"507f1f77bcf86cd799439020\",\n          \"name\": \"The Smith Restaurant\",\n          \"rating\": 4.5,\n          \"reason\": \"Popular near your gate\"\n        }\n      }\n    ]\n  }\n}\n```\"\n        }\n      ]\n    },\n    {\n      \"name\": \"📊 ADMIN DASHBOARD (1 endpoint)\",\n      \"description\": \"Administrative dashboard and system management\",\n      \"item\": [\n        {\n          \"name\": \"GET /admin/dashboard - Admin Dashboard\",\n          \"request\": {\n            \"method\": \"GET\",\n            \"header\": [],\n            \"url\": {\n              \"raw\": \"{{base_url}}/admin/dashboard\",\n              \"host\": [\"{{base_url}}\"],\n              \"path\": [\"admin\", \"dashboard\"]\n            }\n          },\n          \"description\": \"**Get comprehensive admin dashboard**\n\n### 🔐 Authentication Required\nBearer token + Admin role\n\n### ✅ What Happens\nReturns system-wide statistics and admin panel data including user metrics, flight statistics, service ratings, and system health.\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"totalUsers\": 1250,\n    \"totalFlights\": 892,\n    \"unreadNotifications\": 45,\n    \"averageRating\": 4.3,\n    \"recentActivity\": {\n      \"newUsersToday\": 23,\n      \"activeSessionsToday\": 382,\n      \"flightsTrackedToday\": 156,\n      \"servicesRatedToday\": 34\n    },\n    \"systemHealth\": {\n      \"databaseStatus\": \"healthy\",\n      \"apiStatus\": \"healthy\",\n      \"notificationQueue\": 12,\n      \"lastBackup\": \"2026-06-22T03:00:00.000Z\"\n    }\n  }\n}\n```\"\n        }\n      ]\n    }\n  ],\n  \"variable\": [\n    {\n      \"key\": \"base_url\",\n      \"value\": \"http://localhost:3001/api/v1\",\n      \"type\": \"string\"\n    },\n    {\n      \"key\": \"token\",\n      \"value\": \"\",\n      \"type\": \"string\"\n    },\n    {\n      \"key\": \"user_id\",\n      \"value\": \"\",\n      \"type\": \"string\"\n    }\n  ]\n}\n
