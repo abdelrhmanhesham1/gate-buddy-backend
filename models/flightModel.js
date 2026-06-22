@@ -28,16 +28,18 @@ flightSchema.virtual("updates", { ref: "FlightUpdate", foreignField: "flight", l
 
 flightSchema.pre("save", function (next) {
   try {
-    if (this.status === "LANDED" || this.status === "CANCELLED") {
-      const baseTime = (this.arrival && this.arrival.actualTime) || (this.departure && this.departure.actualTime) || new Date();
-      const baseMs = baseTime instanceof Date ? baseTime.getTime() : new Date(baseTime).getTime();
-      this.expireAt = new Date((isNaN(baseMs) ? Date.now() : baseMs) + 30 * 60 * 1000);
+    // 1 hour after the flight's scheduled time
+    let baseTime;
+    if (this.direction === "departure") {
+      baseTime = this.departure?.scheduledTime ? new Date(this.departure.scheduledTime).getTime() : Date.now();
     } else {
-      const depTime = this.departure && this.departure.scheduledTime ? new Date(this.departure.scheduledTime).getTime() : Date.now();
-      this.expireAt = new Date((isNaN(depTime) ? Date.now() : depTime) + 48 * 60 * 60 * 1000);
+      baseTime = this.arrival?.scheduledTime ? new Date(this.arrival.scheduledTime).getTime() : Date.now();
     }
+    
+    // Set expireAt to 1 hour (60 * 60 * 1000 ms) after the flight's scheduled time
+    this.expireAt = new Date(baseTime + 60 * 60 * 1000);
   } catch (err) {
-    this.expireAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    this.expireAt = new Date(Date.now() + 60 * 60 * 1000);
   }
   next();
 });

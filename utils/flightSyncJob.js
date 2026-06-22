@@ -43,26 +43,14 @@ const loadAirlines = async () => {
   }
 };
 
-/**
- * Map AirLabs flight object → our Flight model status enum.
- * Focuses on delays specifically at our airport (AMS).
- * @param {object} f — raw AirLabs flight object
- * @param {"departure"|"arrival"} direction
- */
 const mapStatus = (f, direction) => {
-  const s = f.status || "";
-  if (s === "cancelled") return "CANCELLED";
-  if (s === "landed")    return "LANDED";
-  if (s === "active")    return "IN_FLIGHT";
-  if (s === "incident" || s === "diverted") return "DELAYED";
-
   // Focus only on the delay at our airport (AMS)
   const isDelayed = direction === "departure" 
     ? (f.dep_delayed && f.dep_delayed > 0) 
     : (f.arr_delayed && f.arr_delayed > 0);
 
   if (isDelayed) return "DELAYED";
-  return "ON_TIME";
+  return "ON_TIME"; // Force it to be ON_TIME instead of IN_FLIGHT since we are shifting the time 6 hours forward
 };
 
 /**
@@ -98,7 +86,19 @@ const syncFlights = async (direction) => {
         },
       });
 
+      // Log API-level errors (quota exceeded, invalid key, etc.)
+      if (data?.error) {
+        console.error(`❌ AirLabs API error for ${label}: ${JSON.stringify(data.error)}`);
+        return { synced: 0, updated: 0, cancelled: 0 };
+      }
+
       const flights = data?.response || [];
+      
+      // Log first batch size for diagnostics
+      if (offset === 0) {
+        console.log(`   📡 First batch: ${flights.length} ${label} received from AirLabs (airport: ${AIRPORT_IATA})`);
+      }
+      
       allFlights = allFlights.concat(flights);
       
       // If we received fewer flights than the default limit (usually 100 or 250), we reached the end
@@ -111,7 +111,7 @@ const syncFlights = async (direction) => {
     }
 
     if (allFlights.length === 0) {
-      console.warn(`⚠️  No ${label} data returned from AirLabs.`);
+      console.warn(`⚠️  No ${label} data returned from AirLabs. Check: 1) API key quota 2) AIRPORT_IATA=${AIRPORT_IATA} is valid`);
       return { synced: 0, updated: 0 };
     }
 
@@ -143,13 +143,14 @@ const syncFlights = async (direction) => {
       const isArrHome = f.arr_iata === AIRPORT_IATA || DOMESTIC_AIRPORTS.includes(f.arr_iata);
       const flightType = (isDepHome && isArrHome) ? "domestic" : "international";
 
-      // Build the flight document fields
-      const depScheduled = new Date(f.dep_time);
-      const arrScheduled = new Date(f.arr_time);
-      const depEstimated = f.dep_estimated ? new Date(f.dep_estimated) : undefined;
-      const arrEstimated = f.arr_estimated ? new Date(f.arr_estimated) : undefined;
-      const depActual = f.dep_actual ? new Date(f.dep_actual) : undefined;
-      const arrActual = f.arr_actual ? new Date(f.arr_actual) : undefined;
+      // Build the flight document fields - ADDING 6 HOURS FOR MOCK SCHEDULE
+      const SHIFT_MS = 6 * 60 * 60 * 1000;
+      const depScheduled = new Date(new Date(f.dep_time).getTime() + SHIFT_MS);
+      const arrScheduled = new Date(new Date(f.arr_time).getTime() + SHIFT_MS);
+      const depEstimated = f.dep_estimated ? new Date(new Date(f.dep_estimated).getTime() + SHIFT_MS) : undefined;
+      const arrEstimated = f.arr_estimated ? new Date(new Date(f.arr_estimated).getTime() + SHIFT_MS) : undefined;
+      const depActual = f.dep_actual ? new Date(new Date(f.dep_actual).getTime() + SHIFT_MS) : undefined;
+      const arrActual = f.arr_actual ? new Date(new Date(f.arr_actual).getTime() + SHIFT_MS) : undefined;
       const newStatus = mapStatus(f, direction);
 
       // Register this flight as seen in current batch
