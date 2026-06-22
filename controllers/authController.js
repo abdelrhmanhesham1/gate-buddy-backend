@@ -62,6 +62,22 @@ const resolveOAuthUser = async (provider, profile, req, res) => {
 // --- 3. EXPORTED HANDLERS ---
 exports.signup = catchAsync(async (req, res, next) => {
   console.log("--- DEBUG: SIGNUP ROUTE HIT ---");
+  
+  // Pre-check: Verify email doesn't already exist
+  const existingUser = await User.findOne({ email: req.body.email.toLowerCase() });
+  if (existingUser) {
+    return next(new AppError("Email already registered. Please use another email or log in.", 400));
+  }
+  
+  // Validate password and passwordConfirm are not empty
+  if (!req.body.password || req.body.password.trim().length === 0) {
+    return next(new AppError("Password cannot be empty.", 400));
+  }
+  
+  if (!req.body.passwordConfirm || req.body.passwordConfirm.trim().length === 0) {
+    return next(new AppError("Password confirmation cannot be empty.", 400));
+  }
+  
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -73,9 +89,18 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email }).select("+password +loginAttempts +lockUntil");
+  
+  // Validate inputs
+  if (!email || !password) {
+    return next(new AppError("Please provide email and password.", 400));
+  }
+  
+  const user = await User.findOne({ email: email.toLowerCase() }).select("+password +loginAttempts +lockUntil");
   if (!user) return next(new AppError("Incorrect email or password.", 401));
   if (user.isLocked) return next(new AppError("Account locked. Try again in 1 hour.", 423));
+  
+  if (!user.password) return next(new AppError("This account doesn't have a password. Please use OAuth login.", 401));
+  
   if (!(await user.correctPassword(password, user.password))) {
     user.loginAttempts += 1;
     if (user.loginAttempts >= 5) user.lockUntil = Date.now() + 1 * 60 * 60 * 1000;

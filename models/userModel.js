@@ -67,16 +67,41 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Ensure email uniqueness with proper handling for null/undefined
 userSchema.index({ email: 1 }, { unique: true, sparse: true });
+
+// Pre-validate email uniqueness on save
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("email")) return next();
+  
+  // Only check if email exists and auth_providers is empty (regular signup)
+  if (this.email && (!this.auth_providers || this.auth_providers.length === 0)) {
+    const existingUser = await mongoose.model("User").findOne({ email: this.email, _id: { $ne: this._id } });
+    if (existingUser) {
+      return next(new Error("Email already registered. Please use another email or log in."));
+    }
+  }
+  next();
+});
 userSchema.index({ "auth_providers.provider": 1, "auth_providers.provider_id": 1 }, { unique: true, sparse: true });
 
 userSchema.virtual("isLocked").get(function() { return !!(this.lockUntil && this.lockUntil > Date.now()); });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirm = undefined;
-  next();
+  
+  // Validate password exists and is not empty
+  if (!this.password || this.password.trim().length === 0) {
+    return next(new Error("Password cannot be empty"));
+  }
+  
+  try {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+    next();
+  } catch (error) {
+    next(new Error(`Password hashing failed: ${error.message}`));
+  }
 });
 
 userSchema.pre("save", function (next) {
