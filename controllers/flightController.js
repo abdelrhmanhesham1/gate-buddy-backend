@@ -4,6 +4,7 @@ const Airport = require("../models/airportModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const APIFeatures = require("../utils/apiFeatures");
+const recordFlightUpdates = require("../utils/flightUpdateRecorder");
 const { parse } = require("bcbp");
 
 // Services
@@ -168,11 +169,20 @@ exports.updateFlight = catchAsync(async (req, res, next) => {
     status: req.body.status,
     "departure.gate": req.body.departure?.gate,
     "departure.actualTime": req.body.departure?.actualTime,
+    "departure.estimatedTime": req.body.departure?.estimatedTime,
+    "departure.scheduledTime": req.body.departure?.scheduledTime,
     "departure.boardingTime": req.body.departure?.boardingTime,
     "departure.checkInCounter": req.body.departure?.checkInCounter,
     "arrival.actualTime": req.body.arrival?.actualTime,
+    "arrival.estimatedTime": req.body.arrival?.estimatedTime,
+    "arrival.scheduledTime": req.body.arrival?.scheduledTime,
     "arrival.gate": req.body.arrival?.gate,
   };
+
+  // Record updates before modifying the flight
+  const updates = Object.fromEntries(
+    Object.entries(allowedFields).filter(([, value]) => value !== undefined)
+  );
 
   Object.entries(allowedFields).forEach(([key, value]) => {
     if (value !== undefined) {
@@ -184,6 +194,11 @@ exports.updateFlight = catchAsync(async (req, res, next) => {
       }
     }
   });
+
+  // Record any changes to the FlightUpdate collection
+  if (Object.keys(updates).length > 0) {
+    await recordFlightUpdates(flight, updates);
+  }
 
   await flight.save();
   res.status(200).json({ status: "success", data: { flight } });
