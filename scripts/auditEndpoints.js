@@ -1,16 +1,25 @@
 /**
  * End-to-end endpoint audit for GateBuddy API
- * Run: node scripts/auditEndpoints.js
+ * Run: node scripts/auditEndpoints.js [local|prod]
+ *   local → http://localhost:3001/api/v1
+ *   prod  → https://gate-buddy-backend-production-f6df.up.railway.app/api/v1
  */
+const https = require("https");
 const http = require("http");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../variables.env") });
 
-const BASE = "http://localhost:3001/api/v1";
+const ENV = process.argv[2] || "prod";
+const BASE =
+  ENV === "local"
+    ? "http://localhost:3001/api/v1"
+    : "https://gate-buddy-backend-production-f6df.up.railway.app/api/v1";
+
+console.log(`\nTarget: ${BASE}\n`);
+
 let TOKEN = "";
 let FLIGHT_ID = "";
 let SERVICE_ID = "";
-let TRACK_ID = "";
 
 const results = [];
 
@@ -20,13 +29,24 @@ function req(method, url, body, token) {
     const headers = { "Content-Type": "application/json" };
     if (token) headers["Authorization"] = `Bearer ${token}`;
     if (payload) headers["Content-Length"] = Buffer.byteLength(payload);
-    const parsed = new URL(BASE + url);
-    const options = { hostname: parsed.hostname, port: parsed.port || 80, path: parsed.pathname + parsed.search, method, headers };
-    const r = http.request(options, (res) => {
+
+    const fullUrl = BASE + url;
+    const parsed = new URL(fullUrl);
+    const transport = parsed.protocol === "https:" ? https : http;
+    const options = {
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === "https:" ? 443 : 80),
+      path: parsed.pathname + parsed.search,
+      method,
+      headers,
+    };
+
+    const r = transport.request(options, (res) => {
       let data = "";
       res.on("data", (c) => (data += c));
       res.on("end", () => {
-        let json; try { json = JSON.parse(data); } catch { json = { raw: data.slice(0, 200) }; }
+        let json;
+        try { json = JSON.parse(data); } catch { json = { raw: data.slice(0, 200) }; }
         resolve({ status: res.statusCode, body: json });
       });
     });
@@ -40,23 +60,22 @@ function check(name, res, expectedStatus, validator) {
   const statusOk = res.status === expectedStatus;
   const validOk = !validator || validator(res.body);
   const ok = statusOk && validOk;
-  const icon = ok ? "✅" : "❌";
-  console.log(`${icon} [${res.status}] ${name}`);
+  console.log(`${ok ? "✅" : "❌"} [${res.status}] ${name}`);
   if (!ok) {
     if (!statusOk) console.log(`     Expected HTTP ${expectedStatus}, got ${res.status}`);
-    if (!validOk) console.log(`     Validator failed. Body: ${JSON.stringify(res.body).slice(0, 250)}`);
+    if (!validOk) console.log(`     Validator failed. Body: ${JSON.stringify(res.body).slice(0, 300)}`);
   }
   results.push({ name, ok, status: res.status });
   return ok;
 }
 
 async function run() {
-  console.log("\n══════════════════════════════════════════════════");
-  console.log("  GateBuddy API Audit  —  " + new Date().toISOString());
-  console.log("══════════════════════════════════════════════════\n");
+  console.log("══════════════════════════════════════════════════");
+  console.log("  GateBuddy API Audit — " + new Date().toISOString());
+  console.log("══════════════════════════════════════════════════");
 
   // ── AUTH ─────────────────────────────────────────────────────────────────
-  console.log("── AUTH ──────────────────────────────────────────");
+  console.log("\n── AUTH ──────────────────────────────────────────");
 
   const email = `audit_${Date.now()}@test.com`;
 
@@ -77,12 +96,12 @@ async function run() {
   r = await req("PATCH", "/users/updateMe", { name: "Audit Updated" }, TOKEN);
   check("PATCH /users/updateMe → 200", r, 200, b => b.status === "success");
 
-  // Email should be blocked
+  // Email should not be changeable
   r = await req("PATCH", "/users/updateMe", { email: "hacker@evil.com", name: "X" }, TOKEN);
-  const emailBlocked = r.status === 200 && r.body.data?.data?.email !== "hacker@evil.com";
-  const emailCheckOk = r.status === 200 && !("email" in (r.body.data?.data || {})) || (r.body.data?.data?.email === email);
-  console.log(`${emailCheckOk ? "✅" : "❌"} [${r.status}] PATCH /users/updateMe (email not changeable)`);
-  results.push({ name: "updateMe email blocked", ok: emailCheckOk, status: r.status });
+  const userData = r.body.data?.data || r.body.data?.user || {};
+  const emailBlocked = r.status === 200 && userData.email !== "hacker@evil.com";
+  console.log(`${emailBlocked ? "✅" : "❌"} [${r.status}] PATCH /users/updateMe (email not changeable)`);
+  results.push({ name: "updateMe email blocked", ok: emailBlocked, status: r.status });
 
   r = await req("PATCH", "/users/updateMyPassword", { passwordCurrent: "Pass@1234", password: "NewPass@5678", passwordConfirm: "NewPass@5678" }, TOKEN);
   check("PATCH /users/updateMyPassword → 200", r, 200, b => b.status === "success");
@@ -98,11 +117,9 @@ async function run() {
   r = await req("POST", "/users/logout", null, TOKEN);
   check("POST /users/logout → 200", r, 200, b => b.status === "success");
 
-  // Token header auth should still work after cookie logout
   r = await req("GET", "/users/me", null, TOKEN);
   check("GET /users/me (header token valid after cookie logout) → 200", r, 200);
 
-  // Protected without token
   r = await req("GET", "/users/me", null, null);
   check("GET /users/me (no token) → 401", r, 401);
 
@@ -134,13 +151,12 @@ async function run() {
 
     r = await req("POST", `/flights/${FLIGHT_ID}/track`, { reminderMinutes: 30 }, TOKEN);
     check("POST /flights/:id/track → 201", r, 201, b => b.status === "success");
-    TRACK_ID = r.body.data?.track?._id;
   }
 
   r = await req("GET", "/flights/my-flight", null, TOKEN);
   check("GET /flights/my-flight → 200", r, 200);
 
-  if (TRACK_ID) {
+  if (FLIGHT_ID) {
     r = await req("PATCH", `/flights/${FLIGHT_ID}/cancel-track`, null, TOKEN);
     check("PATCH /flights/:id/cancel-track → 200", r, 200);
   }
@@ -149,13 +165,13 @@ async function run() {
   console.log("\n── SERVICES ──────────────────────────────────────");
 
   r = await req("GET", "/services", null, TOKEN);
-  check("GET /services → 200", r, 200, b => (b.results || 0) > 0);
+  check("GET /services → 200 with results", r, 200, b => (b.results || 0) > 0);
   const svcArr = r.body.data?.services || r.body.data?.data;
   if (Array.isArray(svcArr) && svcArr.length) SERVICE_ID = svcArr[0]._id;
 
   for (const cat of ["SHOPS", "RESTAURANTS", "ACCESSIBILITY", "COUNTERS", "FINANCIAL", "VIP_SERVICES"]) {
     r = await req("GET", `/services?category=${cat}`, null, TOKEN);
-    check(`GET /services?category=${cat} → 200 with results`, r, 200, b => (b.results || 0) > 0);
+    check(`GET /services?category=${cat} → results > 0`, r, 200, b => (b.results || 0) > 0);
   }
 
   r = await req("GET", "/services/search?q=Starbucks", null, TOKEN);
@@ -191,7 +207,6 @@ async function run() {
   r = await req("POST", "/devices/register", { deviceToken: fakeToken, deviceType: "android" }, TOKEN);
   check("POST /devices/register → 201", r, 201, b => b.status === "success");
 
-  // Re-register same token (idempotent)
   r = await req("POST", "/devices/register", { deviceToken: fakeToken, deviceType: "ios" }, TOKEN);
   check("POST /devices/register (re-register same token) → 201", r, 201, b => b.status === "success");
 
@@ -205,9 +220,8 @@ async function run() {
   check("GET /navigation/nodes → 200 array", r, 200, b => Array.isArray(b.data));
 
   r = await req("POST", "/navigation/find-path", { fromNodeId: "C01", toNodeId: "E18" }, TOKEN);
-  // No nodes seeded — expect 500 or 404, just not 500 from unhandled crash
-  const navOk = r.status === 404 || r.status === 200;
-  console.log(`${navOk ? "✅" : "❌"} [${r.status}] POST /navigation/find-path (no nodes → expected 404/200)`);
+  const navOk = r.status !== 500;
+  console.log(`${navOk ? "✅" : "❌"} [${r.status}] POST /navigation/find-path (no nodes → not 500)`);
   results.push({ name: "POST /navigation/find-path", ok: navOk, status: r.status });
 
   // ── CHAT ──────────────────────────────────────────────────────────────────
@@ -228,13 +242,12 @@ async function run() {
   // ── STATS ─────────────────────────────────────────────────────────────────
   console.log("\n── STATS ─────────────────────────────────────────");
 
-  r = await req("GET", "/stats", null, null); // public
+  r = await req("GET", "/stats", null, null);
   check("GET /stats → 200 (public)", r, 200, b => b.data?.metrics);
 
-  r = await req("POST", "/stats/rate", { rating: 5, review: "Audit test - works great!" }, TOKEN);
+  r = await req("POST", "/stats/rate", { rating: 5, review: "Audit test!" }, TOKEN);
   check("POST /stats/rate → 201", r, 201, b => b.data?.rating?.rating === 5);
 
-  // User injection blocked
   r = await req("POST", "/stats/rate", { rating: 4, review: "injection test", user: "000000000000000000000000" }, TOKEN);
   const injBlocked = r.status === 201 && r.body.data?.rating?.user !== "000000000000000000000000";
   console.log(`${injBlocked ? "✅" : "❌"} [${r.status}] POST /stats/rate (user injection blocked)`);
@@ -244,7 +257,7 @@ async function run() {
   console.log("\n── FAQs ──────────────────────────────────────────");
 
   r = await req("GET", "/faqs", null, TOKEN);
-  check("GET /faqs → 200", r, 200, b => (b.results || b.data?.length || 0) > 0);
+  check("GET /faqs → 200 with results", r, 200, b => (b.results || b.data?.length || 0) > 0);
 
   // ── SUMMARY ───────────────────────────────────────────────────────────────
   const passed = results.filter(x => x.ok).length;
@@ -256,6 +269,8 @@ async function run() {
     results.filter(x => !x.ok).forEach(x => console.log(`    ❌ ${x.name} [${x.status}]`));
   }
   console.log("══════════════════════════════════════════════════\n");
+
+  process.exit(failed > 0 ? 1 : 0);
 }
 
 run().catch(console.error);

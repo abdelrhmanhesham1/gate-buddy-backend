@@ -1,6 +1,15 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "./variables.env" });
 
+// Polyfill global fetch for Node < 18 (required by @google/generative-ai)
+if (!globalThis.fetch) {
+  const nodeFetch = require("node-fetch");
+  globalThis.fetch = nodeFetch;
+  globalThis.Headers = nodeFetch.Headers;
+  globalThis.Request = nodeFetch.Request;
+  globalThis.Response = nodeFetch.Response;
+}
+
 const notificationJob = require("./utils/notificationJob");
 const flightSyncJob = require("./utils/flightSyncJob");
 
