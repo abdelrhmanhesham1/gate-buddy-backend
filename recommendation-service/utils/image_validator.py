@@ -15,6 +15,7 @@ TRUSTED_DOMAINS = frozenset({
     "cdn.getyourguide.com",
     "live.staticflickr.com",
     "fastly.4sqi.net",
+    "images.pexels.com",
 })
 
 BLOCKED_DOMAINS = frozenset({
@@ -33,16 +34,20 @@ BLOCKED_DOMAINS = frozenset({
     "stock.adobe.com",
 })
 
+# Only block these extensions when they appear as the final file extension
 BLOCKED_EXTENSIONS = frozenset({
-    ".pdf", ".svg", ".gif", ".docx", ".epub", ".webp"
+    ".pdf", ".svg", ".gif", ".docx", ".epub"
 })
 
-IRRELEVANT_PATH_PATTERN = re.compile(
-    r"(logo|icon|banner|avatar|thumbnail|placeholder|default|noimage|"
+# Match against filename only (last path segment), not the full path
+# This avoids blocking Wikimedia URLs whose path contains /thumb/ or /commons/
+IRRELEVANT_FILENAME_PATTERN = re.compile(
+    r"(logo|icon|banner|avatar|placeholder|default|noimage|"
     r"sprite|flag|badge|button|arrow|background|pattern|texture|"
     r"wallpaper|stock|generic|header|footer)",
     re.IGNORECASE
 )
+
 
 async def validate_image_url(
     url: str,
@@ -53,30 +58,32 @@ async def validate_image_url(
 
     Checks (in order):
       1. Domain not in BLOCKED_DOMAINS
-      2. Extension not in BLOCKED_EXTENSIONS
-      3. Path does not match irrelevant content patterns
+      2. File extension not in BLOCKED_EXTENSIONS (checked against filename only)
+      3. Filename does not match irrelevant content patterns
       4. HEAD request returns HTTP 200 with image/* Content-Type
-      5. Content-Length >= 15KB (rejects icons and thumbnails)
+      5. Content-Length >= 10KB (rejects icons; Wikimedia thumbs may omit this header)
 
     Never raises — returns False on any exception.
     """
     try:
         parsed = urlparse(url)
         domain = parsed.netloc.lower().lstrip("www.")
-        path_lower = parsed.path.lower()
 
         if domain in BLOCKED_DOMAINS:
             return False
 
-        if any(path_lower.endswith(ext) for ext in BLOCKED_EXTENSIONS):
+        # Extract filename only (last path component)
+        filename = parsed.path.rstrip("/").rsplit("/", 1)[-1].lower()
+
+        if any(filename.endswith(ext) for ext in BLOCKED_EXTENSIONS):
             return False
 
-        if IRRELEVANT_PATH_PATTERN.search(parsed.path):
+        if IRRELEVANT_FILENAME_PATTERN.search(filename):
             return False
 
         async with session.head(
             url,
-            timeout=aiohttp.ClientTimeout(total=5),
+            timeout=aiohttp.ClientTimeout(total=8),
             allow_redirects=True
         ) as resp:
             if resp.status != 200:
@@ -86,8 +93,9 @@ async def validate_image_url(
             if not content_type.startswith("image/"):
                 return False
 
-            content_length = int(resp.headers.get("Content-Length", "999999"))
-            if content_length < 15_000:
+            # Some CDNs omit Content-Length; treat missing as OK
+            raw_length = resp.headers.get("Content-Length")
+            if raw_length and int(raw_length) < 10_000:
                 return False
 
         return True
@@ -97,13 +105,9 @@ async def validate_image_url(
 
 
 def compute_bing_trust_score(url: str) -> int:
-    """
-    Scores a Bing candidate URL for venue-image likelihood.
-    Higher score = more likely to be a real photo of the place.
-    Used to rank Bing results before validation attempts.
-    """
     parsed = urlparse(url)
     domain = parsed.netloc.lower().lstrip("www.")
+    filename = parsed.path.rstrip("/").rsplit("/", 1)[-1]
     score = 0
 
     if domain in TRUSTED_DOMAINS:
@@ -113,10 +117,10 @@ def compute_bing_trust_score(url: str) -> int:
     if "ytimg.com" in domain:
         score -= 80
     if any(d in domain for d in ("reuters", "bbc", "cnn", "wtop", "arabianbusiness")):
-        score -= 20  # News sites serve article images, not venue photos
+        score -= 20
     if any(d in domain for d in ("tripadvisor", "getyourguide", "flickr", "mapillary")):
         score += 25
-    if IRRELEVANT_PATH_PATTERN.search(parsed.path):
+    if IRRELEVANT_FILENAME_PATTERN.search(filename):
         score -= 40
 
     return score
