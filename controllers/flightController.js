@@ -1,5 +1,6 @@
 const Flight = require("../models/flightModel");
 const FlightTrack = require("../models/flightTrackModel");
+const FlightUpdate = require("../models/flightUpdateModel");
 const Airport = require("../models/airportModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
@@ -134,6 +135,13 @@ exports.getFlight = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: "success", data: { flight } });
 });
 
+exports.getFlightUpdates = catchAsync(async (req, res, next) => {
+  const flight = await Flight.findById(req.params.id);
+  if (!flight) return next(new AppError("Flight not found.", 404));
+  const updates = await FlightUpdate.find({ flight: req.params.id }).sort({ recordedAt: -1 }).limit(50);
+  res.status(200).json({ status: "success", results: updates.length, data: { updates } });
+});
+
 exports.createFlight = catchAsync(async (req, res, next) => {
   const flight = await Flight.create(req.body);
   res.status(201).json({ status: "success", data: { flight } });
@@ -157,7 +165,7 @@ exports.trackFlight = catchAsync(async (req, res, next) => {
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
-  res.status(200).json({ status: "success", data: { track } });
+  res.status(201).json({ status: "success", data: { track } });
 });
 
 exports.updateFlight = catchAsync(async (req, res, next) => {

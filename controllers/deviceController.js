@@ -7,11 +7,13 @@ exports.registerDevice = catchAsync(async (req, res, next) => {
   if (!deviceToken) return next(new AppError("FCM token is required.", 400));
   if (!deviceType) return next(new AppError("Device type is required.", 400));
 
-  const device = await Device.findOneAndUpdate(
+  // findOneAndUpdate with upsert can race on unique index — use replaceOne with upsert instead
+  await Device.replaceOne(
     { fcmToken: deviceToken },
-    { fcmToken: deviceToken, platform: deviceType, user: req.user.id, lastUsed: Date.now() },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
+    { fcmToken: deviceToken, platform: deviceType, user: req.user.id, lastUsed: new Date() },
+    { upsert: true }
   );
+  const device = await Device.findOne({ fcmToken: deviceToken });
 
   res.status(201).json({ status: "success", data: { device } });
 });

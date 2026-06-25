@@ -881,23 +881,43 @@ const seedData = async () => {
     await Faq.create([
       {
         question: "How can I track my flight?",
-        answer: "Go to the 'Flights' tab and scan your boarding pass barcode or search by your flight number.",
+        answer: "Go to the 'Flights' tab and scan your boarding pass barcode or enter your flight number manually. GateBuddy will show live status, gate, and boarding time.",
         order: 1
       },
       {
-        question: "Where is the prayer room located?",
-        answer: "Prayer rooms are available in all terminals. In T3, it's located near Gate G12 and the food court area.",
+        question: "Where is the prayer room at Schiphol?",
+        answer: "Prayer rooms are located in Departure Hall 2 (before security) and airside on the Non-Schengen E Pier. Both are open 24/7 and include ablution facilities and prayer mats.",
         order: 2
       },
       {
-        question: "Is there free Wi-Fi at CAI?",
-        answer: "Yes, free Wi-Fi is available for 30 minutes. Look for the 'CAI-Free-WiFi' network.",
+        question: "Is there free Wi-Fi at Amsterdam Schiphol?",
+        answer: "Yes, Schiphol offers free unlimited Wi-Fi throughout the airport. Connect to the 'Schiphol' network — no registration required.",
         order: 3
       },
       {
         question: "What should I do if I lose my luggage?",
-        answer: "Visit the 'Lost and Found' counter in the Arrivals hall or contact your airline's baggage service counter.",
+        answer: "Visit the Lost & Found desk in Schiphol Plaza (Level 1) or contact your airline's baggage service counter in the Arrivals hall. You can also report online via the Schiphol website.",
         order: 4
+      },
+      {
+        question: "How do I get to the KLM Crown Lounge?",
+        answer: "The KLM Crown Lounge has two locations: Lounge 25 (Non-Schengen, airside past passport control) and Lounge 52 (Schengen). Access is for Business Class passengers and SkyTeam Elite Plus members.",
+        order: 5
+      },
+      {
+        question: "How do I navigate between gates at Schiphol?",
+        answer: "Use the GateBuddy indoor navigation feature. Enter your current location and destination gate, and the app will provide step-by-step walking directions including floor changes via lifts or escalators.",
+        order: 6
+      },
+      {
+        question: "Where can I exchange currency at Schiphol?",
+        answer: "GWK Travelex has four locations: Departure Hall 1, Departure Hall 2, Non-Schengen E Pier (airside), and Arrivals Hall 3. The airside location often has the best rates.",
+        order: 7
+      },
+      {
+        question: "Is there a medical centre at Schiphol?",
+        answer: "Yes. The Schiphol Medical Centre is in Departure Hall 2 (Level 2) and offers GP consultations, travel vaccinations, a pharmacy, and first aid. Open 07:00–22:00 daily.",
+        order: 8
       }
     ]);
 

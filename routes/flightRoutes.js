@@ -14,8 +14,9 @@ router.get("/updated", flightController.getUpdatedFlights);
 router.use(authController.protect);
 
 router.get("/my-flight", flightController.getTrackedFlight);
-router.get("/:id", flightController.getFlight);
 router.post("/scan", flightController.scanBoardingPass);
+router.get("/:id/updates", flightController.getFlightUpdates);
+router.get("/:id", flightController.getFlight);
 router.post("/:id/track", flightController.trackFlight);
 router.patch("/:id/cancel-track", flightController.cancelTrack);
 

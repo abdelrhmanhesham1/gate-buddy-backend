@@ -1,4 +1,5 @@
 const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/AppError");
 const Flight = require("../models/flightModel");
 const FlightTrack = require("../models/flightTrackModel");
 const Service = require("../models/serviceModel");
@@ -46,12 +47,11 @@ exports.createRating = catchAsync(async (req, res, next) => {
     return next(new AppError("Rating must be between 1 and 5.", 400));
   }
 
-  const newRating = await Rating.create({ rating, review, user: req.user.id });
+  const newRating = await Rating.findOneAndUpdate(
+    { user: req.user.id },
+    { rating, review, user: req.user.id },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
 
-  res.status(201).json({
-    status: "success",
-    data: {
-      rating: newRating
-    }
-  });
+  res.status(201).json({ status: "success", data: { rating: newRating } });
 });
