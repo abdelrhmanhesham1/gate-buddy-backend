@@ -1,35 +1,34 @@
 """
-Live Data Scraper for GateBuddy Recommendations (v4.0)
+Live Data Scraper for GateBuddy Recommendations (v5.0)
+
 Sources:
-- GitHub mwgg/Airports database (airport geolocation)
-- Overpass API / OpenStreetMap (nearby tourist attractions)
-- Wikipedia API (place descriptions)
-- DuckDuckGo / Public Media Proxy (high-quality photos, keyless)
+- GitHub mwgg/Airports database  (airport geolocation)
+- Overpass API / OpenStreetMap   (tourist attractions — wikidata/wikipedia tagged only)
+- Wikipedia API                  (descriptions, hero images)
+- Image waterfall                (Wikidata P18 → Wikipedia → Wikimedia Commons → Pexels)
 """
 
 import asyncio
 import aiohttp
 import re
-import json
 import logging
 import os
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
-from urllib.parse import quote, quote_plus, unquote
+from urllib.parse import quote
 from utils.image_waterfall import image_waterfall
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-OVERPASS_AGENT = "AirportRec/1.0"
+OVERPASS_AGENT = "GateBuddy/5.0 (contact: support@gatebuddy.app)"
+AIRPORTS_URL   = "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
 FALLBACK_IMAGE = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600"
-AIRPORTS_URL = "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
 
+
+# ── Airports Database ──────────────────────────────────────────────────────────
 
 class AirportsDatabase:
-    """In-memory cache of the GitHub airports dataset."""
-
     def __init__(self):
         self._data: Optional[Dict] = None
         self._lock = asyncio.Lock()
@@ -39,25 +38,19 @@ class AirportsDatabase:
             if self._data is not None:
                 return self._data
             try:
-                logger.info("Downloading airports database ...")
                 async with session.get(
                     AIRPORTS_URL,
-                    headers={"User-Agent": USER_AGENT},
                     timeout=aiohttp.ClientTimeout(total=30),
                 ) as resp:
-                    if resp.status == 200:
-                        self._data = await resp.json(content_type=None)
-                        logger.info(f"Loaded {len(self._data)} airports")
-                    else:
-                        logger.error(f"Airports DB HTTP {resp.status}")
-                        self._data = {}
+                    self._data = await resp.json(content_type=None) if resp.status == 200 else {}
+                    logger.info("Loaded %d airports", len(self._data))
             except Exception as e:
-                logger.error(f"Failed to load airports DB: {e}")
+                logger.error("Airports DB failed: %s", e)
                 self._data = {}
             return self._data
 
     def lookup(self, code: str) -> Optional[Dict]:
-        if self._data is None:
+        if not self._data:
             return None
         code = code.upper()
         airport = self._data.get(code)
@@ -69,111 +62,109 @@ class AirportsDatabase:
         return None
 
 
-class ImageFetcher:
-    """Fetches real photos via a modernized keyless proxy pipeline."""
+# ── Overpass Attraction Finder ─────────────────────────────────────────────────
 
-    _VALID_EXT = (".jpg", ".jpeg", ".png")
+class OverpassAttractionFinder:
+    """
+    Queries Overpass for tourist attractions that have wikidata or wikipedia OSM tags.
+    This guarantees all returned places are encyclopedic and have real photos available.
+    Obscure local places (pharmacies, unnamed spots) are excluded by this constraint.
+    """
+
+    _ENDPOINTS = [
+        "https://overpass-api.de/api/interpreter",
+        "https://overpass.openstreetmap.fr/api/interpreter",
+        "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    ]
 
     @staticmethod
-    async def fetch(session: aiohttp.ClientSession, query: str) -> Tuple[str, str]:
-        try:
-            # Modern Keyless Proxy Request bypassing raw vapi regex strings
-            url = f"https://duckduckgo.com/html/?q={quote_plus(query)}+travel+attraction"
-            headers = {"User-Agent": USER_AGENT}
-            
-            async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=6)) as resp:
-                if resp.status == 200:
-                    html = await resp.text()
-                    # Fallback structural search parsing img URLs from modern DuckDuckGo layouts
-                    links = re.findall(r'//img\.duckduckgo\.com/iu/\?u=([^&]+)', html)
-                    for link in links:
-                        unquoted = unquote(link)
-                        if any(unquoted.lower().endswith(ext) for ext in ImageFetcher._VALID_EXT):
-                            return unquoted, "Web Media"
-        except Exception as e:
-            logger.debug(f"Image proxy bypass failed for '{query}': {e}")
+    def _build_query(lat: float, lon: float, radius_m: int = 30000, limit: int = 60) -> str:
+        # Only return elements that have wikidata OR wikipedia tags.
+        # This ensures every result has an encyclopedic source for photos & descriptions.
+        return (
+            f'[out:json][timeout:30];'
+            f'('
+            f'  nwr(around:{radius_m},{lat},{lon})["tourism"~"attraction|museum|gallery"]["wikidata"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["tourism"~"attraction|museum|gallery"]["wikipedia"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["historic"]["wikidata"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["historic"]["wikipedia"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["amenity"~"theatre|concert_hall|arts_centre"]["wikidata"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["leisure"~"stadium"]["wikidata"];'
+            f'  nwr(around:{radius_m},{lat},{lon})["building"~"cathedral|castle|palace|monument"]["wikidata"];'
+            f');'
+            f'out center {limit};'
+        )
 
-        return FALLBACK_IMAGE, "Unsplash License"
+    @classmethod
+    async def find(
+        cls,
+        session: aiohttp.ClientSession,
+        lat: float,
+        lon: float,
+        radius_m: int = 30000,
+        limit: int = 60,
+    ) -> List[Dict]:
+        query = cls._build_query(lat, lon, radius_m, limit)
+        for endpoint in cls._ENDPOINTS:
+            try:
+                async with session.post(
+                    endpoint,
+                    data={"data": query},
+                    headers={"User-Agent": OVERPASS_AGENT},
+                    timeout=aiohttp.ClientTimeout(total=35),
+                ) as resp:
+                    if resp.status == 200:
+                        data = await resp.json(content_type=None)
+                        elements = data.get("elements", [])
+                        logger.info("Overpass returned %d elements from %s", len(elements), endpoint)
+                        return elements
+                    logger.warning("Overpass %s → HTTP %d", endpoint, resp.status)
+            except Exception as e:
+                logger.warning("Overpass %s failed: %s", endpoint, e)
+        return []
 
+
+# ── Wikipedia Description Fetcher ─────────────────────────────────────────────
 
 class WikipediaDescriptionFetcher:
-    """Fetches introductory summary from Wikipedia."""
-
-    _API = "https://en.wikipedia.org/w/api.php"
     _DEFAULT = "A popular local attraction worth visiting."
 
     @staticmethod
     async def fetch(session: aiohttp.ClientSession, title: str, lang: str = "en") -> str:
         try:
             lang = lang if re.match(r"^[a-z-]{2,12}$", lang) else "en"
-            api = f"https://{lang}.wikipedia.org/w/api.php"
             params = {
-                "action": "query",
-                "format": "json",
-                "prop": "extracts",
-                "exintro": True,
+                "action":      "query",
+                "format":      "json",
+                "prop":        "extracts",
+                "exintro":     True,
                 "explaintext": True,
-                "exchars": 180,
-                "titles": title,
-                "redirects": 1,
+                "exchars":     200,
+                "titles":      title,
+                "redirects":   1,
             }
             async with session.get(
-                api,
+                f"https://{lang}.wikipedia.org/w/api.php",
                 params=params,
                 headers={"User-Agent": OVERPASS_AGENT},
                 timeout=aiohttp.ClientTimeout(total=8),
             ) as resp:
-                data = await resp.json()
+                data = await resp.json(content_type=None)
 
-            pages = data.get("query", {}).get("pages", {})
-            if pages:
-                extract = list(pages.values())[0].get("extract", "").strip()
-                if extract:
+            for page in data.get("query", {}).get("pages", {}).values():
+                extract = page.get("extract", "").strip()
+                if extract and len(extract) > 20:
                     return extract
 
         except Exception as e:
-            logger.debug(f"Wikipedia fetch failed for '{title}': {e}")
+            logger.debug("Wikipedia desc failed for '%s': %s", title, e)
 
         return WikipediaDescriptionFetcher._DEFAULT
 
 
-class OverpassAttractionFinder:
-    """Discovers tourist attractions near coordinates via Overpass / OSM."""
-
-    _URL = "https://overpass.openstreetmap.fr/api/interpreter"
-
-    @staticmethod
-    async def find(
-        session: aiohttp.ClientSession,
-        lat: float,
-        lon: float,
-        radius_m: int = 25000,
-        limit: int = 40,
-    ) -> List[Dict]:
-        query = (
-            f'[out:json][timeout:25];'
-            f'nwr(around:{radius_m},{lat},{lon})["tourism"="attraction"];'
-            f'out center {limit};'
-        )
-        try:
-            async with session.post(
-                OverpassAttractionFinder._URL,
-                data={"data": query},
-                headers={"User-Agent": OVERPASS_AGENT},
-                timeout=aiohttp.ClientTimeout(total=30),
-            ) as resp:
-                if resp.status != 200:
-                    logger.error(f"Overpass HTTP {resp.status}")
-                    return []
-                data = await resp.json()
-                return data.get("elements", [])
-        except Exception as e:
-            logger.error(f"Overpass query failed: {e}")
-            return []
-
+# ── Main Scraper ───────────────────────────────────────────────────────────────
 
 class LiveDataScraper:
-    """Main orchestrator resolving airport data using robust location ranking algorithms."""
 
     def __init__(self):
         self._session: Optional[aiohttp.ClientSession] = None
@@ -192,37 +183,39 @@ class LiveDataScraper:
         if not airport:
             return None
         return {
-            "city": airport.get("city", "Unknown"),
+            "city":    airport.get("city", "Unknown"),
             "country": airport.get("country", "Unknown"),
-            "lat": airport.get("lat"),
-            "lon": airport.get("lon"),
+            "lat":     airport.get("lat"),
+            "lon":     airport.get("lon"),
         }
 
-    def _calculate_popularity_score(self, element: Dict) -> int:
-        """Calculates popularity index based on OpenStreetMap tags."""
-        tags = element.get("tags", {})
+    def _score_element(self, el: Dict) -> int:
+        tags = el.get("tags", {})
         score = 0
-        
-        # High value indicators
-        if "wikipedia" in tags: score += 15
-        if "wikidata" in tags: score += 10
-        if "historic" in tags: score += 5
-        if tags.get("building") in ["palace", "castle", "cathedral", "temple", "monument"]: score += 12
-        if tags.get("attraction") in ["theme_park", "museum", "viewpoint"]: score += 8
-        
-        # Exclude broad neighborhoods, boundaries, or generic landuse types
-        if tags.get("landuse") or tags.get("place") in ["suburb", "neighborhood"]:
-            score -= 20
-            
+        # Both tags = highest priority
+        if "wikidata"  in tags: score += 20
+        if "wikipedia" in tags: score += 20
+        # Building/feature type bonuses
+        building = tags.get("building", "")
+        if building in ("cathedral", "castle", "palace", "monument", "church"):
+            score += 15
+        tourism = tags.get("tourism", "")
+        if tourism in ("museum", "gallery"):
+            score += 12
+        historic = tags.get("historic", "")
+        if historic in ("castle", "monument", "ruins", "church", "fort", "building"):
+            score += 10
+        # Penalise neighbourhood/boundary shapes that sneak through
+        if tags.get("landuse") or tags.get("place") in ("suburb", "neighborhood"):
+            score -= 30
         return score
 
     def _parse_wikipedia_tag(self, tags: Dict) -> Tuple[Optional[str], Optional[str]]:
-        value = tags.get("wikipedia")
+        value = tags.get("wikipedia", "")
         if not value or ":" not in value:
             return None, None
         lang, title = value.split(":", 1)
-        title = title.replace("_", " ").strip()
-        return (lang.strip() or "en"), title or None
+        return (lang.strip() or "en"), title.replace("_", " ").strip() or None
 
     async def scrape_destination_data(
         self,
@@ -232,38 +225,36 @@ class LiveDataScraper:
         limit: int = 6,
     ) -> Optional[Dict]:
         session = await self._get_session()
+        await self._airports_db.load(session)
 
-        airports = await self._airports_db.load(session)
         airport = self._airports_db.lookup(airport_code)
         if not airport:
-            logger.error(f"Airport '{airport_code}' not found in database")
+            logger.error("Airport '%s' not found", airport_code)
             return None
 
-        lat, lon = airport["lat"], airport["lon"]
-        resolved_city = airport.get("city", city_name) or city_name
-        resolved_country = airport.get("country", country) or country
+        lat = airport["lat"]
+        lon = airport["lon"]
+        resolved_city    = airport.get("city",    city_name) or city_name
+        resolved_country = airport.get("country", country)   or country
 
-        logger.info(f"Scraping via Overpass for {resolved_city} ({lat}, {lon}) ...")
+        logger.info("Fetching attractions for %s (%s, %s)", resolved_city, lat, lon)
 
         elements = await OverpassAttractionFinder.find(session, lat, lon)
         if not elements:
-            logger.warning(f"Overpass returned no attractions for {airport_code}")
+            logger.warning("No Overpass results for %s", airport_code)
             return None
 
-        # Sort dynamically using our compound scoring algorithm
-        elements.sort(key=self._calculate_popularity_score, reverse=True)
+        # Score, deduplicate, and take top candidates
+        elements.sort(key=self._score_element, reverse=True)
+        named = [el for el in elements if el.get("tags", {}).get("name")]
+        seen, unique = set(), []
+        for el in named:
+            key = el["tags"]["name"].strip().lower()
+            if key not in seen:
+                seen.add(key)
+                unique.append(el)
 
-        named_elements = [el for el in elements if el.get("tags", {}).get("name")]
-
-        seen_names = set()
-        unique_elements = []
-        for el in named_elements:
-            name = el["tags"]["name"].strip()
-            if name.lower() not in seen_names:
-                seen_names.add(name.lower())
-                unique_elements.append(el)
-
-        candidates = unique_elements[: limit + 6]
+        candidates = unique[: limit + 8]
 
         tasks = [
             self._enrich_place(session, el, resolved_city, resolved_country, lat, lon)
@@ -271,25 +262,19 @@ class LiveDataScraper:
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        places = []
-        for result in results:
-            if isinstance(result, Exception) or result is None:
-                continue
-            places.append(result)
-            if len(places) >= limit:
-                break
+        places = [r for r in results if r and not isinstance(r, Exception)][:limit]
 
         if not places:
-            logger.error(f"No valid places enriched for {resolved_city}")
+            logger.error("No valid places for %s", resolved_city)
             return None
 
         return {
             "airportCode": airport_code.upper(),
-            "cityName": resolved_city,
-            "country": resolved_country,
-            "places": places,
-            "message": f"Top places to visit in {resolved_city}, {resolved_country}",
-            "scrapedAt": datetime.utcnow().isoformat(),
+            "cityName":    resolved_city,
+            "country":     resolved_country,
+            "places":      places,
+            "message":     f"Top places to visit in {resolved_city}, {resolved_country}",
+            "scrapedAt":   datetime.utcnow().isoformat(),
         }
 
     async def _enrich_place(
@@ -303,38 +288,36 @@ class LiveDataScraper:
     ) -> Optional[Dict]:
         async with self._concurrency:
             tags = element.get("tags", {})
-            name = tags["name"]
+            name = tags.get("name", "").strip()
+            if not name:
+                return None
 
-            p_lat = element.get("lat") or element.get("center", {}).get("lat", fallback_lat)
-            p_lon = element.get("lon") or element.get("center", {}).get("lon", fallback_lon)
-
-            # Build clean Google Maps Query link
-            search_query = f"{name}, {city}"
-            maps_link = f"https://www.google.com/maps/search/?api=1&query={quote(search_query)}"
+            p_lat = float(element.get("lat") or element.get("center", {}).get("lat", fallback_lat))
+            p_lon = float(element.get("lon") or element.get("center", {}).get("lon", fallback_lon))
 
             wiki_lang, wiki_title = self._parse_wikipedia_tag(tags)
-            desc_title = wiki_title or name
-            desc_lang = wiki_lang or "en"
+            wikidata_id = tags.get("wikidata")
 
-            p_lat = float(p_lat)
-            p_lon = float(p_lon)
+            # Use English Wikipedia title for lookup if available; otherwise use the OSM name
+            desc_title = wiki_title or name
+            desc_lang  = wiki_lang  or "en"
+
             place = {
-                "name": name,
-                "category": tags.get("tourism", "Attraction").title(),
-                "rating": 4.8 if ("wikipedia" in tags or "wikidata" in tags) else 4.2,
-                "vicinity": tags.get("addr:full") or tags.get("addr:street") or f"{p_lat:.4f}, {p_lon:.4f}",
-                "googleMapsLink": maps_link,
-                "city": city,
-                "cityName": city,
-                "country": country,
-                "wikidata": tags.get("wikidata"),
-                "wikidataId": tags.get("wikidata"),
-                "wikipediaLang": desc_lang,
+                "name":          name,
+                "category":      _derive_category(tags),
+                "rating":        4.9 if (wikidata_id and wiki_title) else (4.7 if wikidata_id or wiki_title else 4.2),
+                "vicinity":      f"{p_lat:.4f}, {p_lon:.4f}",
+                "googleMapsLink": f"https://www.google.com/maps/search/?api=1&query={quote(name + ', ' + city)}",
+                "cityName":      city,
+                "country":       country,
+                "wikidataId":    wikidata_id,
+                "wikidata":      wikidata_id,
+                "wikipediaLang":  desc_lang,
                 "wikipediaTitle": desc_title,
             }
 
             desc_task = WikipediaDescriptionFetcher.fetch(session, desc_title, desc_lang)
-            img_task = image_waterfall(
+            img_task  = image_waterfall(
                 place,
                 session,
                 google_api_key=os.getenv("GOOGLE_PLACES_API_KEY"),
@@ -344,17 +327,44 @@ class LiveDataScraper:
 
             description, (image_url, image_credit) = await asyncio.gather(desc_task, img_task)
 
-            place["description"] = description
-            place["image"] = image_url or FALLBACK_IMAGE
-            place["imageCredit"] = image_credit or "Fallback"
+            place["description"]  = description
+            place["image"]        = image_url or FALLBACK_IMAGE
+            place["imageCredit"]  = image_credit or "Fallback"
 
-            place.pop("city", None)
-            place.pop("wikidata", None)
-            place.pop("wikidataId", None)
-            place.pop("wikipediaLang", None)
-            place.pop("wikipediaTitle", None)
+            # Strip internal lookup fields before returning
+            for key in ("wikidata", "wikidataId", "wikipediaLang", "wikipediaTitle", "cityName", "country"):
+                place.pop(key, None)
+
             return place
 
     async def close(self):
         if self._session and not self._session.closed:
             await self._session.close()
+
+
+def _derive_category(tags: Dict) -> str:
+    tourism  = tags.get("tourism", "")
+    historic = tags.get("historic", "")
+    amenity  = tags.get("amenity", "")
+    leisure  = tags.get("leisure", "")
+    building = tags.get("building", "")
+
+    if tourism == "museum" or amenity == "museum":
+        return "Museum"
+    if tourism == "gallery":
+        return "Art Gallery"
+    if tourism == "attraction":
+        if building in ("cathedral", "church") or historic in ("church",):
+            return "Religious Site"
+        if historic in ("castle", "fort", "ruins"):
+            return "Historic Site"
+        return "Attraction"
+    if historic:
+        return "Historic Site"
+    if amenity in ("theatre", "concert_hall", "arts_centre"):
+        return "Culture"
+    if leisure == "stadium":
+        return "Stadium"
+    if building in ("cathedral", "palace", "castle", "monument"):
+        return "Landmark"
+    return "Attraction"
