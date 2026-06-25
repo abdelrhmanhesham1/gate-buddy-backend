@@ -11,6 +11,7 @@ exports.getAllServices = catchAsync(async (req, res, next) => {
 
 exports.searchServices = catchAsync(async (req, res, next) => {
   const { q } = req.query;
+  if (!q || !q.trim()) return next(new AppError("Search query is required.", 400));
   const services = await Service.find(
     { $text: { $search: q } },
     { score: { $meta: "textScore" } }

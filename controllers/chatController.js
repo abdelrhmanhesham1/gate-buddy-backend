@@ -46,5 +46,5 @@ exports.chat_with_gemini = catchAsync(async (req, res, next) => {
   const result = await model.generateContent(prompt);
   const response = result.response.text();
 
-  res.status(200).json({ status: "success", data: { response } });
+  res.status(200).json({ status: "success", data: { reply: response } });
 });

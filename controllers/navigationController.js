@@ -138,10 +138,6 @@ exports.getNodes = catchAsync(async (req, res, next) => {
     "nodeId name type level location connectedTo"
   );
 
-  if (!nodes || nodes.length === 0) {
-    return next(new AppError("No navigation nodes found", 404));
-  }
-
   res.status(200).json({
     status: "success",
     results: nodes.length,

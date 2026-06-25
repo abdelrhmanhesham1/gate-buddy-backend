@@ -41,9 +41,12 @@ exports.getGlobalStats = catchAsync(async (req, res, next) => {
 });
 
 exports.createRating = catchAsync(async (req, res, next) => {
-  if (!req.body.user) req.body.user = req.user.id;
+  const { rating, review } = req.body;
+  if (!rating || rating < 1 || rating > 5) {
+    return next(new AppError("Rating must be between 1 and 5.", 400));
+  }
 
-  const newRating = await Rating.create(req.body);
+  const newRating = await Rating.create({ rating, review, user: req.user.id });
 
   res.status(201).json({
     status: "success",

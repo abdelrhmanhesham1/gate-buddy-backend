@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const serviceSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    category: { type: String, required: true, enum: ["COUNTERS", "FINANCIAL", "VIP_SERVICES", "ACCESSIBILITY", "SHOPS", "RESTAURANTS", "GATES"] },
+    category: { type: String, required: true, enum: ["COUNTERS", "FINANCIAL", "VIP_SERVICES", "ACCESSIBILITY", "SHOPS", "RESTAURANTS"] },
     subCategory: String,
     description: String,
     status: { type: String, default: "Open", enum: ["Open", "Closed", "Busy", "Available"] },
@@ -42,4 +42,5 @@ const serviceSchema = new mongoose.Schema(
 );
 
 serviceSchema.index({ location: "2dsphere" });
+serviceSchema.index({ name: "text", description: "text", subCategory: "text" });
 module.exports = mongoose.model("Service", serviceSchema);

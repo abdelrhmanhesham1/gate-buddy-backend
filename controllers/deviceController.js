@@ -4,7 +4,8 @@ const AppError = require("../utils/AppError");
 
 exports.registerDevice = catchAsync(async (req, res, next) => {
   const { deviceToken, deviceType } = req.body;
-  if (!deviceToken || !deviceType) return next(new AppError("Token and type required", 400));
+  if (!deviceToken) return next(new AppError("FCM token is required.", 400));
+  if (!deviceType) return next(new AppError("Device type is required.", 400));
 
   const device = await Device.findOneAndUpdate(
     { fcmToken: deviceToken },
@@ -12,7 +13,7 @@ exports.registerDevice = catchAsync(async (req, res, next) => {
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
-  res.status(200).json({ status: "success", data: { device } });
+  res.status(201).json({ status: "success", data: { device } });
 });
 
 exports.deleteDevice = catchAsync(async (req, res, next) => {

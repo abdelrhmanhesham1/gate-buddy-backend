@@ -30,6 +30,8 @@ router.use(authController.protect);
 
 router.get("/me", userController.getMe, userController.getUser);
 router.patch("/updateMe", userController.uploadUserPhoto, userController.updateMe);
+router.patch("/updateMyPassword", authController.updateMyPassword);
+router.post("/link-provider", authController.linkProvider);
 router.delete("/deleteMe", userController.deleteMe);
 
 // --- 3. ADMIN ---

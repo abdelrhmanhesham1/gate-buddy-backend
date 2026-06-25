@@ -43,6 +43,7 @@ const createSendToken = async (user, statusCode, req, res) => {
 const resolveOAuthUser = async (provider, profile, req, res) => {
   const { provider_id, email, name, picture } = profile;
   let user = await User.findOne({ "auth_providers.provider": provider, "auth_providers.provider_id": provider_id });
+  let isNewUser = false;
 
   if (!user && email) {
     user = await User.findOne({ email });
@@ -54,15 +55,14 @@ const resolveOAuthUser = async (provider, profile, req, res) => {
 
   if (!user) {
     user = await User.create({ name, email, photo: picture, auth_providers: [{ provider, provider_id }] });
+    isNewUser = true;
   }
 
-  await createSendToken(user, 200, req, res);
+  await createSendToken(user, isNewUser ? 201 : 200, req, res);
 };
 
 // --- 3. EXPORTED HANDLERS ---
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log("--- DEBUG: SIGNUP ROUTE HIT ---");
-  
   // Pre-check: Verify email doesn't already exist
   const existingUser = await User.findOne({ email: req.body.email.toLowerCase() });
   if (existingUser) {
@@ -121,6 +121,10 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
   if (!stored || stored.revokedAt) {
     if (stored) await RefreshToken.deleteMany({ user: stored.user });
     return next(new AppError("Token reuse detected.", 403));
+  }
+  if (stored.expiresAt < new Date()) {
+    await RefreshToken.deleteMany({ user: stored.user });
+    return next(new AppError("Refresh token expired. Please log in again.", 401));
   }
   const rawNew = signRefreshToken(stored.user);
   const hashedNew = crypto.createHash("sha256").update(rawNew).digest("hex");
@@ -207,9 +211,14 @@ exports.facebookAuth = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
   if (req.headers.authorization?.startsWith("Bearer")) token = req.headers.authorization.split(" ")[1];
-  else if (req.cookies.jwt) token = req.cookies.jwt;
+  else if (req.cookies.jwt && req.cookies.jwt !== "loggedout") token = req.cookies.jwt;
   if (!token) return next(new AppError("Not logged in.", 401));
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  let decoded;
+  try {
+    decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  } catch (err) {
+    return next(new AppError("Invalid or expired token. Please log in again.", 401));
+  }
   const user = await User.findById(decoded.id);
   if (!user || user.changedPasswordAfter(decoded.iat)) return next(new AppError("Invalid session.", 401));
   req.user = user;
@@ -233,3 +242,50 @@ exports.restrictTo = (...roles) => (req, res, next) => {
   if (!roles.includes(req.user.role)) return next(new AppError("Denied.", 403));
   next();
 };
+
+exports.updateMyPassword = catchAsync(async (req, res, next) => {
+  const { passwordCurrent, password, passwordConfirm } = req.body;
+  if (!passwordCurrent || !password || !passwordConfirm) {
+    return next(new AppError("Current password, new password, and confirmation are required.", 400));
+  }
+  const user = await User.findById(req.user.id).select("+password");
+  if (!(await user.correctPassword(passwordCurrent, user.password))) {
+    return next(new AppError("Current password is incorrect.", 401));
+  }
+  if (passwordCurrent === password) {
+    return next(new AppError("New password cannot be the same as the current password.", 400));
+  }
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+  await createSendToken(user, 200, req, res);
+});
+
+exports.linkProvider = catchAsync(async (req, res, next) => {
+  const { provider, token } = req.body;
+  if (!["google", "github", "facebook"].includes(provider)) {
+    return next(new AppError("Invalid provider. Must be google, github, or facebook.", 400));
+  }
+  if (!token) return next(new AppError("Token is required.", 400));
+
+  let profile;
+  if (provider === "google") profile = await oauthVerifiers.verifyGoogle(token);
+  else if (provider === "github") profile = await oauthVerifiers.verifyGitHub(token);
+  else profile = await oauthVerifiers.verifyFacebook(token);
+
+  const alreadyLinked = req.user.auth_providers.some(p => p.provider === provider);
+  if (alreadyLinked) return next(new AppError("Provider already linked to this account.", 409));
+
+  const takenByOther = await User.findOne({
+    "auth_providers.provider": provider,
+    "auth_providers.provider_id": profile.provider_id,
+    _id: { $ne: req.user._id }
+  });
+  if (takenByOther) return next(new AppError("This social account is already linked to another user.", 409));
+
+  req.user.auth_providers.push({ provider, provider_id: profile.provider_id, linked_at: Date.now() });
+  await req.user.save({ validateBeforeSave: false });
+
+  req.user.password = undefined;
+  res.status(200).json({ status: "success", data: { user: req.user } });
+});

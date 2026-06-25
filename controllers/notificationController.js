@@ -82,11 +82,13 @@ exports.getUnreadCount = catchAsync(async (req, res, next) => {
 });
 
 exports.markAllAsRead = catchAsync(async (req, res, next) => {
-  await Notification.updateMany(
+  const result = await Notification.updateMany(
     { recipient: req.user._id, read: false },
     { read: true }
   );
-  res
-    .status(200)
-    .json({ status: "success", message: "All notifications marked as read" });
+  res.status(200).json({
+    status: "success",
+    message: "All notifications marked as read",
+    count: result.modifiedCount
+  });
 });
