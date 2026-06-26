@@ -576,7 +576,7 @@ const seedData = async () => {
       // — Schiphol Plaza & Airside —
       {
         name: "Rabobank ATM — Schiphol Plaza", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7610, 52.3090] },
+        location: { type: "Point", coordinates: [4.7625, 52.3070] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.0, status: "Open", operatingHours: "24/24"
       },
@@ -771,7 +771,7 @@ const seedData = async () => {
       },
       {
         name: "Lost & Found — Schiphol Plaza", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7610, 52.3092] },
+        location: { type: "Point", coordinates: [4.7625, 52.3072] },
         terminal: "Schiphol Plaza", zone: "Level 1",
         rating: 4.1, status: "Open", operatingHours: "07:00–22:00",
         amenities: ["Lost Property Registration", "Online Tracking", "Baggage Claim Support"]
@@ -835,7 +835,7 @@ const seedData = async () => {
       // — Schiphol Plaza [4.7638, 52.3071] —
       {
         name: "Rituals — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7610, 52.3088] },
+        location: { type: "Point", coordinates: [4.7625, 52.3068] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.6, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.rituals, IMG.rituals2],
@@ -843,7 +843,7 @@ const seedData = async () => {
       },
       {
         name: "De Bijenkorf Boutique — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7608, 52.3090] },
+        location: { type: "Point", coordinates: [4.7623, 52.3070] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.5, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.bijenkorf, IMG.bijenkorf2],
@@ -851,7 +851,7 @@ const seedData = async () => {
       },
       {
         name: "Lacoste — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7612, 52.3089] },
+        location: { type: "Point", coordinates: [4.7627, 52.3069] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.3, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.lacoste, IMG.lacoste2],
@@ -859,7 +859,7 @@ const seedData = async () => {
       },
       {
         name: "Hugo Boss — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7610, 52.3092] },
+        location: { type: "Point", coordinates: [4.7625, 52.3072] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.hugo_boss, IMG.hugo_boss2],
@@ -867,7 +867,7 @@ const seedData = async () => {
       },
       {
         name: "Michael Kors — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7608, 52.3088] },
+        location: { type: "Point", coordinates: [4.7623, 52.3068] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.michael_kors, IMG.michael_kors2],
@@ -875,7 +875,7 @@ const seedData = async () => {
       },
       {
         name: "Pandora — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7612, 52.3091] },
+        location: { type: "Point", coordinates: [4.7627, 52.3071] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.2, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.pandora, IMG.pandora2],
@@ -883,7 +883,7 @@ const seedData = async () => {
       },
       {
         name: "Apple Authorised Reseller — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7608, 52.3092] },
+        location: { type: "Point", coordinates: [4.7623, 52.3072] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.5, status: "Open", operatingHours: "06:30–22:00",
         images: [IMG.apple, IMG.apple2],
@@ -891,7 +891,7 @@ const seedData = async () => {
       },
       {
         name: "Lego Store — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7610, 52.3086] },
+        location: { type: "Point", coordinates: [4.7625, 52.3066] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.7, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.lego, IMG.lego2],
@@ -899,7 +899,7 @@ const seedData = async () => {
       },
       {
         name: "Mango — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7612, 52.3087] },
+        location: { type: "Point", coordinates: [4.7627, 52.3067] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.2, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.mango, IMG.mango2],
@@ -907,7 +907,7 @@ const seedData = async () => {
       },
       {
         name: "Holland & Barrett — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7606, 52.3090] },
+        location: { type: "Point", coordinates: [4.7621, 52.3070] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.1, status: "Open", operatingHours: "07:00–21:00",
         images: [IMG.holland_barrett, IMG.holland_barrett2],
@@ -915,7 +915,7 @@ const seedData = async () => {
       },
       {
         name: "Amsterdam House — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7614, 52.3089] },
+        location: { type: "Point", coordinates: [4.7629, 52.3069] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.amsterdam_house, IMG.amsterdam_house2],
@@ -1388,7 +1388,7 @@ const seedData = async () => {
       // — Schiphol Plaza [4.7638, 52.3071] —
       {
         name: "Hard Rock Cafe — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7610, 52.3087] },
+        location: { type: "Point", coordinates: [4.7625, 52.3067] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 2",
         rating: 4.1, status: "Open", operatingHours: "07:00–22:00",
         cuisine: ["American", "Burgers", "Cocktails"],
@@ -1397,7 +1397,7 @@ const seedData = async () => {
       },
       {
         name: "La Place — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7608, 52.3091] },
+        location: { type: "Point", coordinates: [4.7623, 52.3071] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 2",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Dutch", "International", "Salads", "Hot Dishes"],
@@ -1406,7 +1406,7 @@ const seedData = async () => {
       },
       {
         name: "Eurest — Schiphol Plaza Canteen", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7612, 52.3086] },
+        location: { type: "Point", coordinates: [4.7627, 52.3066] },
         terminal: "Schiphol Plaza", zone: "Level 0",
         rating: 3.9, status: "Open", operatingHours: "06:00–20:00",
         cuisine: ["Dutch", "International", "Hot Meals", "Soup"],
@@ -1415,7 +1415,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7614, 52.3090] },
+        location: { type: "Point", coordinates: [4.7629, 52.3070] },
         terminal: "Schiphol Plaza", zone: "Level 1",
         rating: 4.0, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
