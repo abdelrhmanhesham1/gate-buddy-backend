@@ -289,7 +289,7 @@ const seedData = async () => {
       // — Departure Hall 1 (west) —
       {
         name: "Ryanair Check-in (Desks 1–6, Hall 1)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7585, 52.3102] },
+        location: { type: "Point", coordinates: [4.7608, 52.3067] },
         terminal: "Departure Hall 1", gate: "B Pier", zone: "Departures Level 2",
         rating: 3.5, status: "Open", airline: "Ryanair",
         airlineLogo: "https://pics.avs.io/200/200/FR.png",
@@ -299,7 +299,7 @@ const seedData = async () => {
       },
       {
         name: "Transavia Check-in (Desks 70–82, Hall 1)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7587, 52.3101] },
+        location: { type: "Point", coordinates: [4.7610, 52.3066] },
         terminal: "Departure Hall 1", gate: "B Pier", zone: "Departures Level 2",
         rating: 3.9, status: "Open", airline: "Transavia",
         airlineLogo: "https://pics.avs.io/200/200/HV.png",
@@ -309,7 +309,7 @@ const seedData = async () => {
       },
       {
         name: "easyJet Check-in (Desks 7–14, Hall 1)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7583, 52.3103] },
+        location: { type: "Point", coordinates: [4.7606, 52.3068] },
         terminal: "Departure Hall 1", gate: "C Pier", zone: "Departures Level 2",
         rating: 3.8, status: "Open", airline: "easyJet",
         airlineLogo: "https://pics.avs.io/200/200/U2.png",
@@ -319,7 +319,7 @@ const seedData = async () => {
       },
       {
         name: "Vueling Check-in (Desks 83–88, Hall 1)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7589, 52.3102] },
+        location: { type: "Point", coordinates: [4.7612, 52.3067] },
         terminal: "Departure Hall 1", gate: "B/C Pier", zone: "Departures Level 2",
         rating: 3.7, status: "Open", airline: "Vueling",
         airlineLogo: "https://pics.avs.io/200/200/VY.png",
@@ -331,7 +331,7 @@ const seedData = async () => {
       // — Departure Hall 2 (central) —
       {
         name: "KLM Check-in (Desks 1–99)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7648, 52.3108] },
+        location: { type: "Point", coordinates: [4.7635, 52.3065] },
         terminal: "Departure Hall 2", gate: "D/E Pier", zone: "Departures Level 2",
         rating: 4.2, status: "Open", airline: "KLM",
         airlineLogo: "https://pics.avs.io/200/200/KL.png",
@@ -342,7 +342,7 @@ const seedData = async () => {
       // — Departure Hall 2 (central) continued —
       {
         name: "KLM Business Class Check-in (Desks 100–115)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7650, 52.3107] },
+        location: { type: "Point", coordinates: [4.7637, 52.3064] },
         terminal: "Departure Hall 2", gate: "D Pier", zone: "Departures Level 2",
         rating: 4.7, status: "Open", airline: "KLM",
         airlineLogo: "https://pics.avs.io/200/200/KL.png",
@@ -352,7 +352,7 @@ const seedData = async () => {
       },
       {
         name: "Emirates Check-in (Desks 25–35)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7646, 52.3109] },
+        location: { type: "Point", coordinates: [4.7633, 52.3066] },
         terminal: "Departure Hall 2", gate: "F Pier", zone: "Departures Level 2",
         rating: 4.7, status: "Open", airline: "Emirates",
         airlineLogo: "https://pics.avs.io/200/200/EK.png",
@@ -362,7 +362,7 @@ const seedData = async () => {
       },
       {
         name: "Lufthansa Check-in (Desks 8–14)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7648, 52.3106] },
+        location: { type: "Point", coordinates: [4.7635, 52.3063] },
         terminal: "Departure Hall 2", gate: "D Pier", zone: "Departures Level 2",
         rating: 4.1, status: "Open", airline: "Lufthansa",
         airlineLogo: "https://pics.avs.io/200/200/LH.png",
@@ -372,7 +372,7 @@ const seedData = async () => {
       },
       {
         name: "Turkish Airlines Check-in (Desks 40–48)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7652, 52.3108] },
+        location: { type: "Point", coordinates: [4.7639, 52.3065] },
         terminal: "Departure Hall 2", gate: "F Pier", zone: "Departures Level 2",
         rating: 4.0, status: "Open", airline: "Turkish Airlines",
         airlineLogo: "https://pics.avs.io/200/200/TK.png",
@@ -382,7 +382,7 @@ const seedData = async () => {
       },
       {
         name: "British Airways Check-in (Desks 56–62)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7644, 52.3109] },
+        location: { type: "Point", coordinates: [4.7631, 52.3066] },
         terminal: "Departure Hall 2", gate: "D Pier", zone: "Departures Level 2",
         rating: 4.1, status: "Open", airline: "British Airways",
         airlineLogo: "https://pics.avs.io/200/200/BA.png",
@@ -392,7 +392,7 @@ const seedData = async () => {
       },
       {
         name: "Qatar Airways Check-in (Desks 17–22)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7650, 52.3110] },
+        location: { type: "Point", coordinates: [4.7637, 52.3067] },
         terminal: "Departure Hall 2", gate: "F Pier", zone: "Departures Level 2",
         rating: 4.8, status: "Open", airline: "Qatar Airways",
         airlineLogo: "https://pics.avs.io/200/200/QR.png",
@@ -402,7 +402,7 @@ const seedData = async () => {
       },
       {
         name: "Air France Check-in (Desks 50–56)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7646, 52.3107] },
+        location: { type: "Point", coordinates: [4.7633, 52.3064] },
         terminal: "Departure Hall 2", gate: "E Pier", zone: "Departures Level 2",
         rating: 4.0, status: "Open", airline: "Air France",
         airlineLogo: "https://pics.avs.io/200/200/AF.png",
@@ -412,7 +412,7 @@ const seedData = async () => {
       },
       {
         name: "Swiss International Check-in (Desks 15–18)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7652, 52.3109] },
+        location: { type: "Point", coordinates: [4.7639, 52.3066] },
         terminal: "Departure Hall 2", gate: "D Pier", zone: "Departures Level 2",
         rating: 4.3, status: "Open", airline: "Swiss",
         airlineLogo: "https://pics.avs.io/200/200/LX.png",
@@ -424,7 +424,7 @@ const seedData = async () => {
       // — Departure Hall 3 (east) —
       {
         name: "Singapore Airlines Check-in (Desks 30–36)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7712, 52.3113] },
+        location: { type: "Point", coordinates: [4.7656, 52.3065] },
         terminal: "Departure Hall 3", gate: "F Pier", zone: "Departures Level 2",
         rating: 4.9, status: "Open", airline: "Singapore Airlines",
         airlineLogo: "https://pics.avs.io/200/200/SQ.png",
@@ -434,7 +434,7 @@ const seedData = async () => {
       },
       {
         name: "Etihad Airways Check-in (Desks 22–28)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7710, 52.3114] },
+        location: { type: "Point", coordinates: [4.7654, 52.3066] },
         terminal: "Departure Hall 3", gate: "F Pier", zone: "Departures Level 2",
         rating: 4.5, status: "Open", airline: "Etihad Airways",
         airlineLogo: "https://pics.avs.io/200/200/EY.png",
@@ -444,7 +444,7 @@ const seedData = async () => {
       },
       {
         name: "United Airlines Check-in (Desks 35–40)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7714, 52.3112] },
+        location: { type: "Point", coordinates: [4.7658, 52.3064] },
         terminal: "Departure Hall 3", gate: "G Pier", zone: "Departures Level 2",
         rating: 3.9, status: "Open", airline: "United Airlines",
         airlineLogo: "https://pics.avs.io/200/200/UA.png",
@@ -454,7 +454,7 @@ const seedData = async () => {
       },
       {
         name: "Cathay Pacific Check-in (Desks 41–46)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7708, 52.3113] },
+        location: { type: "Point", coordinates: [4.7652, 52.3065] },
         terminal: "Departure Hall 3", gate: "G Pier", zone: "Departures Level 2",
         rating: 4.4, status: "Open", airline: "Cathay Pacific",
         airlineLogo: "https://pics.avs.io/200/200/CX.png",
@@ -464,7 +464,7 @@ const seedData = async () => {
       },
       {
         name: "Delta Air Lines Check-in (Desks 47–52)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7716, 52.3114] },
+        location: { type: "Point", coordinates: [4.7660, 52.3066] },
         terminal: "Departure Hall 3", gate: "G Pier", zone: "Departures Level 2",
         rating: 4.0, status: "Open", airline: "Delta Air Lines",
         airlineLogo: "https://pics.avs.io/200/200/DL.png",
@@ -474,7 +474,7 @@ const seedData = async () => {
       },
       {
         name: "American Airlines Check-in (Desks 53–58)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7710, 52.3112] },
+        location: { type: "Point", coordinates: [4.7654, 52.3064] },
         terminal: "Departure Hall 3", gate: "G Pier", zone: "Departures Level 2",
         rating: 3.8, status: "Open", airline: "American Airlines",
         airlineLogo: "https://pics.avs.io/200/200/AA.png",
@@ -484,7 +484,7 @@ const seedData = async () => {
       },
       {
         name: "Iberia Check-in (Desks 59–64)", category: "COUNTERS",
-        location: { type: "Point", coordinates: [4.7714, 52.3113] },
+        location: { type: "Point", coordinates: [4.7658, 52.3065] },
         terminal: "Departure Hall 3", gate: "E Pier", zone: "Departures Level 2",
         rating: 3.9, status: "Open", airline: "Iberia",
         airlineLogo: "https://pics.avs.io/200/200/IB.png",
@@ -500,47 +500,47 @@ const seedData = async () => {
       // — Departure Halls —
       {
         name: "GWK Travelex — Departure Hall 1", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7585, 52.3103] },
+        location: { type: "Point", coordinates: [4.7608, 52.3068] },
         terminal: "Departure Hall 1", zone: "Departures Level 2 (before security)",
         rating: 3.8, status: "Open", operatingHours: "06:00–22:00",
         description: "Currency exchange and travel money. 40+ currencies available."
       },
       {
         name: "ABN AMRO ATM — Departure Hall 1", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7583, 52.3102] },
+        location: { type: "Point", coordinates: [4.7606, 52.3067] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 4.1, status: "Open", operatingHours: "24/24"
       },
       {
         name: "GWK Travelex — Departure Hall 2", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7650, 52.3108] },
+        location: { type: "Point", coordinates: [4.7637, 52.3065] },
         terminal: "Departure Hall 2", zone: "Departures Level 2 (before security)",
         rating: 3.9, status: "Open", operatingHours: "06:00–22:00",
         description: "Currency exchange and travel money. Click & collect available."
       },
       {
         name: "ABN AMRO ATM — Departure Hall 2", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7646, 52.3108] },
+        location: { type: "Point", coordinates: [4.7633, 52.3065] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.1, status: "Open", operatingHours: "24/24"
       },
       {
         name: "ABN AMRO Travel Insurance Desk", category: "FINANCIAL", subCategory: "Insurance",
-        location: { type: "Point", coordinates: [4.7648, 52.3110] },
+        location: { type: "Point", coordinates: [4.7635, 52.3067] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.0, status: "Open", operatingHours: "07:00–21:00",
         description: "Last-minute travel and baggage insurance."
       },
       {
         name: "GWK Travelex — Departure Hall 3", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7712, 52.3115] },
+        location: { type: "Point", coordinates: [4.7656, 52.3067] },
         terminal: "Departure Hall 3", zone: "Departures Level 2 (before security)",
         rating: 3.8, status: "Open", operatingHours: "06:00–22:00",
         description: "Currency exchange kiosk. Euros, USD, GBP, and 30+ currencies."
       },
       {
         name: "Rabobank ATM — Departure Hall 3", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7710, 52.3113] },
+        location: { type: "Point", coordinates: [4.7654, 52.3065] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 4.0, status: "Open", operatingHours: "24/24"
       },
@@ -548,27 +548,27 @@ const seedData = async () => {
       // — Arrivals Halls —
       {
         name: "GWK Travelex — Arrivals Hall 2", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7643, 52.3093] },
+        location: { type: "Point", coordinates: [4.7635, 52.3063] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 3.8, status: "Open", operatingHours: "06:00–23:00",
         description: "First currency exchange after landing. Euro and major currencies."
       },
       {
         name: "ABN AMRO ATM — Arrivals Hall 2", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7645, 52.3092] },
+        location: { type: "Point", coordinates: [4.7637, 52.3062] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 4.2, status: "Open", operatingHours: "24/24"
       },
       {
         name: "GWK Travelex — Arrivals Hall 3", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7710, 52.3097] },
+        location: { type: "Point", coordinates: [4.7660, 52.3063] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 3.7, status: "Open", operatingHours: "06:00–23:00",
         description: "Currency exchange in eastern arrivals. Competitive rates post-landing."
       },
       {
         name: "ING ATM — Arrivals Hall 3", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7708, 52.3097] },
+        location: { type: "Point", coordinates: [4.7658, 52.3063] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 4.0, status: "Open", operatingHours: "24/24"
       },
@@ -576,26 +576,26 @@ const seedData = async () => {
       // — Schiphol Plaza & Airside —
       {
         name: "Rabobank ATM — Schiphol Plaza", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7638, 52.3071] },
+        location: { type: "Point", coordinates: [4.7610, 52.3090] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.0, status: "Open", operatingHours: "24/24"
       },
       {
         name: "GWK Travelex — Non-Schengen E Pier", category: "FINANCIAL", subCategory: "Currency Exchange",
-        location: { type: "Point", coordinates: [4.7777, 52.2973] },
+        location: { type: "Point", coordinates: [4.7670, 52.3117] },
         terminal: "Non-Schengen", zone: "E Pier (after passport control)",
         rating: 4.0, status: "Open", operatingHours: "05:00–22:00",
         description: "Airside currency exchange with competitive rates."
       },
       {
         name: "ING ATM — E Pier (Non-Schengen)", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7775, 52.2974] },
+        location: { type: "Point", coordinates: [4.7668, 52.3118] },
         terminal: "Non-Schengen", zone: "E Pier (after security)",
         rating: 4.0, status: "Open", operatingHours: "24/24"
       },
       {
         name: "ABN AMRO ATM — F Pier (Non-Schengen)", category: "FINANCIAL", subCategory: "ATMs",
-        location: { type: "Point", coordinates: [4.7848, 52.2958] },
+        location: { type: "Point", coordinates: [4.7618, 52.3122] },
         terminal: "Non-Schengen", zone: "F Pier (airside)",
         rating: 3.9, status: "Open", operatingHours: "24/24"
       },
@@ -605,70 +605,70 @@ const seedData = async () => {
       // ══════════════════════════════════════════════════════════════════════
       {
         name: "Aspire Lounge — B Pier (Schengen)", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7535, 52.3001] },
+        location: { type: "Point", coordinates: [4.7628, 52.3043] },
         terminal: "Schengen", gate: "B Pier", zone: "B Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:00–21:00",
         amenities: ["Free Wi-Fi", "Hot Food", "Bar", "Priority Pass & DragonPass Access"]
       },
       {
         name: "No1 Lounge — C Pier (Schengen)", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7618, 52.2993] },
+        location: { type: "Point", coordinates: [4.7662, 52.3057] },
         terminal: "Schengen", gate: "C Pier", zone: "C Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "05:30–21:30",
         amenities: ["Free Wi-Fi", "Buffet", "Bar", "Newspapers", "Open Access"]
       },
       {
         name: "KLM Crown Lounge 52 (Schengen)", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7700, 52.2986] },
+        location: { type: "Point", coordinates: [4.7695, 52.3085] },
         terminal: "Schengen", gate: "D Pier", zone: "D Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "05:00–22:00",
         amenities: ["Free Wi-Fi", "Snacks", "Bar", "Business Centre", "SkyTeam Access"]
       },
       {
         name: "Lufthansa Business Lounge — D Pier", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7702, 52.2987] },
+        location: { type: "Point", coordinates: [4.7697, 52.3086] },
         terminal: "Schengen", gate: "D Pier", zone: "D Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "05:30–21:00",
         amenities: ["Free Wi-Fi", "Buffet", "Bar", "Showers", "Miles & More Access"]
       },
       {
         name: "KLM Crown Lounge 25 (Non-Schengen)", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7775, 52.2974] },
+        location: { type: "Point", coordinates: [4.7668, 52.3118] },
         terminal: "Non-Schengen", gate: "E Pier", zone: "E Pier mid (airside)",
         rating: 4.6, status: "Open", operatingHours: "05:00–23:00",
         amenities: ["Free Wi-Fi", "Hot Meals", "Full Bar", "Showers", "Business Centre", "SkyTeam Access", "Panoramic Views"]
       },
       {
         name: "The Lounge Amsterdam — Non-Schengen", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7777, 52.2975] },
+        location: { type: "Point", coordinates: [4.7670, 52.3119] },
         terminal: "Non-Schengen", gate: "E Pier", zone: "E Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "05:00–23:00",
         amenities: ["Free Wi-Fi", "Hot & Cold Buffet", "Premium Bar", "Showers", "Quiet Zone", "Open Access (fee)"]
       },
       {
         name: "Singapore Airlines SilverKris Lounge", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7848, 52.2958] },
+        location: { type: "Point", coordinates: [4.7618, 52.3122] },
         terminal: "Non-Schengen", gate: "F Pier", zone: "F Pier mid (airside)",
         rating: 4.8, status: "Open", operatingHours: "06:00–20:00",
         amenities: ["Free Wi-Fi", "À la Carte Dining", "Premium Bar", "Showers", "Business Suites", "SIA Business Class Access"]
       },
       {
         name: "Emirates Business Class Lounge", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7850, 52.2957] },
+        location: { type: "Point", coordinates: [4.7620, 52.3121] },
         terminal: "Non-Schengen", gate: "F Pier", zone: "F Pier mid (airside)",
         rating: 4.7, status: "Open", operatingHours: "05:00–21:00",
         amenities: ["Free Wi-Fi", "Gourmet Buffet", "Cocktail Bar", "Showers", "Emirates Business/First Access"]
       },
       {
         name: "Qatar Airways Al Mourjan Lounge — F/G Pier", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7869, 52.2934] },
+        location: { type: "Point", coordinates: [4.7618, 52.3132] },
         terminal: "Non-Schengen", gate: "G Pier", zone: "F/G Pier (airside)",
         rating: 4.8, status: "Open", operatingHours: "05:00–22:00",
         amenities: ["Free Wi-Fi", "Gourmet Buffet", "Full Bar", "Showers", "Privilege Club Access"]
       },
       {
         name: "Turkish Airlines Lounge — G Pier", category: "VIP_SERVICES",
-        location: { type: "Point", coordinates: [4.7914, 52.2921] },
+        location: { type: "Point", coordinates: [4.7570, 52.3124] },
         terminal: "Non-Schengen", gate: "G Pier", zone: "G Pier (airside)",
         rating: 4.5, status: "Open", operatingHours: "05:00–22:00",
         amenities: ["Free Wi-Fi", "Hot Buffet", "Bar", "Showers", "Miles&Smiles Access"]
@@ -681,21 +681,21 @@ const seedData = async () => {
       // — Departure Hall 1 —
       {
         name: "Schiphol Assistance Desk — Departure Hall 1", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7585, 52.3104] },
+        location: { type: "Point", coordinates: [4.7608, 52.3069] },
         terminal: "Departure Hall 1", zone: "Departures Level 2 (before security)",
         rating: 4.7, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Electric Cart", "Priority Security", "Boarding Support"]
       },
       {
         name: "Prayer Room — Departure Hall 1", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7583, 52.3101] },
+        location: { type: "Point", coordinates: [4.7606, 52.3066] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 4.4, status: "Open", operatingHours: "24/24",
         amenities: ["Multi-Faith", "Ablution Facilities", "Prayer Mats", "Direction Indicator"]
       },
       {
         name: "Baby Care Room — Departure Hall 1", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7587, 52.3103] },
+        location: { type: "Point", coordinates: [4.7610, 52.3068] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 4.5, status: "Open", operatingHours: "24/24",
         amenities: ["Changing Tables", "Nursing Area", "Bottle Warming", "Privacy Screens"]
@@ -704,35 +704,35 @@ const seedData = async () => {
       // — Departure Hall 2 —
       {
         name: "Schiphol Assistance Desk — Departure Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7648, 52.3109] },
+        location: { type: "Point", coordinates: [4.7635, 52.3066] },
         terminal: "Departure Hall 2", zone: "Departures Level 2 (before security)",
         rating: 4.7, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Electric Cart", "Priority Security", "Boarding Support"]
       },
       {
         name: "Prayer Room — Departure Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7650, 52.3106] },
+        location: { type: "Point", coordinates: [4.7637, 52.3063] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.4, status: "Open", operatingHours: "24/24",
         amenities: ["Multi-Faith", "Ablution Facilities", "Prayer Mats", "Direction Indicator"]
       },
       {
         name: "Baby Care Room — Departure Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7646, 52.3107] },
+        location: { type: "Point", coordinates: [4.7633, 52.3064] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.6, status: "Open", operatingHours: "24/24",
         amenities: ["Changing Tables", "Nursing Area", "Bottle Warming", "Privacy Screens"]
       },
       {
         name: "Schiphol Medical Centre", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7648, 52.3111] },
+        location: { type: "Point", coordinates: [4.7635, 52.3068] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.8, status: "Open", operatingHours: "07:00–22:00",
         amenities: ["First Aid", "GP Consultation", "Travel Vaccinations", "Pharmacy", "AED Defibrillators"]
       },
       {
         name: "Quiet Room — Departure Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7652, 52.3107] },
+        location: { type: "Point", coordinates: [4.7639, 52.3064] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.4, status: "Open", operatingHours: "24/24",
         amenities: ["Sensory-Friendly", "Low Noise", "Dimmed Lighting", "Comfortable Seating"]
@@ -741,14 +741,14 @@ const seedData = async () => {
       // — Departure Hall 3 —
       {
         name: "Schiphol Assistance Desk — Departure Hall 3", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7712, 52.3116] },
+        location: { type: "Point", coordinates: [4.7656, 52.3068] },
         terminal: "Departure Hall 3", zone: "Departures Level 2 (before security)",
         rating: 4.6, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Electric Cart", "Priority Security", "Boarding Support"]
       },
       {
         name: "Baby Care Room — Departure Hall 3", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7710, 52.3115] },
+        location: { type: "Point", coordinates: [4.7654, 52.3067] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 4.5, status: "Open", operatingHours: "24/24",
         amenities: ["Changing Tables", "Nursing Area", "Bottle Warming"]
@@ -757,35 +757,35 @@ const seedData = async () => {
       // — Arrivals Halls —
       {
         name: "Schiphol Assistance Desk — Arrivals Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7643, 52.3094] },
+        location: { type: "Point", coordinates: [4.7635, 52.3064] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 4.6, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Meet & Greet", "Baggage Assistance"]
       },
       {
         name: "Baby Care Room — Arrivals Hall 2", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7641, 52.3093] },
+        location: { type: "Point", coordinates: [4.7633, 52.3063] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 4.5, status: "Open", operatingHours: "24/24",
         amenities: ["Changing Tables", "Nursing Area"]
       },
       {
         name: "Lost & Found — Schiphol Plaza", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7638, 52.3073] },
+        location: { type: "Point", coordinates: [4.7610, 52.3092] },
         terminal: "Schiphol Plaza", zone: "Level 1",
         rating: 4.1, status: "Open", operatingHours: "07:00–22:00",
         amenities: ["Lost Property Registration", "Online Tracking", "Baggage Claim Support"]
       },
       {
         name: "Schiphol Assistance Desk — Arrivals Hall 3", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7710, 52.3099] },
+        location: { type: "Point", coordinates: [4.7660, 52.3065] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 4.5, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Meet & Greet", "Escort Service"]
       },
       {
         name: "Schiphol Assistance Desk — Arrivals Hall 4", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7735, 52.3099] },
+        location: { type: "Point", coordinates: [4.7680, 52.3061] },
         terminal: "Arrivals Hall 4", zone: "Arrivals Level 1",
         rating: 4.5, status: "Open", operatingHours: "04:00–23:00",
         amenities: ["Wheelchair Assistance", "Meet & Greet", "Escort Service"]
@@ -794,35 +794,35 @@ const seedData = async () => {
       // — Piers (airside) —
       {
         name: "Quiet Room — B Pier (Schengen)", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7535, 52.3003] },
+        location: { type: "Point", coordinates: [4.7628, 52.3045] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "24/24",
         amenities: ["Sensory-Friendly", "Low Noise", "Dimmed Lighting"]
       },
       {
         name: "Assistance Point — C Pier (Schengen)", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7618, 52.2995] },
+        location: { type: "Point", coordinates: [4.7662, 52.3059] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "05:00–22:00",
         amenities: ["Wheelchair Assistance", "Boarding Support", "Electric Cart Pickup"]
       },
       {
         name: "Prayer Room — D Pier (Schengen)", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7700, 52.2988] },
+        location: { type: "Point", coordinates: [4.7695, 52.3087] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "24/24",
         amenities: ["Multi-Faith", "Ablution Facilities", "Prayer Mats"]
       },
       {
         name: "Quiet Room — D Pier (Schengen)", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7702, 52.2985] },
+        location: { type: "Point", coordinates: [4.7697, 52.3084] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "24/24",
         amenities: ["Sensory-Friendly", "Low Noise", "Dimmed Lighting"]
       },
       {
         name: "Prayer Room — E Pier (Non-Schengen)", category: "ACCESSIBILITY",
-        location: { type: "Point", coordinates: [4.7775, 52.2976] },
+        location: { type: "Point", coordinates: [4.7668, 52.3120] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "24/24",
         amenities: ["Multi-Faith", "Ablution Facilities", "Prayer Mats"]
@@ -835,7 +835,7 @@ const seedData = async () => {
       // — Schiphol Plaza [4.7638, 52.3071] —
       {
         name: "Rituals — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7638, 52.3069] },
+        location: { type: "Point", coordinates: [4.7610, 52.3088] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.6, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.rituals, IMG.rituals2],
@@ -843,7 +843,7 @@ const seedData = async () => {
       },
       {
         name: "De Bijenkorf Boutique — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7636, 52.3071] },
+        location: { type: "Point", coordinates: [4.7608, 52.3090] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.5, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.bijenkorf, IMG.bijenkorf2],
@@ -851,7 +851,7 @@ const seedData = async () => {
       },
       {
         name: "Lacoste — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7640, 52.3070] },
+        location: { type: "Point", coordinates: [4.7612, 52.3089] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.3, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.lacoste, IMG.lacoste2],
@@ -859,7 +859,7 @@ const seedData = async () => {
       },
       {
         name: "Hugo Boss — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7638, 52.3073] },
+        location: { type: "Point", coordinates: [4.7610, 52.3092] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.hugo_boss, IMG.hugo_boss2],
@@ -867,7 +867,7 @@ const seedData = async () => {
       },
       {
         name: "Michael Kors — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7636, 52.3069] },
+        location: { type: "Point", coordinates: [4.7608, 52.3088] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.michael_kors, IMG.michael_kors2],
@@ -875,7 +875,7 @@ const seedData = async () => {
       },
       {
         name: "Pandora — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7640, 52.3072] },
+        location: { type: "Point", coordinates: [4.7612, 52.3091] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.2, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.pandora, IMG.pandora2],
@@ -883,7 +883,7 @@ const seedData = async () => {
       },
       {
         name: "Apple Authorised Reseller — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7636, 52.3073] },
+        location: { type: "Point", coordinates: [4.7608, 52.3092] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.5, status: "Open", operatingHours: "06:30–22:00",
         images: [IMG.apple, IMG.apple2],
@@ -891,7 +891,7 @@ const seedData = async () => {
       },
       {
         name: "Lego Store — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7638, 52.3067] },
+        location: { type: "Point", coordinates: [4.7610, 52.3086] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.7, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.lego, IMG.lego2],
@@ -899,7 +899,7 @@ const seedData = async () => {
       },
       {
         name: "Mango — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7640, 52.3068] },
+        location: { type: "Point", coordinates: [4.7612, 52.3087] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.2, status: "Open", operatingHours: "06:30–21:30",
         images: [IMG.mango, IMG.mango2],
@@ -907,7 +907,7 @@ const seedData = async () => {
       },
       {
         name: "Holland & Barrett — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7634, 52.3071] },
+        location: { type: "Point", coordinates: [4.7606, 52.3090] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.1, status: "Open", operatingHours: "07:00–21:00",
         images: [IMG.holland_barrett, IMG.holland_barrett2],
@@ -915,7 +915,7 @@ const seedData = async () => {
       },
       {
         name: "Amsterdam House — Schiphol Plaza", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7642, 52.3070] },
+        location: { type: "Point", coordinates: [4.7614, 52.3089] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 1",
         rating: 4.4, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.amsterdam_house, IMG.amsterdam_house2],
@@ -925,7 +925,7 @@ const seedData = async () => {
       // — Departure Hall 1 —
       {
         name: "WHSmith — Departure Hall 1", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7585, 52.3101] },
+        location: { type: "Point", coordinates: [4.7608, 52.3066] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 3.9, status: "Open", operatingHours: "05:00–22:30",
         images: [IMG.whsmith, IMG.whsmith2],
@@ -933,7 +933,7 @@ const seedData = async () => {
       },
       {
         name: "Airport Pharmacy — Departure Hall 1", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7583, 52.3102] },
+        location: { type: "Point", coordinates: [4.7606, 52.3067] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 4.3, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.pharmacy, IMG.wellness],
@@ -941,7 +941,7 @@ const seedData = async () => {
       },
       {
         name: "Travel Accessories — Departure Hall 1", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7587, 52.3100] },
+        location: { type: "Point", coordinates: [4.7610, 52.3065] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 3.8, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.dufry, IMG.dufry2],
@@ -951,7 +951,7 @@ const seedData = async () => {
       // — Departure Hall 2 —
       {
         name: "WHSmith — Departure Hall 2", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7648, 52.3107] },
+        location: { type: "Point", coordinates: [4.7635, 52.3064] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 3.9, status: "Open", operatingHours: "05:00–22:30",
         images: [IMG.whsmith, IMG.whsmith2],
@@ -959,7 +959,7 @@ const seedData = async () => {
       },
       {
         name: "Nespresso — Departure Hall 2", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7650, 52.3106] },
+        location: { type: "Point", coordinates: [4.7637, 52.3063] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.5, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.nespresso, IMG.nespresso2],
@@ -967,7 +967,7 @@ const seedData = async () => {
       },
       {
         name: "Swarovski — Departure Hall 2", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7646, 52.3106] },
+        location: { type: "Point", coordinates: [4.7633, 52.3063] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.4, status: "Open", operatingHours: "06:00–21:30",
         images: [IMG.swarovski, IMG.swarovski2],
@@ -977,7 +977,7 @@ const seedData = async () => {
       // — Departure Hall 3 —
       {
         name: "WHSmith — Departure Hall 3", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7712, 52.3112] },
+        location: { type: "Point", coordinates: [4.7656, 52.3064] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.whsmith, IMG.whsmith2],
@@ -985,7 +985,7 @@ const seedData = async () => {
       },
       {
         name: "Airport Pharmacy — Departure Hall 3", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7714, 52.3113] },
+        location: { type: "Point", coordinates: [4.7658, 52.3065] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         images: [IMG.pharmacy, IMG.wellness],
@@ -995,7 +995,7 @@ const seedData = async () => {
       // — B Pier mid [4.7535, 52.3001] —
       {
         name: "Newsagent & Snacks — B Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7535, 52.2999] },
+        location: { type: "Point", coordinates: [4.7628, 52.3041] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.whsmith2, IMG.books],
@@ -1003,7 +1003,7 @@ const seedData = async () => {
       },
       {
         name: "Dutch Souvenirs — B Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7537, 52.3001] },
+        location: { type: "Point", coordinates: [4.7630, 52.3043] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:30–21:30",
         images: [IMG.amsterdam_house, IMG.chocolate],
@@ -1013,7 +1013,7 @@ const seedData = async () => {
       // — C Pier mid [4.7618, 52.2993] —
       {
         name: "Grab & Go Shop — C Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7618, 52.2991] },
+        location: { type: "Point", coordinates: [4.7662, 52.3055] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 3.9, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.food_grab, IMG.healthy],
@@ -1021,7 +1021,7 @@ const seedData = async () => {
       },
       {
         name: "WHSmith — C Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7620, 52.2993] },
+        location: { type: "Point", coordinates: [4.7664, 52.3057] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.whsmith, IMG.books],
@@ -1029,7 +1029,7 @@ const seedData = async () => {
       },
       {
         name: "Chocolates & Sweets — C Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7616, 52.2993] },
+        location: { type: "Point", coordinates: [4.7660, 52.3057] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:30–21:30",
         images: [IMG.chocolate, IMG.souvenirs],
@@ -1039,7 +1039,7 @@ const seedData = async () => {
       // — D Pier mid [4.7700, 52.2986] —
       {
         name: "Duty Free by Heinemann — D Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7700, 52.2984] },
+        location: { type: "Point", coordinates: [4.7695, 52.3083] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "05:00–22:30",
         images: [IMG.heinemann, IMG.heinemann2],
@@ -1047,7 +1047,7 @@ const seedData = async () => {
       },
       {
         name: "Perfume & Cosmetics — D Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7702, 52.2986] },
+        location: { type: "Point", coordinates: [4.7697, 52.3085] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.perfume, IMG.cosmetics],
@@ -1055,7 +1055,7 @@ const seedData = async () => {
       },
       {
         name: "Dutch Treats Shop — D Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7698, 52.2986] },
+        location: { type: "Point", coordinates: [4.7693, 52.3085] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.chocolate, IMG.amsterdam_house],
@@ -1065,7 +1065,7 @@ const seedData = async () => {
       // — E Pier mid [4.7775, 52.2974] —
       {
         name: "Duty Free by Heinemann — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7775, 52.2972] },
+        location: { type: "Point", coordinates: [4.7668, 52.3116] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "05:00–22:30",
         images: [IMG.heinemann, IMG.heinemann2],
@@ -1073,7 +1073,7 @@ const seedData = async () => {
       },
       {
         name: "Rituals — E Pier (airside)", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7777, 52.2974] },
+        location: { type: "Point", coordinates: [4.7670, 52.3118] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "05:30–22:30",
         images: [IMG.rituals, IMG.rituals2],
@@ -1081,7 +1081,7 @@ const seedData = async () => {
       },
       {
         name: "Chanel Beauty — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7773, 52.2975] },
+        location: { type: "Point", coordinates: [4.7666, 52.3119] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.8, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.chanel, IMG.chanel2],
@@ -1089,7 +1089,7 @@ const seedData = async () => {
       },
       {
         name: "Swarovski — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7775, 52.2976] },
+        location: { type: "Point", coordinates: [4.7668, 52.3120] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "05:30–22:30",
         images: [IMG.swarovski, IMG.swarovski2],
@@ -1097,7 +1097,7 @@ const seedData = async () => {
       },
       {
         name: "Bose — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7777, 52.2972] },
+        location: { type: "Point", coordinates: [4.7670, 52.3116] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.6, status: "Open", operatingHours: "05:30–22:30",
         images: [IMG.bose, IMG.bose2],
@@ -1105,7 +1105,7 @@ const seedData = async () => {
       },
       {
         name: "DUFRY Travel Value — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7773, 52.2973] },
+        location: { type: "Point", coordinates: [4.7666, 52.3117] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:00–23:00",
         images: [IMG.dufry, IMG.dufry2],
@@ -1113,7 +1113,7 @@ const seedData = async () => {
       },
       {
         name: "WHSmith — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7779, 52.2974] },
+        location: { type: "Point", coordinates: [4.7672, 52.3118] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 3.9, status: "Open", operatingHours: "05:00–23:00",
         images: [IMG.whsmith, IMG.whsmith2],
@@ -1121,7 +1121,7 @@ const seedData = async () => {
       },
       {
         name: "Nespresso — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7775, 52.2970] },
+        location: { type: "Point", coordinates: [4.7668, 52.3114] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.nespresso, IMG.nespresso2],
@@ -1131,7 +1131,7 @@ const seedData = async () => {
       // — E Pier gate end [4.7798, 52.2951] —
       {
         name: "Mini Market — E Pier Gate End", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7798, 52.2951] },
+        location: { type: "Point", coordinates: [4.7682, 52.3133] },
         terminal: "Non-Schengen", zone: "E Pier gate end (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–23:00",
         images: [IMG.food_grab, IMG.souvenirs],
@@ -1139,7 +1139,7 @@ const seedData = async () => {
       },
       {
         name: "Chocolates Kiosk — E Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7800, 52.2951] },
+        location: { type: "Point", coordinates: [4.7684, 52.3133] },
         terminal: "Non-Schengen", zone: "E Pier gate end (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:30–22:30",
         images: [IMG.chocolate, IMG.souvenirs],
@@ -1149,7 +1149,7 @@ const seedData = async () => {
       // — F Pier mid [4.7848, 52.2958] —
       {
         name: "Duty Free by Heinemann — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7848, 52.2956] },
+        location: { type: "Point", coordinates: [4.7618, 52.3120] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:00–23:00",
         images: [IMG.heinemann, IMG.heinemann2],
@@ -1157,7 +1157,7 @@ const seedData = async () => {
       },
       {
         name: "Hermès — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7850, 52.2958] },
+        location: { type: "Point", coordinates: [4.7620, 52.3122] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.9, status: "Open", operatingHours: "06:00–21:00",
         images: [IMG.hermes, IMG.hermes2],
@@ -1165,7 +1165,7 @@ const seedData = async () => {
       },
       {
         name: "Dior — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7846, 52.2958] },
+        location: { type: "Point", coordinates: [4.7616, 52.3122] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.9, status: "Open", operatingHours: "06:00–21:00",
         images: [IMG.dior, IMG.dior2],
@@ -1173,7 +1173,7 @@ const seedData = async () => {
       },
       {
         name: "Luxury Watches — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7848, 52.2960] },
+        location: { type: "Point", coordinates: [4.7618, 52.3124] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.6, status: "Open", operatingHours: "06:00–21:00",
         images: [IMG.watches, IMG.jewelry],
@@ -1181,7 +1181,7 @@ const seedData = async () => {
       },
       {
         name: "Chocolates & Belgian Sweets — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7852, 52.2957] },
+        location: { type: "Point", coordinates: [4.7622, 52.3121] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.chocolate, IMG.souvenirs],
@@ -1189,7 +1189,7 @@ const seedData = async () => {
       },
       {
         name: "Jewellery Boutique — F Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7846, 52.2957] },
+        location: { type: "Point", coordinates: [4.7616, 52.3121] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "06:00–21:00",
         images: [IMG.jewelry, IMG.watches],
@@ -1199,7 +1199,7 @@ const seedData = async () => {
       // — F Pier gate end [4.7869, 52.2934] —
       {
         name: "Mini Market — F Pier Gate End", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7869, 52.2934] },
+        location: { type: "Point", coordinates: [4.7618, 52.3132] },
         terminal: "Non-Schengen", zone: "F Pier gate end (airside)",
         rating: 3.7, status: "Open", operatingHours: "05:00–22:30",
         images: [IMG.food_grab, IMG.books],
@@ -1207,7 +1207,7 @@ const seedData = async () => {
       },
       {
         name: "Gift Shop — F Pier Gate End", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7871, 52.2934] },
+        location: { type: "Point", coordinates: [4.7620, 52.3132] },
         terminal: "Non-Schengen", zone: "F Pier gate end (airside)",
         rating: 3.9, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.souvenirs, IMG.amsterdam_house],
@@ -1217,7 +1217,7 @@ const seedData = async () => {
       // — G Pier [4.7914, 52.2921] —
       {
         name: "Newsagent & Snacks — G Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7914, 52.2921] },
+        location: { type: "Point", coordinates: [4.7570, 52.3124] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         images: [IMG.whsmith2, IMG.books],
@@ -1225,7 +1225,7 @@ const seedData = async () => {
       },
       {
         name: "Dutch Souvenir Kiosk — G Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7916, 52.2921] },
+        location: { type: "Point", coordinates: [4.7572, 52.3124] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:30–21:30",
         images: [IMG.amsterdam_house2, IMG.souvenirs],
@@ -1233,7 +1233,7 @@ const seedData = async () => {
       },
       {
         name: "Chocolate & Delicacies — G Pier", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7912, 52.2921] },
+        location: { type: "Point", coordinates: [4.7568, 52.3124] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:30–22:00",
         images: [IMG.chocolate, IMG.souvenirs],
@@ -1243,7 +1243,7 @@ const seedData = async () => {
       // — Arrivals Level —
       {
         name: "Drugstore — Arrivals Hall 2", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7643, 52.3091] },
+        location: { type: "Point", coordinates: [4.7635, 52.3061] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 4.0, status: "Open", operatingHours: "06:00–23:00",
         images: [IMG.pharmacy, IMG.wellness],
@@ -1251,7 +1251,7 @@ const seedData = async () => {
       },
       {
         name: "Newsagent — Arrivals Hall 3", category: "SHOPS",
-        location: { type: "Point", coordinates: [4.7710, 52.3095] },
+        location: { type: "Point", coordinates: [4.7660, 52.3061] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 3.8, status: "Open", operatingHours: "06:00–23:00",
         images: [IMG.whsmith, IMG.books],
@@ -1265,7 +1265,7 @@ const seedData = async () => {
       // — Departure Hall 1 [4.7585, 52.3102] —
       {
         name: "Starbucks — Departure Hall 1", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7585, 52.3100] },
+        location: { type: "Point", coordinates: [4.7608, 52.3065] },
         terminal: "Departure Hall 1", zone: "Departures Level 2 (before security)",
         rating: 4.0, status: "Open", operatingHours: "04:30–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1274,7 +1274,7 @@ const seedData = async () => {
       },
       {
         name: "Burger King — Departure Hall 1", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7583, 52.3101] },
+        location: { type: "Point", coordinates: [4.7606, 52.3066] },
         terminal: "Departure Hall 1", zone: "Departures Level 2 (before security)",
         rating: 3.6, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Burgers", "Fast Food"],
@@ -1283,7 +1283,7 @@ const seedData = async () => {
       },
       {
         name: "Dunkin' — Departure Hall 1", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7587, 52.3102] },
+        location: { type: "Point", coordinates: [4.7610, 52.3067] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Coffee", "Donuts", "Bagels"],
@@ -1292,7 +1292,7 @@ const seedData = async () => {
       },
       {
         name: "Café Amsterdam — Departure Hall 1", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7585, 52.3104] },
+        location: { type: "Point", coordinates: [4.7608, 52.3069] },
         terminal: "Departure Hall 1", zone: "Departures Level 2",
         rating: 4.1, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Dutch", "Bitterballen", "Beer"],
@@ -1301,7 +1301,7 @@ const seedData = async () => {
       },
       {
         name: "Subway — Departure Hall 1", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7589, 52.3101] },
+        location: { type: "Point", coordinates: [4.7612, 52.3066] },
         terminal: "Departure Hall 1", zone: "Departures Level 2 (before security)",
         rating: 3.6, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Sandwiches", "Fast Food", "Salads"],
@@ -1312,7 +1312,7 @@ const seedData = async () => {
       // — Departure Hall 2 [4.7648, 52.3108] —
       {
         name: "Starbucks — Departure Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7648, 52.3106] },
+        location: { type: "Point", coordinates: [4.7635, 52.3063] },
         terminal: "Departure Hall 2", zone: "Departures Level 2 (before security)",
         rating: 4.0, status: "Open", operatingHours: "04:30–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1321,7 +1321,7 @@ const seedData = async () => {
       },
       {
         name: "Pret a Manger — Departure Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7650, 52.3108] },
+        location: { type: "Point", coordinates: [4.7637, 52.3065] },
         terminal: "Departure Hall 2", zone: "Departures Level 2 (before security)",
         rating: 4.1, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Sandwiches", "Wraps", "Coffee", "Salads"],
@@ -1330,7 +1330,7 @@ const seedData = async () => {
       },
       {
         name: "La Place — Departure Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7646, 52.3109] },
+        location: { type: "Point", coordinates: [4.7633, 52.3066] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Dutch", "International", "Salads", "Hot Dishes"],
@@ -1339,7 +1339,7 @@ const seedData = async () => {
       },
       {
         name: "Subway — Departure Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7648, 52.3110] },
+        location: { type: "Point", coordinates: [4.7635, 52.3067] },
         terminal: "Departure Hall 2", zone: "Departures Level 2 (before security)",
         rating: 3.6, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Sandwiches", "Fast Food", "Salads"],
@@ -1348,7 +1348,7 @@ const seedData = async () => {
       },
       {
         name: "McDonald's — Departure Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7652, 52.3108] },
+        location: { type: "Point", coordinates: [4.7639, 52.3065] },
         terminal: "Departure Hall 2", zone: "Departures Level 2",
         rating: 3.6, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Fast Food", "Burgers", "Breakfast"],
@@ -1359,7 +1359,7 @@ const seedData = async () => {
       // — Departure Hall 3 [4.7712, 52.3113] —
       {
         name: "Starbucks — Departure Hall 3", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7712, 52.3111] },
+        location: { type: "Point", coordinates: [4.7656, 52.3063] },
         terminal: "Departure Hall 3", zone: "Departures Level 2 (before security)",
         rating: 4.0, status: "Open", operatingHours: "04:30–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1368,7 +1368,7 @@ const seedData = async () => {
       },
       {
         name: "Burger King — Departure Hall 3", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7710, 52.3113] },
+        location: { type: "Point", coordinates: [4.7654, 52.3065] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 3.7, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Burgers", "Fast Food"],
@@ -1377,7 +1377,7 @@ const seedData = async () => {
       },
       {
         name: "Café Junction — Departure Hall 3", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7714, 52.3112] },
+        location: { type: "Point", coordinates: [4.7658, 52.3064] },
         terminal: "Departure Hall 3", zone: "Departures Level 2",
         rating: 3.9, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Coffee", "Pastries", "Light Meals"],
@@ -1388,7 +1388,7 @@ const seedData = async () => {
       // — Schiphol Plaza [4.7638, 52.3071] —
       {
         name: "Hard Rock Cafe — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7638, 52.3068] },
+        location: { type: "Point", coordinates: [4.7610, 52.3087] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 2",
         rating: 4.1, status: "Open", operatingHours: "07:00–22:00",
         cuisine: ["American", "Burgers", "Cocktails"],
@@ -1397,7 +1397,7 @@ const seedData = async () => {
       },
       {
         name: "La Place — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7636, 52.3072] },
+        location: { type: "Point", coordinates: [4.7608, 52.3091] },
         terminal: "Schiphol Plaza", zone: "Shopping Centre Level 2",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Dutch", "International", "Salads", "Hot Dishes"],
@@ -1406,7 +1406,7 @@ const seedData = async () => {
       },
       {
         name: "Eurest — Schiphol Plaza Canteen", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7640, 52.3067] },
+        location: { type: "Point", coordinates: [4.7612, 52.3086] },
         terminal: "Schiphol Plaza", zone: "Level 0",
         rating: 3.9, status: "Open", operatingHours: "06:00–20:00",
         cuisine: ["Dutch", "International", "Hot Meals", "Soup"],
@@ -1415,7 +1415,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — Schiphol Plaza", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7642, 52.3071] },
+        location: { type: "Point", coordinates: [4.7614, 52.3090] },
         terminal: "Schiphol Plaza", zone: "Level 1",
         rating: 4.0, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1426,7 +1426,7 @@ const seedData = async () => {
       // — Arrivals Hall 2 [4.7643, 52.3093] —
       {
         name: "McDonald's — Arrivals Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7643, 52.3095] },
+        location: { type: "Point", coordinates: [4.7635, 52.3065] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 3.5, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Fast Food", "Burgers", "Breakfast"],
@@ -1435,7 +1435,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — Arrivals Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7641, 52.3093] },
+        location: { type: "Point", coordinates: [4.7633, 52.3063] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 4.0, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1444,7 +1444,7 @@ const seedData = async () => {
       },
       {
         name: "Café & Bar — Arrivals Hall 2", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7645, 52.3092] },
+        location: { type: "Point", coordinates: [4.7637, 52.3062] },
         terminal: "Arrivals Hall 2", zone: "Arrivals Level 1",
         rating: 3.9, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Coffee", "Snacks", "Beer"],
@@ -1455,7 +1455,7 @@ const seedData = async () => {
       // — Arrivals Hall 3 [4.7710, 52.3097] —
       {
         name: "McDonald's — Arrivals Hall 3", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7710, 52.3099] },
+        location: { type: "Point", coordinates: [4.7660, 52.3065] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 3.5, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Fast Food", "Burgers", "Breakfast"],
@@ -1464,7 +1464,7 @@ const seedData = async () => {
       },
       {
         name: "Coffee Corner — Arrivals Hall 3", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7708, 52.3097] },
+        location: { type: "Point", coordinates: [4.7658, 52.3063] },
         terminal: "Arrivals Hall 3", zone: "Arrivals Level 1",
         rating: 3.8, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1475,7 +1475,7 @@ const seedData = async () => {
       // — B Pier mid [4.7535, 52.3001] —
       {
         name: "Café B — B Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7535, 52.3003] },
+        location: { type: "Point", coordinates: [4.7628, 52.3045] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 3.9, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Coffee", "Sandwiches", "Snacks"],
@@ -1484,7 +1484,7 @@ const seedData = async () => {
       },
       {
         name: "The Pub — B Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7533, 52.3001] },
+        location: { type: "Point", coordinates: [4.7626, 52.3043] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 4.0, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Beer", "Snacks", "Dutch Bites"],
@@ -1493,7 +1493,7 @@ const seedData = async () => {
       },
       {
         name: "Grab & Fly — B Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7537, 52.3000] },
+        location: { type: "Point", coordinates: [4.7630, 52.3042] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Sandwiches", "Wraps", "Salads", "Snacks"],
@@ -1502,7 +1502,7 @@ const seedData = async () => {
       },
       {
         name: "Healthy Bites — B Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7535, 52.2999] },
+        location: { type: "Point", coordinates: [4.7628, 52.3041] },
         terminal: "Schengen", zone: "B Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Salads", "Smoothies", "Wraps", "Healthy"],
@@ -1513,7 +1513,7 @@ const seedData = async () => {
       // — B Pier gate end [4.7523, 52.2978] —
       {
         name: "Gate Café — B Pier End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7523, 52.2980] },
+        location: { type: "Point", coordinates: [4.7633, 52.3035] },
         terminal: "Schengen", zone: "B Pier gate end (airside)",
         rating: 3.7, status: "Open", operatingHours: "05:30–21:30",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1522,7 +1522,7 @@ const seedData = async () => {
       },
       {
         name: "Snack Bar — B Gate End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7521, 52.2978] },
+        location: { type: "Point", coordinates: [4.7631, 52.3033] },
         terminal: "Schengen", zone: "B Pier gate end (airside)",
         rating: 3.6, status: "Busy", operatingHours: "05:30–21:30",
         cuisine: ["Snacks", "Drinks", "Sandwiches"],
@@ -1533,7 +1533,7 @@ const seedData = async () => {
       // — C Pier mid [4.7618, 52.2993] —
       {
         name: "Starbucks — C Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7618, 52.2995] },
+        location: { type: "Point", coordinates: [4.7662, 52.3059] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:00–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1542,7 +1542,7 @@ const seedData = async () => {
       },
       {
         name: "Grab & Fly — C Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7616, 52.2993] },
+        location: { type: "Point", coordinates: [4.7660, 52.3057] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–22:00",
         cuisine: ["Sandwiches", "Wraps", "Salads", "Snacks"],
@@ -1551,7 +1551,7 @@ const seedData = async () => {
       },
       {
         name: "Beer House — C Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7620, 52.2992] },
+        location: { type: "Point", coordinates: [4.7664, 52.3056] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.0, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Beer", "Bar Snacks", "Dutch Bites"],
@@ -1560,7 +1560,7 @@ const seedData = async () => {
       },
       {
         name: "Healthy Bites — C Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7618, 52.2991] },
+        location: { type: "Point", coordinates: [4.7662, 52.3055] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Salads", "Bowls", "Wraps", "Healthy"],
@@ -1571,7 +1571,7 @@ const seedData = async () => {
       // — C Pier gate end [4.7612, 52.2970] —
       {
         name: "Gate Café — C Pier End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7612, 52.2972] },
+        location: { type: "Point", coordinates: [4.7667, 52.3050] },
         terminal: "Schengen", zone: "C Pier gate end (airside)",
         rating: 3.7, status: "Open", operatingHours: "05:30–21:30",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1580,7 +1580,7 @@ const seedData = async () => {
       },
       {
         name: "Sandwich Bar — C Gate End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7610, 52.2970] },
+        location: { type: "Point", coordinates: [4.7665, 52.3048] },
         terminal: "Schengen", zone: "C Pier gate end (airside)",
         rating: 3.6, status: "Open", operatingHours: "05:30–21:30",
         cuisine: ["Sandwiches", "Wraps", "Drinks"],
@@ -1591,7 +1591,7 @@ const seedData = async () => {
       // — D Pier mid [4.7700, 52.2986] —
       {
         name: "Sushiya — D Pier (Schengen)", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7700, 52.2988] },
+        location: { type: "Point", coordinates: [4.7695, 52.3087] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Japanese", "Sushi", "Asian"],
@@ -1600,7 +1600,7 @@ const seedData = async () => {
       },
       {
         name: "Kebapçı Istanbul — D Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7702, 52.2986] },
+        location: { type: "Point", coordinates: [4.7697, 52.3085] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Turkish", "Kebab", "Mediterranean"],
@@ -1609,7 +1609,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — D Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7698, 52.2987] },
+        location: { type: "Point", coordinates: [4.7693, 52.3086] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:00–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1618,7 +1618,7 @@ const seedData = async () => {
       },
       {
         name: "Café Schengen — D Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7700, 52.2984] },
+        location: { type: "Point", coordinates: [4.7695, 52.3083] },
         terminal: "Schengen", zone: "D Pier mid (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Dutch", "Coffee", "Light Meals"],
@@ -1629,7 +1629,7 @@ const seedData = async () => {
       // — D Pier gate end [4.7708, 52.2963] —
       {
         name: "Gate Bar — D Pier End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7708, 52.2965] },
+        location: { type: "Point", coordinates: [4.7720, 52.3092] },
         terminal: "Schengen", zone: "D Pier gate end (airside)",
         rating: 3.9, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Beer", "Drinks", "Snacks"],
@@ -1638,7 +1638,7 @@ const seedData = async () => {
       },
       {
         name: "Coffee Corner — D Gate End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7706, 52.2963] },
+        location: { type: "Point", coordinates: [4.7718, 52.3090] },
         terminal: "Schengen", zone: "D Pier gate end (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1649,7 +1649,7 @@ const seedData = async () => {
       // — E Pier mid [4.7775, 52.2974] —
       {
         name: "Starbucks — E Pier (airside)", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7775, 52.2976] },
+        location: { type: "Point", coordinates: [4.7668, 52.3120] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1658,7 +1658,7 @@ const seedData = async () => {
       },
       {
         name: "Heineken — The Airport Brewery", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7777, 52.2973] },
+        location: { type: "Point", coordinates: [4.7670, 52.3117] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "06:00–23:00",
         cuisine: ["Beer", "Snacks", "Dutch Bites"],
@@ -1667,7 +1667,7 @@ const seedData = async () => {
       },
       {
         name: "Sushiya — E Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7773, 52.2974] },
+        location: { type: "Point", coordinates: [4.7666, 52.3118] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Japanese", "Sushi", "Asian"],
@@ -1676,7 +1676,7 @@ const seedData = async () => {
       },
       {
         name: "Burger King — E Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7775, 52.2972] },
+        location: { type: "Point", coordinates: [4.7668, 52.3116] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 3.7, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Burgers", "Fast Food"],
@@ -1685,7 +1685,7 @@ const seedData = async () => {
       },
       {
         name: "Gall & Gall — Wine Bar E Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7779, 52.2975] },
+        location: { type: "Point", coordinates: [4.7672, 52.3119] },
         terminal: "Non-Schengen", zone: "E Pier mid (airside)",
         rating: 4.4, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Wine", "Beer", "Spirits", "Tapas"],
@@ -1694,7 +1694,7 @@ const seedData = async () => {
       },
       {
         name: "Sky Lounge Restaurant — E Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7777, 52.2976] },
+        location: { type: "Point", coordinates: [4.7670, 52.3120] },
         terminal: "Non-Schengen", zone: "E Pier Level 2 (airside)",
         rating: 4.3, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["International", "Sit-Down", "European"],
@@ -1705,7 +1705,7 @@ const seedData = async () => {
       // — E Pier gate end [4.7798, 52.2951] —
       {
         name: "Gate Café — E Pier End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7798, 52.2953] },
+        location: { type: "Point", coordinates: [4.7682, 52.3135] },
         terminal: "Non-Schengen", zone: "E Pier gate end (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1714,7 +1714,7 @@ const seedData = async () => {
       },
       {
         name: "Snack Bar — E Gate End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7800, 52.2951] },
+        location: { type: "Point", coordinates: [4.7684, 52.3133] },
         terminal: "Non-Schengen", zone: "E Pier gate end (airside)",
         rating: 3.7, status: "Open", operatingHours: "05:00–23:00",
         cuisine: ["Snacks", "Drinks", "Sandwiches"],
@@ -1723,7 +1723,7 @@ const seedData = async () => {
       },
       {
         name: "Coffee & Bagels — E Gate", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7796, 52.2951] },
+        location: { type: "Point", coordinates: [4.7680, 52.3133] },
         terminal: "Non-Schengen", zone: "E Pier gate end (airside)",
         rating: 3.9, status: "Open", operatingHours: "05:30–22:30",
         cuisine: ["Coffee", "Bagels", "Pastries"],
@@ -1732,7 +1732,7 @@ const seedData = async () => {
       },
       {
         name: "Noodle Bar — C Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7622, 52.2994] },
+        location: { type: "Point", coordinates: [4.7666, 52.3058] },
         terminal: "Schengen", zone: "C Pier mid (airside)",
         rating: 4.1, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Asian", "Noodles", "Ramen"],
@@ -1743,7 +1743,7 @@ const seedData = async () => {
       // — F Pier mid [4.7848, 52.2958] —
       {
         name: "Obika Mozzarella Bar — F Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7848, 52.2960] },
+        location: { type: "Point", coordinates: [4.7618, 52.3124] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.5, status: "Open", operatingHours: "06:00–21:30",
         cuisine: ["Italian", "Mozzarella", "Mediterranean"],
@@ -1752,7 +1752,7 @@ const seedData = async () => {
       },
       {
         name: "Heineken Bar — F Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7850, 52.2957] },
+        location: { type: "Point", coordinates: [4.7620, 52.3121] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.3, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Beer", "Snacks", "Dutch Bites"],
@@ -1761,7 +1761,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — F Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7846, 52.2958] },
+        location: { type: "Point", coordinates: [4.7616, 52.3122] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:30–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1770,7 +1770,7 @@ const seedData = async () => {
       },
       {
         name: "Noodle Bar — F Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7848, 52.2956] },
+        location: { type: "Point", coordinates: [4.7618, 52.3120] },
         terminal: "Non-Schengen", zone: "F Pier mid (airside)",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Asian", "Noodles", "Ramen", "Thai"],
@@ -1781,7 +1781,7 @@ const seedData = async () => {
       // — F Pier gate end [4.7869, 52.2934] —
       {
         name: "Gate Café — F Pier End", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7869, 52.2936] },
+        location: { type: "Point", coordinates: [4.7618, 52.3134] },
         terminal: "Non-Schengen", zone: "F Pier gate end (airside)",
         rating: 3.8, status: "Open", operatingHours: "05:30–22:00",
         cuisine: ["Coffee", "Pastries", "Snacks"],
@@ -1790,7 +1790,7 @@ const seedData = async () => {
       },
       {
         name: "Wine & Tapas Bar — F Gate", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7871, 52.2933] },
+        location: { type: "Point", coordinates: [4.7620, 52.3131] },
         terminal: "Non-Schengen", zone: "F Pier gate end (airside)",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Wine", "Tapas", "Cheese", "Charcuterie"],
@@ -1801,7 +1801,7 @@ const seedData = async () => {
       // — G Pier [4.7914, 52.2921] —
       {
         name: "The Grand Café — G Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7914, 52.2923] },
+        location: { type: "Point", coordinates: [4.7570, 52.3126] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.3, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["International", "Sit-Down", "European"],
@@ -1810,7 +1810,7 @@ const seedData = async () => {
       },
       {
         name: "Bar & Grill — G Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7916, 52.2920] },
+        location: { type: "Point", coordinates: [4.7572, 52.3123] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.1, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Burgers", "Grill", "Beer", "Cocktails"],
@@ -1819,7 +1819,7 @@ const seedData = async () => {
       },
       {
         name: "Starbucks — G Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7912, 52.2922] },
+        location: { type: "Point", coordinates: [4.7568, 52.3125] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.0, status: "Open", operatingHours: "05:00–22:30",
         cuisine: ["Coffee", "Sandwiches", "Pastries"],
@@ -1828,7 +1828,7 @@ const seedData = async () => {
       },
       {
         name: "Asian Fusion — G Pier", category: "RESTAURANTS",
-        location: { type: "Point", coordinates: [4.7914, 52.2919] },
+        location: { type: "Point", coordinates: [4.7570, 52.3122] },
         terminal: "Non-Schengen", zone: "G Pier (airside)",
         rating: 4.2, status: "Open", operatingHours: "06:00–22:00",
         cuisine: ["Asian", "Sushi", "Thai", "Dim Sum"],
