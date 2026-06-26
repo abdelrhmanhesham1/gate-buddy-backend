@@ -1,7 +1,7 @@
 # 🔌 GateBuddy Complete API Documentation
 
 **Base URL (Development)**: `http://localhost:3001/api/v1`
-**Base URL (Production)**: `https://gate-buddy-backend-production.up.railway.app/api/v1`
+**Base URL (Production)**: `https://gate-buddy-backend-production-f6df.up.railway.app/api/v1`
 
 **Authentication**: Most endpoints require JWT token in header: `Authorization: Bearer <token>` or in HttpOnly cookie `jwt`
 
@@ -555,20 +555,22 @@ RESPONSE (200 OK):
       }
     },
     "weather": {
-      "temperature": 72,
-      "condition": "Sunny",
-      "humidity": 65,
-      "windSpeed": 10,
-      "feelsLike": 70
+      "temp": "28°C",
+      "condition": "Partly Cloudy"
     },
-    "recommendations": {
-      "title": "Los Angeles",
-      "description": "Beautiful coastal city...",
-      "images": ["url1", "url2", "url3"],
-      "attractions": ["Hollywood", "Venice Beach", "Griffith Observatory"],
-      "wikiLink": "https://en.wikipedia.org/wiki/Los_Angeles"
-    },
-    "arrivalTime": "2026-04-21T17:45:00Z"
+    "recommendations": [
+      {
+        "name": "Egyptian Museum",
+        "category": "Culture",
+        "description": "World-class collection of ancient Egyptian antiquities.",
+        "rating": 4.7,
+        "vicinity": "Tahrir Square, Cairo",
+        "image": "https://upload.wikimedia.org/...",
+        "imageCredit": "Wikimedia Commons",
+        "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=..."
+      }
+    ],
+    "arrivalTime": "10:00 PM"
   }
 }
 
@@ -702,10 +704,22 @@ RESPONSE (200 OK):
       "timezone": "America/Los_Angeles"
     },
     "weather": {
-      "temperature": 72,
-      "condition": "Sunny"
+      "temp": "28°C",
+      "condition": "Partly Cloudy"
     },
-    "recommendations": { ... }
+    "recommendations": [
+      {
+        "name": "Egyptian Museum",
+        "category": "Culture",
+        "description": "World-class collection of ancient Egyptian antiquities.",
+        "rating": 4.7,
+        "vicinity": "Tahrir Square, Cairo",
+        "image": "https://upload.wikimedia.org/...",
+        "imageCredit": "Wikimedia Commons",
+        "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=..."
+      }
+    ],
+    "arrivalTime": "10:00 PM"
   }
 }
 
@@ -1156,33 +1170,39 @@ Content-Type: application/json
 
 REQUEST BODY:
 {
-  "message": "What are the popular attractions in Los Angeles?"
+  "message": "Where is my gate?",
+  "history": [                          // Optional — last 4 exchanges (8 items)
+    { "role": "user", "text": "Hi, I need help." },
+    { "role": "assistant", "text": "Hello! I'm GateBuddy. How can I help you?" }
+  ]
 }
 
 RESPONSE (200 OK):
 {
   "status": "success",
   "data": {
-    "reply": "Los Angeles has many popular attractions including Hollywood, Griffith Observatory, Venice Beach, The Getty Center, Universal Studios, and Disneyland. As you're arriving at 5:45 PM, you might want to head to Venice Beach for sunset or check into your hotel first.",
-    "sources": [
-      "Current flight information",
-      "Destination recommendations",
-      "Travel guides"
-    ],
-    "responseTime": 2500  // milliseconds
+    "reply": "Your flight KL1234 departs from Gate D7 in Terminal D. Boarding starts at 2:00 PM. Head straight from security and follow the D-gates signs — about a 5-minute walk."
   }
 }
 
-FEATURES:
-- Context-aware responses using flight data
-- Grounded in real airport and travel information
-- Powered by Google Gemini AI
-- Response generation: 2-5 seconds typically
+LIVE CONTEXT THE CHATBOT HAS ACCESS TO (automatically, from DB):
+- User's active tracked flight (gate, status, boarding time, check-in counter)
+- Any flight mentioned by number in the message (e.g. "What is KL205 status?")
+- All open airport services (restaurants, lounges, shops, ATMs, accessibility)
+- Terminal navigation nodes and zone layout
+- Airport FAQs (Wi-Fi, prayer rooms, lost luggage, transport links)
+- Live airport-wide delay/cancellation counts
+
+BEHAVIOR:
+- Powered by Google Gemini 2.5 Flash
+- Max ~120 words per reply
+- Responds in the same language the user writes in
+- Never invents gate numbers or services not in the database
+- Supports multi-turn conversation via the history array
 
 ERROR RESPONSES:
 - 401: Unauthorized
 - 400: "Message is required"
-- 503: "AI service temporarily unavailable"
 ```
 
 ---
@@ -1210,13 +1230,9 @@ RESPONSE (200 OK):
         "_id": "507f1f77bcf86cd799439011",
         "user": "507f1f77bcf86cd799439010",
         "type": "FLIGHT_UPDATE",
-        "title": "Flight AA1234 Gate Changed",
-        "message": "Your flight to LAX has been assigned to gate A45",
-        "isRead": false,
-        "metadata": {
-          "flightId": "507f1f77bcf86cd799439012",
-          "newGate": "A45"
-        },
+        "title": "Upcoming Flight Reminder",
+        "message": "Your flight KL1234 departs in approximately 25 minutes. Gate: D7.",
+        "read": false,
         "createdAt": "2026-04-21T14:20:00Z"
       },
       {
@@ -1224,7 +1240,7 @@ RESPONSE (200 OK):
         "type": "BOARDING_REMINDER",
         "title": "Boarding in 30 minutes",
         "message": "Please head to your gate for boarding",
-        "isRead": false,
+        "read": false,
         "createdAt": "2026-04-21T14:15:00Z"
       }
     ]
@@ -1256,8 +1272,7 @@ RESPONSE (200 OK):
   "data": {
     "notification": {
       "_id": "507f1f77bcf86cd799439011",
-      "isRead": true,
-      "readAt": "2026-04-21T14:25:00Z"
+      "read": true
     }
   }
 }
@@ -1604,4 +1619,4 @@ Auto-account creation on first login
 ---
 
 **API Version**: 1.0.0
-**Last Updated**: April 2026
+**Last Updated**: June 2026

@@ -1,8 +1,8 @@
 # ✈️ GateBuddy: The Intelligent Airport Companion Ecosystem
 
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/database-MongoDB-green)](https://www.mongodb.com/)
-[![AI Assistant](https://img.shields.io/badge/AI-Google%20Gemini-blue)](https://deepmind.google/technologies/gemini/)
+[![AI Assistant](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-blue)](https://deepmind.google/technologies/gemini/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **GateBuddy** is a state-of-the-art, distributed backend ecosystem designed to revolutionize the airport experience. It serves as a digital travel concierge, guiding passengers from the terminal entrance to their boarding gate with real-time intelligence, AI assistance, and indoor navigation.
@@ -48,17 +48,17 @@ GateBuddy follows a modern microservices-inspired architecture:
 | :--- | :--- |
 | **Backend** | Node.js, Express, Python Flask |
 | **Database** | MongoDB (Geospatial Indexing) |
-| **AI/ML** | Google Gemini 1.5 Pro |
+| **AI/ML** | Google Gemini 2.5 Flash |
 | **Auth** | OAuth 2.0, JWT, Bcrypt |
 | **Real-time** | Firebase Cloud Messaging (FCM), Node-Cron |
-| **External APIs** | Open-Meteo, Wikipedia, Pexels, AirLabs |
+| **External APIs** | Open-Meteo, Wikipedia, Wikimedia Commons, AirLabs |
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 16+ & npm 8+
+- Node.js 18+ & npm 8+
 - MongoDB instance (Local or Atlas)
 - Python 3.8+ (for recommendation microservice)
 - Firebase Admin SDK key
@@ -68,7 +68,7 @@ GateBuddy follows a modern microservices-inspired architecture:
 
 1.  **Clone & Install Dependencies**
     ```bash
-    git clone https://github.com/your-username/gateBuddy.git
+    git clone https://github.com/abdelrhmanhesham11/gateBuddy.git
     cd gateBuddy
     npm install
     ```

@@ -1,7 +1,7 @@
-{
+﻿{
   "info": {
     "name": "GateBuddy API - Complete Reference (41 Endpoints)",
-    "description": "**🔴 AUTHORITATIVE REFERENCE** for GateBuddy - The Intelligent Airport Companion Ecosystem\n\n📚 **API Standards**: JSend + REST conventions\n\n🔗 **Base URLs:**\n- **Development**: `http://localhost:3001/api/v1`\n- **Production**: `https://gate-buddy-backend-production.up.railway.app/api/v1`\n\n🔐 **Authentication**: Bearer JWT (set automatically after Signup/Login)\n\n⏱️ **Token Details**:\n- **Access Token**: Valid for 6 hours\n- **Refresh Token**: Valid for 7 days (stored in MongoDB)\n- **Method**: Authorization header: `Bearer {token}`\n\n📱 **Core Features:**\n1. **JWT Authentication** - 6-hour access, refresh token rotation\n2. **OAuth 2.0** - Google, GitHub, Facebook sign-in\n3. **Real-Time Flight Tracking** - Delays, gate changes, status updates with audit trail\n4. **Indoor Navigation** - Dijkstra pathfinding through airport terminals\n5. **AI Chat Assistant** - Google Gemini-powered terminal concierge\n6. **Push Notifications** - Firebase Cloud Messaging (FCM) integration\n7. **Ratings & Reviews** - Service ratings with user reviews\n8. **Admin Dashboard** - System analytics and management\n\n⚠️ **Important Notes:**\n- All timestamps: **ISO 8601 format** (UTC)\n- All prices: **USD cents** (divide by 100 for display)\n- Rate limiting: **100 requests per 15 minutes** (environment-aware)\n- Flight TTL: **Auto-expires 1 hour after scheduled time**\n- Flight times shifted: **+6 hours for testing** (real departure = scheduled - 6h)\n- Error format: `{ \"status\": \"fail/error\", \"message\": \"...\", \"statusCode\": 400 }`\n\n🚀 **Quick Start:**\n1. Call `POST /users/signup` to create account\n2. Save returned `token` in Bearer Authorization\n3. Use `GET /flights` to explore available flights\n4. All endpoints with 🔐 require authentication\n\n📖 **Response Format (JSend Standard):**\n```json\n{\n  \"status\": \"success\",\n  \"data\": { /* endpoint-specific data */ }\n}\n```\n\n❌ **Error Format:**\n```json\n{\n  \"status\": \"fail\",\n  \"message\": \"Descriptive error message\",\n  \"statusCode\": 400\n}\n```",
+    "description": "**🔴 AUTHORITATIVE REFERENCE** for GateBuddy - The Intelligent Airport Companion Ecosystem\n\n📚 **API Standards**: JSend + REST conventions\n\n🔗 **Base URLs:**\n- **Development**: `http://localhost:3001/api/v1`\n- **Production**: `https://gate-buddy-backend-production-f6df.up.railway.app/api/v1`\n\n🔐 **Authentication**: Bearer JWT (set automatically after Signup/Login)\n\n⏱️ **Token Details**:\n- **Access Token**: Valid for 6 hours\n- **Refresh Token**: Valid for 7 days (stored in MongoDB)\n- **Method**: Authorization header: `Bearer {token}`\n\n📱 **Core Features:**\n1. **JWT Authentication** - 6-hour access, refresh token rotation\n2. **OAuth 2.0** - Google, GitHub, Facebook sign-in\n3. **Real-Time Flight Tracking** - Delays, gate changes, status updates with audit trail\n4. **Indoor Navigation** - Dijkstra pathfinding through airport terminals\n5. **AI Chat Assistant** - Google Gemini-powered terminal concierge\n6. **Push Notifications** - Firebase Cloud Messaging (FCM) integration\n7. **Ratings & Reviews** - Service ratings with user reviews\n8. **Admin Dashboard** - System analytics and management\n\n⚠️ **Important Notes:**\n- All timestamps: **ISO 8601 format** (UTC)\n- All prices: **USD cents** (divide by 100 for display)\n- Rate limiting: **100 requests per 15 minutes** (environment-aware)\n- Flight TTL: **Auto-expires 1 hour after scheduled time**\n- Flight times shifted: **+6 hours for testing** (real departure = scheduled - 6h)\n- Error format: `{ \"status\": \"fail/error\", \"message\": \"...\", \"statusCode\": 400 }`\n\n🚀 **Quick Start:**\n1. Call `POST /users/signup` to create account\n2. Save returned `token` in Bearer Authorization\n3. Use `GET /flights` to explore available flights\n4. All endpoints with 🔐 require authentication\n\n📖 **Response Format (JSend Standard):**\n```json\n{\n  \"status\": \"success\",\n  \"data\": { /* endpoint-specific data */ }\n}\n```\n\n❌ **Error Format:**\n```json\n{\n  \"status\": \"fail\",\n  \"message\": \"Descriptive error message\",\n  \"statusCode\": 400\n}\n```",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "gatebuddy-v1-complete"
   },
@@ -532,7 +532,7 @@
           "description": "**Get recent updates for a flight (delays, gate changes, status changes)**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nReturns all FlightUpdate records for this flight sorted by timestamp (newest first). Tracks ALL changes: delays, gate changes, status changes, boarding times.\n\n### 📝 QUERY PARAMETERS\n```\nlimit  = Number of updates to return (default: 30)\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"results\": 5,\n    \"updates\": [\n      {\n        \"_id\": \"607f1f77bcf86cd799439100\",\n        \"flight\": \"607f1f77bcf86cd799439001\",\n        \"updateType\": \"gate_change\",\n        \"before\": \"B40\",\n        \"after\": \"B42\",\n        \"timestamp\": \"2026-06-22T14:15:00.000Z\"\n      },\n      {\n        \"_id\": \"607f1f77bcf86cd799439101\",\n        \"flight\": \"607f1f77bcf86cd799439001\",\n        \"updateType\": \"delay\",\n        \"before\": 0,\n        \"after\": 5,\n        \"timestamp\": \"2026-06-22T14:25:00.000Z\"\n      }\n    ]\n  }\n}\n```"
         },
         {
-          "name": "POST /flights/scanBoardingPass - Scan Boarding Pass",
+          "name": "POST /flights/scan - Scan Boarding Pass",
           "request": {
             "method": "POST",
             "header": [
@@ -546,9 +546,9 @@
               "raw": "{\n  \"boardingPassData\": \"M1UA123ABC456789123456789012345\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/flights/scanBoardingPass",
+              "raw": "{{base_url}}/flights/scan",
               "host": ["{{base_url}}"],
-              "path": ["flights", "scanBoardingPass"]
+              "path": ["flights", "scan"]
             }
           },
           "description": "**Scan and validate boarding pass (IATA 792 standard)**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nValidates boarding pass using IATA 792 barcode format. Extracts flight info, validates date/time, returns flight status and gate information. Returns error if pass is invalid or expired.\n\n### 📝 REQUEST BODY\n```json\n{\n  \"boardingPassData\": \"M1UA123ABC456789123456789012345\" // ✓ Required, IATA 792 format\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"valid\": true,\n    \"flight\": {\n      \"flightNumber\": \"UA123\",\n      \"departure\": \"JFK\",\n      \"arrival\": \"LAX\",\n      \"scheduledDeparture\": \"2026-06-22T14:30:00.000Z\",\n      \"gate\": \"B42\",\n      \"status\": \"boarding\",\n      \"delay\": 5\n    },\n    \"passenger\": \"JOHN DOE\",\n    \"seat\": \"12A\",\n    \"boardingGroup\": \"1\"\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **400 Bad Request**: Invalid barcode format\n- **401 Unauthorized**: Boarding pass expired"
@@ -932,7 +932,7 @@
       "description": "AI-powered chat assistant using Google Gemini",
       "item": [
         {
-          "name": "POST /chat - Send Chat Message",
+          "name": "POST /chat/query - Send Chat Message",
           "request": {
             "method": "POST",
             "header": [
@@ -943,12 +943,12 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"message\": \"What restaurants are available near my gate?\",\n  \"context\": {\n    \"airport\": \"JFK\",\n    \"currentGate\": \"B42\"\n  }\n}"
+              "raw": "{\n  \"message\": \"Where is my gate?\",\n  \"history\": [\n    { \"role\": \"user\", \"text\": \"Hi, I need help.\" },\n    { \"role\": \"assistant\", \"text\": \"Hello! I am GateBuddy. How can I help you?\" }\n  ]\n}"
             },
             "url": {
-              "raw": "{{base_url}}/chat",
+              "raw": "{{base_url}}/chat/query",
               "host": ["{{base_url}}"],
-              "path": ["chat"]
+              "path": ["chat", "query"]
             }
           },
           "description": "**Chat with AI assistant for airport help**\n\n### 🔐 Authentication Required\nBearer token\n\n### ✅ What Happens\nSends message to Google Gemini AI. Assistant understands airport context and helps with:\n- Finding restaurants, lounges, stores\n- Flight information & updates\n- Navigation directions\n- Airport services & amenities\n- Terminal maps\n\n### 📝 REQUEST BODY\n```json\n{\n  \"message\": \"What restaurants are available near my gate?\",  // ✓ Required, max 1000 chars\n  \"context\": {\n    \"airport\": \"JFK\",         // ✗ Optional, IATA code\n    \"currentGate\": \"B42\"      // ✗ Optional, for location context\n  }\n}\n```\n\n### 📤 SUCCESS RESPONSE (200 OK)\n```json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"response\": {\n      \"message\": \"Near gate B42 in Terminal 4, you have several great options. The Smith Restaurant offers upscale American cuisine with a 4.5-star rating. Sky Lounge is a premium business lounge with WiFi and comfortable seating. There's also a Starbucks coffee shop about 100 meters away.\",\n      \"suggestions\": [\n        {\n          \"type\": \"restaurant\",\n          \"name\": \"The Smith Restaurant\",\n          \"distance\": 150,\n          \"rating\": 4.5\n        }\n      ]\n    }\n  }\n}\n```\n\n### ❌ ERROR RESPONSES\n- **400 Bad Request**: Message too long or invalid context\n- **503 Service Unavailable**: Google Gemini API unavailable"
