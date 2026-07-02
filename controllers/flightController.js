@@ -61,9 +61,11 @@ exports.scanBoardingPass = catchAsync(async (req, res, next) => {
   if (!flight) return next(new AppError("Flight not found.", 404));
 
   const [weather, recommendations] = await Promise.all([
-    weatherService.getArrivalWeather(flight.route.to),
+    weatherService.getArrivalWeather(flight.route.to, flight.arrival.scheduledTime),
     aiService.getRecommendationsSafe(flight.route.toCode, req.user.id)
   ]);
+
+  const timezone = weather.timezone || "Africa/Cairo";
 
   await FlightTrack.findOneAndUpdate(
     { user: req.user.id, flight: flight._id },
@@ -75,9 +77,12 @@ exports.scanBoardingPass = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       flight,
-      weather,
+      weather: { temp: weather.temp, condition: weather.condition },
+      weatherAtArrival: { temp: weather.temp, condition: weather.condition },
       recommendations,
-      arrivalTime: weatherService.getArrivalTimeFormatted(flight.arrival.scheduledTime)
+      arrivalTime: weatherService.getArrivalTimeFormatted(flight.arrival.scheduledTime, timezone),
+      destinationLocalTime: weatherService.getCurrentLocalTime(timezone),
+      localTime: weatherService.getCurrentLocalTime(timezone)
     }
   });
 });
@@ -97,18 +102,23 @@ exports.getTrackedFlight = catchAsync(async (req, res, next) => {
   // Execute external API calls and DB queries concurrently
   const [airport, weather, recommendations] = await Promise.all([
     Airport.findOne({ code: destinationCode }).catch(() => null),
-    weatherService.getArrivalWeather(flight.route.to),
+    weatherService.getArrivalWeather(flight.route.to, flight.arrival.scheduledTime),
     aiService.getRecommendationsSafe(destinationCode, req.user.id)
   ]);
+
+  const timezone = weather.timezone || "Africa/Cairo";
 
   res.status(200).json({
     status: "success",
     data: {
       flight,
-      weather,
+      weather: { temp: weather.temp, condition: weather.condition },
+      weatherAtArrival: { temp: weather.temp, condition: weather.condition },
       recommendations,
       airport: airport || null,
-      arrivalTime: weatherService.getArrivalTimeFormatted(flight.arrival.scheduledTime)
+      arrivalTime: weatherService.getArrivalTimeFormatted(flight.arrival.scheduledTime, timezone),
+      destinationLocalTime: weatherService.getCurrentLocalTime(timezone),
+      localTime: weatherService.getCurrentLocalTime(timezone)
     }
   });
 });
